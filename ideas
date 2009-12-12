@@ -1,0 +1,24 @@
+* add center selection in search form
+* build local data models/additional fields
+* ability to edit your profile
+  * set a secure cookie associated with an email
+  * send the user its value in their email
+  * if they use that to log in, authenticate them to edit the profile
+    associated with that email.
+  * clear the cookie
+* pull in gravatars
+* add google-analytics
+* lists/groups
+
+* search by tag, keyword etc. 
+* add local cache
+* show a map with locations of contacts (eg. search results or
+  individuals).
+* make people.opennasa.com an openID server, too. 
+* make people.opennasa.com available as its own LDAP server? 
+* allow people to download sets of contacts according to a search,
+  center, etc.
+* x500 mobile app
+
+example nasa ldap stuff (from linton)
+http://babelfish.arc.nasa.gov/trac/dashlink/browser/main/trunk/ivhm/utils/helper.py

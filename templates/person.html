@@ -1,65 +1,126 @@
 {% extends base.html %}
 
+{% block meta %}
+    <meta content="openNASA Profile page of {{ ', '.join(profile['Name']) }}" name='description' />
+{% end %}
+
 {% block body %}
 
-<div id="container">
-<div class="wrap-background">
+  <div id="person" class="vcard">    
 
-<div id="header">
-    <a href="http://www.opennasa.com">
-    <span/>
-    </a>
-</div>    
+    <img src="{{ gravatar_url }}" class="photo" alt="gravatar" />
+    <span class="fn">{{ profile['Name'][0] }}</span>
+    <div class="org">[[Ames Research Center - Nebula Project]]</div>
 
-<div id="menu" border="1">
-    <ul class="wrap">
-        <a href="/search">New Search</a>
+    <div class="contact">
+      {% if profile.has_key('Internet Addresses') %}
+        <a class="email" href="mailto:{{ profile['Internet Addresses'][0] }}">{{ profile['Internet Addresses'][0] }}</a>
+      {% end %}
+      {% if profile.has_key('Phone') %}
+        <span class="tel">
+          <span class="type">office</span>:
+          <span class="value">{{ profile['Phone'][0] }}</span>
+        </span>
+      {% end %}
+    </div>         
+  </div>
+  
+  
+  <div class="wide_block">
+    <h3>Biography</h3>
+    <p>Description of role on project</p>
+  </div>
+  
+  <div class="wide_block">
+    <h3>ProjectName</h3>
+    <a href="#">http://project.com</a>
+    <p>Description of role on project</p>
+  </div>
+
+  
+
+  <div class="narrow_block">
+    <h3>Skills</h3>
+    [insert tagcloud here]
+  </div>
+
+  <div class="narrow_block">
+    <h3>Tags</h3>
+    [insert tagcloud here]
+  </div>
+
+  <div class="narrow_block">
+    <h3>Previous Projects</h3>
+    <ul>
+      <li>Project 1</li>
+      <li>project 2</li>
+    </ul>
+  </div>
+
+  <div class="narrow_block">
+    <h3>Side Projects</h3>
+    <ul>
+      <li>Project 1</li>
+      <li>project 2</li>
+    </ul>
+  </div>
+  <div class=" narrow_block">
+    <h3>Address</h3>
+    <address>
+      Code I - Office of the CIO<br />
+      Building 122, Room 255<br />
+      (202) 260-3967 - office<br />
+      <br />
+      NASA Ames Research Center<br />
+      M/S 133-3<br />
+      Moffett Field, CA 95053
+    </address>
+
+  </div>
+
+  <div class=" narrow_block">
+    <h3>Other Information</h3>
+    <ul>
+      <li>Employer: Mission Critical Technologies</li>
+      <li>Hire Date: September 17, 2009</li>
+      <li>Personal Blog: <a href="http://blog.quaternia.net">http://blog.quaternia.net</a></li>
+    </ul>
+  </div>
 </div>
-<div id="content" class="left-col wrap">
-    
-<!-- gravatar -->
-<p class="gravatar">
-<img src="{{ gravatar_url }}">
-</p>
 
-<h1>{{ profile['Name'][0]}}</h1>
-<!-- 
+<div id="sidebar">
+  <div id="map">
+    <img src="{{ map('ARC')}}"/>
+  </div>
 
-profile data:
+  <div id="twitter">
+    Connect {{ profile['Name'][0]}} via Twitter
+  </div>
 
-some of the values in the profile dict are strings, and some are
-lists, so careful :). 
+  <div id="facebook">
+    Connect {{ profile['Name'][0]}} via Facebook
+  </div>
 
--->
-
-{% for field, values in profile.iteritems() %}
-{% if isinstance(values, str) %}
-   <h3>{{ field }}</h3><br>
-   {{ values }}
-{% else %}
-   <h3>{{ field }}</h3> 
-   {% for value in values %}
-      {{ value }}<br>
-   {% end %} <!-- end for -->
-{% end %} <!-- end else -->
-{% end %} <!-- end for -->
-
-<!-- is this you? -->
-<p>Is this you? Click <a href="">here</a> to edit</p>
-</div>
-<div id="sidebar" class="right-col">
-<h2> Google Maps</h2>
-
-<img src="{{ map('ARC')}}"/>
+  <div id="x500">
+    <p>ALL DATA</p>
+      {% for field, values in profile.iteritems() %}
+      {% if isinstance(values, str) %}
+         <h3>{{ field }}</h3><br>
+         {{ values }}
+      {% else %}
+         <h3>{{ field }}</h3> 
+         {% for value in values %}
+            {{ value }}<br>
+         {% end %} <!-- end for -->
+      {% end %} <!-- end else -->
+      {% end %} <!-- end for -->
+  </div>
 
 
-<h2>Follow {{ profile['Name'][0]}} on Twitter</h2>
-
-
-<h2>Connect {{ profile['Name'][0]}} via Facebook</h2>
-
+  <!-- is this you? -->
+  <p>Is this you? Click <a href="">here</a> to edit</p>
 
 </div>
-</div>
-</div>
+
+
 {% end %} <!-- end block -->

@@ -45,8 +45,7 @@ class PersonHandler(tornado.web.RequestHandler):
         self.render('templates/person.html', title=profile['Name'], 
                     gravatar_url=self.gravatar_url(email), profile=profile, map=helper.map)
         
-    def gravatar_url(self, email):
-        size = 150
+    def gravatar_url(self, email, size=125):
         base = "http://www.gravatar.com/avatar.php?"
         return base+urllib.urlencode({'gravatar_id':hashlib.md5(email).hexdigest(), 
                                       'size':str(size)})                

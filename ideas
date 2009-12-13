@@ -19,6 +19,8 @@
 * allow people to download sets of contacts according to a search,
   center, etc.
 * x500 mobile app
+* allow new employees to put in their own contact page while waiting to be in the system - also allows summer interns to have a directory.
+
 
 example nasa ldap stuff (from linton)
 http://babelfish.arc.nasa.gov/trac/dashlink/browser/main/trunk/ivhm/utils/helper.py

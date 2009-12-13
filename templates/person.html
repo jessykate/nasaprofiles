@@ -2,7 +2,26 @@
 
 {% block body %}
 
+<div id="container">
+<div class="wrap-background">
+
+<div id="header">
+    <a href="http://www.opennasa.com">
+    <span/>
+    </a>
+</div>    
+
+<div id="menu" border="1">
+    <ul class="wrap">
+        <a href="/search">New Search</a>
+</div>
+
 <h2>{{ profile['Name'][0]}}</h2>
+
+<!-- gravatar -->
+<p class="gravatar">
+<img src="{{ gravatar_url }}">
+</p>
 
 <!-- 
 
@@ -29,5 +48,6 @@ lists, so careful :).
 
 <!-- is this you? -->
 <p>Is this you? Click <a href="">here</a> to edit</p>
-
+</div>
+</div>
 {% end %} <!-- end block -->

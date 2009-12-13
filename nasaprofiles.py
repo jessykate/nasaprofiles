@@ -10,6 +10,7 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 import tornado.escape
+import os
 from database import Database
 from x500DisplayParser import x500DisplayPageParser
 
@@ -131,6 +132,7 @@ def structured_results(html):
 
 settings = {
     'db':Database().connect(),
+    "static_path": os.path.join(os.path.dirname(__file__), "static"),
 }
 
 application = tornado.web.Application([

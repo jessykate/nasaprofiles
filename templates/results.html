@@ -1,0 +1,9 @@
+{% extends base.html %}
+
+{% block body %}
+{% for name in results %}
+
+<a href="/person/{{ name }}">{{ name }}</a><br>
+
+{% end %}
+{% end %}

@@ -100,7 +100,6 @@ class EditHandler(tornado.web.RequestHandler):
     #for field, value in profile:
     #    doc[field] = value
     #db[uid] = doc
-
     pass
 
 
@@ -119,24 +118,14 @@ class SearchHandler(tornado.web.RequestHandler):
         json = tornado.escape.url_escape(tornado.escape.json_encode(results))
         self.set_cookie('search_results', json)
         
-        # display the search results to the user
-        self.set_header("Content-Type", "text/html")
-        for name, link in results.iteritems(): 
-            # for each person in the x500 results, display a link to
-            # see info about them. if it's only one result, display it
-            # directly, instead of a list.
-            self.write('<a href="/person/%s">%s</a><br>' % (name,name))
+        # display the search results
+        people = results.keys()
+        self.render('templates/results.html', title='Search Results', results=people)
 
     def get(self):
         # present user w search form
         self.set_header("Content-Type", "text/html")
-        self.write('<form action="/search" method="post">'
-                   '<label for="query">Search for a NASA person</label><br>'
-                   '<input type="text" name="query"><br>'
-                   '<label for="center">Select a Center or Centers for your Search</label><br>'
-                   '<input type="checkbox" name="arc">Ames Research Center<br>'
-                   '<input type="submit" value="Find me some Space Peeps!">'
-                   '</form></body></html>')
+        self.render('templates/search.html', title='Search for your NASA Homies')
 
     def x500_search(self, query):
         # base url searches for entries in country = US and org = NASA

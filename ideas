@@ -1,20 +1,18 @@
+todo:
 * add center selection in search form
-* build local data models/additional fields
-* ability to edit your profile
-  * set a secure cookie associated with an email
-  * send the user its value in their email
-  * if they use that to log in, authenticate them to edit the profile
-    associated with that email.
-  * clear the cookie
-* pull in gravatars
-* add google-analytics
-* lists/groups
-* pull in stuff from http://ntrs.nasa.gov/search.jsp
+* PersonHandler: We should be able to detect if the person is in our
+  local database BEFORE we hit the remote x500 server.
+* use secure cookies
 * mark primary email, name, etc. 
+* user click to manually cause x500 field update
+* default gravatar (plus remove fallback email)
+* one-time login to edit your profile
+* add google-analytics
 * option to override x500 info
-
+* make the url /person/somename/ work directly
 * search by tag, keyword etc. 
-* add local cache
+
+future features:
 * show a map with locations of contacts (eg. search results or
   individuals).
 * make people.opennasa.com an openID server, too. 
@@ -22,6 +20,11 @@
 * allow people to download sets of contacts according to a search,
   center, etc.
 * x500 mobile app
+* pull in stuff from http://ntrs.nasa.gov/search.jsp
+* lists/groups
+
+done:
+* pull in gravatars
 
 example nasa ldap stuff (from linton)
 http://babelfish.arc.nasa.gov/trac/dashlink/browser/main/trunk/ivhm/utils/helper.py

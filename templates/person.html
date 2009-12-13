@@ -1,36 +1,125 @@
 {% extends base.html %}
 
+{% block meta %}
+    <meta content="openNASA Profile page of {{ ', '.join(profile['Name']) }}" name='description' />
+{% end %}
+
 {% block body %}
 
-<h2>{{ profile['Name'][0]}}</h2>
+  <div id="person" class="vcard">    
 
-<!-- gravatar -->
-<p class="gravatar">
-<img src="{{ gravatar_url }}">
-</p>
+    <img src="{{ gravatar_url }}" class="photo" alt="gravatar" />
+    <span class="fn">{{ profile['Name'][0] }}</span>
+    <div class="org">[[Ames Research Center - Nebula Project]]</div>
 
-<!-- 
+    <div class="contact">
+      {% if profile.has_key('Internet Addresses') %}
+        <a class="email" href="mailto:{{ profile['Internet Addresses'][0] }}">{{ profile['Internet Addresses'][0] }}</a>
+      {% end %}
+      {% if profile.has_key('Phone') %}
+        <span class="tel">
+          <span class="type">office</span>:
+          <span class="value">{{ profile['Phone'][0] }}</span>
+        </span>
+      {% end %}
+    </div>         
+  </div>
+  
+  
+  <div class="wide_block">
+    <h3>Biography</h3>
+    <p>Description of role on project</p>
+  </div>
+  
+  <div class="wide_block">
+    <h3>ProjectName</h3>
+    <a href="#">http://project.com</a>
+    <p>Description of role on project</p>
+  </div>
 
-profile data:
+  
 
-some of the values in the profile dict are strings, and some are
-lists, so careful :). 
+  <div class="narrow_block">
+    <h3>Skills</h3>
+    [insert tagcloud here]
+  </div>
 
--->
+  <div class="narrow_block">
+    <h3>Tags</h3>
+    [insert tagcloud here]
+  </div>
 
-{% for field, values in profile.iteritems() %}
-{% if isinstance(values, str) %}
-   <h3>{{ field }}</h3><br>
-   {{ values }}
-{% else %}
-   <h3>{{ field }}</h3> 
-   {% for value in values %}
-      {{ value }}<br>
-   {% end %} <!-- end for -->
-{% end %} <!-- end else -->
-{% end %} <!-- end for -->
+  <div class="narrow_block">
+    <h3>Previous Projects</h3>
+    <ul>
+      <li>Project 1</li>
+      <li>project 2</li>
+    </ul>
+  </div>
 
-<!-- is this you? -->
-<p>Is this you? Click <a href="{{ edit_request }}">here</a> to edit</p>
+  <div class="narrow_block">
+    <h3>Side Projects</h3>
+    <ul>
+      <li>Project 1</li>
+      <li>project 2</li>
+    </ul>
+  </div>
+  <div class=" narrow_block">
+    <h3>Address</h3>
+    <address>
+      Code I - Office of the CIO<br />
+      Building 122, Room 255<br />
+      (202) 260-3967 - office<br />
+      <br />
+      NASA Ames Research Center<br />
+      M/S 133-3<br />
+      Moffett Field, CA 95053
+    </address>
+
+  </div>
+
+  <div class=" narrow_block">
+    <h3>Other Information</h3>
+    <ul>
+      <li>Employer: Mission Critical Technologies</li>
+      <li>Hire Date: September 17, 2009</li>
+      <li>Personal Blog: <a href="http://blog.quaternia.net">http://blog.quaternia.net</a></li>
+    </ul>
+  </div>
+</div>
+
+<div id="sidebar">
+  <div id="map">
+    <img src="{{ map('ARC')}}"/>
+  </div>
+
+  <div id="twitter">
+    Connect {{ profile['Name'][0]}} via Twitter
+  </div>
+
+  <div id="facebook">
+    Connect {{ profile['Name'][0]}} via Facebook
+  </div>
+
+  <div id="x500">
+    <p>ALL DATA</p>
+      {% for field, values in profile.iteritems() %}
+      {% if isinstance(values, str) %}
+         <h3>{{ field }}</h3><br>
+         {{ values }}
+      {% else %}
+         <h3>{{ field }}</h3> 
+         {% for value in values %}
+            {{ value }}<br>
+         {% end %} <!-- end for -->
+      {% end %} <!-- end else -->
+      {% end %} <!-- end for -->
+  </div>
+
+
+  <!-- is this you? -->
+  <p>Is this you? Click <a href="{{ edit_request }}">here</a> to edit</p>
+
+</div>
 
 {% end %} <!-- end block -->

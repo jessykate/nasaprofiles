@@ -1,14 +1,43 @@
-<html>
-   <head>
-     <title>{% block title %}{{ title }}{% end %}</title>
-   </head>
-   <body>     
-     {% block header %}
-     <div class="header" border="1">
-       <a href="/search">New Search</a>
-     </div>
-     {% end %}
-     {% block body %}{% end %}
-     {% block footer %}{% end %}
-   </body>
- </html>
+<!DOCTYPE html>
+<html lang="en" xml:lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Nasa Profiles</title>
+    <meta name="Author" content="Author" />
+    <meta name="Robots" content="index,all" />
+    {% block meta %}
+      <meta name="Keywords" content="NASA, Profiles" />
+      <meta name="Description" content="Nasa Profiles" />
+    {% end %}    
+    <link rel="stylesheet" href="/static/style.css" type="text/css" media="screen" />
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="header">
+        <h1>Nasa Profiles</h1>
+        <ul id="nav">
+          <li><a href="/search">Search</a></li>
+          <li><a href="#">NASA-only View</a></li>
+          <li><a href="#">Edit</a></li>
+          <li><a href="#">Help</a></li>
+        </ul>
+      </div>      
+      <div id="container">
+        <div id="content">
+            {% block header %}{% end %}
+            {% block body %}{% end %}
+        </div>
+      </div>
+      {% block footer %}
+      <div id="footer">
+        <p class="copy">Copyright &copy; 2009 blahblah</p>
+        <ul id="footNav">
+          <li><a href="#">about</a></li>
+          <li><a href="#">faq</a></li>
+          <li><a href="#">stuff</a></li>
+        </ul>
+      </div>  
+      {% end %}
+    </div>
+  </body>
+</html>

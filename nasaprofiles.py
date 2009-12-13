@@ -1,9 +1,10 @@
 #!/usr/bin/python
 
-import urllib2, urllib, re, time, hashlib, uuid
+import urllib2, urllib, re, time, hashlib, uuid, helper
 import smtplib, os
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+
 try:
     import json
 except:
@@ -13,6 +14,7 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 import tornado.escape
+import os
 from database import Database
 from x500DisplayParser import x500DisplayPageParser
 
@@ -58,10 +60,9 @@ class PersonHandler(tornado.web.RequestHandler):
         # save the uid for the edit request.
         edit_request = '/edit/'+uid
         self.render('templates/person.html', title=profile['Name'], edit_request=edit_request,
-                    gravatar_url=self.gravatar_url('jk@f00d.org'), profile=profile)
+                    gravatar_url=self.gravatar_url('jk@f00d.org'), profile=profile, map=helper.map)
         
-    def gravatar_url(self, email):
-        size = 150
+    def gravatar_url(self, email, size=125):
         base = "http://www.gravatar.com/avatar.php?"
         return base+urllib.urlencode({'gravatar_id':hashlib.md5(email).hexdigest(), 
                                       'size':str(size)})                
@@ -196,6 +197,7 @@ class SearchHandler(tornado.web.RequestHandler):
 
 settings = {
     'db':Database().connect(),
+    "static_path": os.path.join(os.path.dirname(__file__), "static"),
     'domain': 'localhost',
     'port': 8989,
     'smtp_user': 'jessy.cowansharp@gmail.com',

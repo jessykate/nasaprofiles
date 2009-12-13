@@ -1,0 +1,199 @@
+/* @override http://10.0.1.28/nasaprofiles/style.css */
+
+body {
+	font-family: arial, sans-serif;
+	font-size: 12px;
+	border: 0;
+	color: #404040;
+	padding-bottom: 30px;
+	background: #fff url(images/bg.jpg) center top no-repeat;
+	margin: 0;
+}
+
+h1 {
+	background: #000;
+	padding: 20px;
+	color: #fff;
+	width: 174px;
+	margin: 0;
+}
+
+#wrapper {
+	width: 1000px;
+	margin: 0 auto;
+	
+}
+
+ul#nav {
+	list-style: none;
+	background: #000;
+	display: block;
+	float: left;
+	height: 35px;
+	padding: 0;
+	width: 100%;
+	margin: 15px 0;
+}
+
+ul#nav li {
+	float: left;
+}
+
+ul#nav li a {
+	color: #C0CDCF;
+	display: block;
+	padding: 10px 30px;
+	border-right: 1px solid #555;
+	text-transform: uppercase;
+	font-size: 14px;
+	text-decoration: none;
+}
+
+ul#nav li a:hover {
+	color: #fff;
+}
+
+#content {
+	width: 600px;
+	margin-right: 20px;
+	float: left;
+	padding: 20px;
+}
+
+#sidebar {
+	width: 300px;
+	float: left;
+	margin-left: 25px;
+	margin-top: 25px;
+}
+
+#person {
+	float: left;
+	width: 100%;
+}
+
+span.fn {
+	font-size: 36px;
+	font-weight: bold;
+	float: left;
+	display: block;
+}
+
+.org {
+	float: left;
+	display: block;
+	width: 400px;
+	font-size: 16px;
+}
+
+.email {
+	display: block;
+	float: left;
+}	
+	
+img.photo {
+	float: left;
+	margin-right: 20px;
+	margin-bottom: 20px;
+	background:#CCCCCC none repeat scroll 0 0;
+    padding:5px;
+}
+
+.tel {
+	display: block;
+	clear: both;
+	float: left;
+	margin-top: 5px;
+}
+
+.address {
+	float: left;
+	margin-right: 50px;
+}
+#person address {
+	font-style: normal;
+}
+
+.otherInfo {
+	float: left;
+}
+
+.contact {
+	float: left;
+	margin-top: 10px;
+	width: 400px;
+}
+
+
+#footer {
+	clear: both;
+}
+
+
+#container {
+	background: url(images/wrapper_bg.png) top left repeat-y;
+	float: left;
+}
+
+.narrow_block {
+	width: 275px;
+	margin-right: 20px;
+	float: left;
+	margin-bottom: 20px;
+}
+
+.wide_block {
+	width: 600px; 
+	float: left;
+	margin-bottom: 20px;
+}
+
+.otherInfo ul {
+	padding: 0;
+}
+
+#footer {
+	color: #ccc;
+	border-top: 1px dotted #999;
+	width: 985px;
+}
+
+#footer ul {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+#footer li {
+	float: left;
+	margin-right: 10px;
+}
+
+#footer li a {
+	color: #;
+}
+
+a {
+	color: #1cacc4;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+a img {
+	border: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+

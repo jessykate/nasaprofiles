@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
-import urllib2, urllib, re, time, 
-
+import urllib2, urllib, re, time
 try:
     import json
 except:
@@ -24,18 +23,29 @@ class PersonHandler(tornado.web.RequestHandler):
         html = urllib2.urlopen(url)
         parser = x500DisplayPageParser()
         parser.feed(''.join(html.readlines()))
-        for field, values in parser.profile_fields.iteritems():        
-            for value in values:
-                self.write("%s: %s<br>" % (field, value))
+        profile = parser.profile_fields
 
-        # see if we have any local info. if so, display it. 
-        all_docs = db.view('main/all_docs')
+        # get the NASA uid, which is also the index into our data
+        # store. all the scraped values from x500 are lists, even if
+        # only one item.
+        uid = profile['Unique Identifier'][0]
 
-        #if parser.profile_fields['Unique Identifier'] in all_docs
+        # see if we have any local info. 
+        if uid in db:
+            local_fields = db[uid]
+            profile.update(local_fields.copy())            
+
+        # remove profile fields that we dont want to render. 
+        profile.pop('_id')
+        profile.pop('_rev')
+        self.render('templates/person.html', title='', profile=profile)
 
         # gravatar
-
+                
         # display "is this you?"        
+
+class EditHandler(tornado.web.RequestHandler):
+    pass
 
 class SearchHandler(tornado.web.RequestHandler):
     def post(self):

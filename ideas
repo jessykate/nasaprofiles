@@ -9,6 +9,9 @@
 * pull in gravatars
 * add google-analytics
 * lists/groups
+* pull in stuff from http://ntrs.nasa.gov/search.jsp
+* mark primary email, name, etc. 
+* option to override x500 info
 
 * search by tag, keyword etc. 
 * add local cache

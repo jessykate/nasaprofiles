@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import urllib2, urllib, re, time
+import urllib2, urllib, re, time, hashlib
 try:
     import json
 except:
@@ -39,16 +39,17 @@ class PersonHandler(tornado.web.RequestHandler):
             profile.pop('_id')
             profile.pop('_rev')
 
-        # gravatar
+        # get gravatar. just use the first email address as the defaul
+        # for now.
+        email = profile['Internet Addresses'][0]
+        self.render('templates/person.html', title=profile['Name'], 
+                    gravatar_url=self.gravatar_url(email), profile=profile)
         
-        self.render('templates/person.html', title='', profile=profile)
-        
-    def gravatar(email):
+    def gravatar_url(self, email):
         size = 150
         base = "http://www.gravatar.com/avatar.php?"
-        url = base + urllib.urlencode({'gravatar_id':hashlib.md5(email).hexdigest(), 
-                                       'size':str(size)})        
-        urllib2.urlopen(url)
+        return base+urllib.urlencode({'gravatar_id':hashlib.md5(email).hexdigest(), 
+                                      'size':str(size)})                
 
 class EditHandler(tornado.web.RequestHandler):
     pass

@@ -1,0 +1,17 @@
+Dependencies:
+0. python
+1. couchdb
+2. python-couchdb
+
+Settings:
+1. in nasaprofiles.py, set the host domain in settings
+
+2. the first the the app is run, if any views are defined, then run
+   the database file standalone:
+   ./database.py
+   which will call the configure() method to populate permanent views.
+
+Running
+1. ./nasaprofiles.py
+2. visit domain:port/search (tornado listens on * so it doesnt matter
+   where you connect from)

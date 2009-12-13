@@ -1,0 +1,13 @@
+{% extends base.html %}
+
+{% block body %}
+
+<form action="/search" method="post">
+<label for="query">Search for a NASA person</label><br>
+<input type="text" name="query"><br>
+<label for="center">Select a Center or Centers for your Search</label><br>
+<input type="checkbox" name="arc">Ames Research Center<br>
+<input type="submit" value="Find me some Space Peeps!">
+</form>
+
+{% end %}

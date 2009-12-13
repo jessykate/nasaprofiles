@@ -34,15 +34,20 @@ class PersonHandler(tornado.web.RequestHandler):
         if uid in db:
             local_fields = db[uid]
             profile.update(local_fields.copy())            
-
-        # remove profile fields that we dont want to render. 
-        profile.pop('_id')
-        profile.pop('_rev')
-        self.render('templates/person.html', title='', profile=profile)
+            # remove profile fields that we dont want to render.
+            profile.pop('_id')
+            profile.pop('_rev')
 
         # gravatar
-                
-        # display "is this you?"        
+        
+        self.render('templates/person.html', title='', profile=profile)
+        
+    def gravatar(email):
+        size = 150
+        base = "http://www.gravatar.com/avatar.php?"
+        url = base + urllib.urlencode({'gravatar_id':hashlib.md5(email).hexdigest(), 
+                                       'size':str(size)})        
+        urllib2.urlopen(url)
 
 class EditHandler(tornado.web.RequestHandler):
     pass

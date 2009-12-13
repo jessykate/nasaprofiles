@@ -4,7 +4,7 @@ Dependencies:
 2. python-couchdb
 
 Settings:
-1. in nasaprofiles.py, set the host domain in settings
+1. in nasaprofiles.py, customize the settings as appropriate. 
 
 2. the first the the app is run, if any views are defined, then run
    the database file standalone:

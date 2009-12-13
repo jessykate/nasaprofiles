@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import urllib2, urllib, re, time, hashlib, uuid
-import smtplib
+import smtplib, os
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 try:
@@ -42,6 +42,7 @@ class PersonHandler(tornado.web.RequestHandler):
             profile = doc.copy()
         else:
             # create a new record
+            profile['x500_url'] = url
             db[uid] = profile
         # remove profile fields that we dont want to render.
         profile.pop('_id')
@@ -69,18 +70,26 @@ class PersonHandler(tornado.web.RequestHandler):
 class EditRequestHandler(tornado.web.RequestHandler):
     def get(self, uid):
         db = settings['db']
-        # generate a one-time hash
+        # generate a one-time hash. these are stored in the database
+        # as uuid --> uid key-value pairs, so that the uuid is an
+        # index which returns the uid which the user is logging into
+        # as.
         if not 'edit_requests' in db:
             db['edit_requests'] = {}
         edit_requests = db['edit_requests']
-        edit_requests[uid] = str(uuid.uuid4())
+        onetime_uuid = str(uuid.uuid4())
+        edit_requests[onetime_uuid] = uid
         db['edit_requests'] = edit_requests
         user = db[uid]
         email = user['Internet Addresses'][0]
         
         # construct and send the email
-        text = '''Please click the following link to update your information:\n"%s/login/%s"''' % (settings['domain'], edit_requests[uid])
-        html = '''<html><p>Please click the following link to update your information:<br><a href="%s/login/%s"></a></p></html>''' % (settings['domain'], edit_requests[uid])
+        base = 'http://'+settings['domain']
+        if settings['port'] != 80:       
+            base += ':'+settings['port']
+        edit_url = base+'/login/'+onetime_uuid
+        text = '''Please click the following link to update your information:\n%s''' % edit_url
+        html = '''<html><p>Please click the following link to update your information:<br><a href="%s">%s</a></p></html>''' % (edit_url, edit_url)
         part1 = MIMEText(text, 'text')
         part2 = MIMEText(html, 'html')
         msg = MIMEMultipart('alternative')
@@ -89,11 +98,25 @@ class EditRequestHandler(tornado.web.RequestHandler):
         msg['Subject'] = '[NASA Profiles] Update your Information'
         msg['From'] = 'profiles@opennasa.com'
         msg['To'] = email
-        s = smtplib.SMTP('localhost')
+        s = smtplib.SMTP('smtp.gmail.com:587')
+        s.starttls()
+        s.login(settings['smtp_user'], settings['smtp_pass'] )
         s.sendmail(msg['From'], msg['To'], msg.as_string())
         s.quit()
         self.write('An email with one-time login has been sent to your email address at %s' % email)
-        
+
+class LoginHandler(tornado.web.RequestHandler):
+    def get(self, uuid):
+        ''' check the uuid and compare it against active edit_requests
+        in the data store.'''
+        db = settings['db']
+        edit_requests = db['edit_requests']
+        if uuid in edit_requests:
+            uid = edit_requests[uuid]
+            person = db[uid]
+            self.write('you will edit the profile for %s' % person['Name'][0])
+        else:
+            self.write('Could not find that record')
 
 class EditHandler(tornado.web.RequestHandler):
     # update any new fields
@@ -175,6 +198,8 @@ settings = {
     'db':Database().connect(),
     'domain': 'localhost',
     'port': 8989,
+    'smtp_user': 'jessy.cowansharp@gmail.com',
+    'smtp_pass': open('/home/jessy/.gmailpw').read().strip(),
 }
 
 application = tornado.web.Application([
@@ -182,6 +207,7 @@ application = tornado.web.Application([
         # XXX FIXME this regex probably wouldnt support many names
         (r'/person/([A-Za-z0-9\+,\-%]+)', PersonHandler),
         (r'/edit/([A-Za-z0-9\+,\-%]+)', EditRequestHandler),
+        (r'/login/([A-Za-z0-9\\-]+)', LoginHandler),
         ], **settings)
 
 

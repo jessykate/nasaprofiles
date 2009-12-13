@@ -1,12 +1,16 @@
 todo:
-* add center selection in search form
+* make one-time login work link-wise
+* 
+* tie into into tornado auth system; wrap edit view in auth. 
+* build the profile edit page
 * PersonHandler: We should be able to detect if the person is in our
-  local database BEFORE we hit the remote x500 server.
+  local database BEFORE we hit the remote x500 server. (store a hash
+  of the url with each user record)
+* add center selection in search form
 * use secure cookies
 * mark primary email, name, etc. 
 * user click to manually cause x500 field update
 * default gravatar (plus remove fallback email)
-* one-time login to edit your profile
 * add google-analytics
 * option to override x500 info
 * make the url /person/somename/ work directly

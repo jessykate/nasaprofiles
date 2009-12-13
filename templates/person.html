@@ -3,10 +3,15 @@
 {% block body %}
 
 <h2>{{ profile['Name'][0]}}</h2>
-{% profile.pop('Name') %}
 
-<!-- pass all the info we have to the template. some of the values in
-the profile dict are strings, and some are lists, so careful :). -->
+<!-- 
+
+profile data:
+
+some of the values in the profile dict are strings, and some are
+lists, so careful :). 
+
+-->
 
 {% for field, values in profile.iteritems() %}
 {% if isinstance(values, str) %}
@@ -19,4 +24,10 @@ the profile dict are strings, and some are lists, so careful :). -->
    {% end %} <!-- end for -->
 {% end %} <!-- end else -->
 {% end %} <!-- end for -->
+
+<!-- gravatar -->
+
+<!-- is this you? -->
+<p>Is this you? Click <a href="">here</a> to edit</p>
+
 {% end %} <!-- end block -->

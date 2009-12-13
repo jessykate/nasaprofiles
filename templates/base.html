@@ -3,7 +3,11 @@
      <title>{% block title %}{{ title }}{% end %}</title>
    </head>
    <body>     
-     {% block header %}{% end %}
+     {% block header %}
+     <div class="header" border="1">
+       <a href="/search">New Search</a>
+     </div>
+     {% end %}
      {% block body %}{% end %}
      {% block footer %}{% end %}
    </body>

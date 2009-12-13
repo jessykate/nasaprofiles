@@ -1,6 +1,12 @@
 #!/usr/bin/python
 
-import urllib2, urllib, re, time, json
+import urllib2, urllib, re, time, 
+
+try:
+    import json
+except:
+    import simplejson as json
+
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
@@ -24,8 +30,7 @@ class PersonHandler(tornado.web.RequestHandler):
 
         # see if we have any local info. if so, display it. 
         all_docs = db.view('main/all_docs')
-        self.write(str(type(all_docs)))
-        print all_docs
+
         #if parser.profile_fields['Unique Identifier'] in all_docs
 
         # gravatar

@@ -4,6 +4,11 @@
 
 <h2>{{ profile['Name'][0]}}</h2>
 
+<!-- gravatar -->
+<p class="gravatar">
+<img src="{{ gravatar_url }}">
+</p>
+
 <!-- 
 
 profile data:
@@ -24,8 +29,6 @@ lists, so careful :).
    {% end %} <!-- end for -->
 {% end %} <!-- end else -->
 {% end %} <!-- end for -->
-
-<!-- gravatar -->
 
 <!-- is this you? -->
 <p>Is this you? Click <a href="">here</a> to edit</p>

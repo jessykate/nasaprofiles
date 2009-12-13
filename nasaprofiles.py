@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import urllib2, urllib, re, time, hashlib
+import urllib2, urllib, re, time, hashlib, helper
 try:
     import json
 except:
@@ -43,7 +43,7 @@ class PersonHandler(tornado.web.RequestHandler):
         # for now.
         email = profile['Internet Addresses'][0]
         self.render('templates/person.html', title=profile['Name'], 
-                    gravatar_url=self.gravatar_url(email), profile=profile)
+                    gravatar_url=self.gravatar_url(email), profile=profile, map=helper.map)
         
     def gravatar_url(self, email):
         size = 150

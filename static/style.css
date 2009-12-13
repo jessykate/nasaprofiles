@@ -123,7 +123,7 @@ a img {
 	height: 35px;
 	margin-left: 160px;
 	padding: 0;
-	background: url(images/menu_bg.gif) repeat-x 0 bottom;
+	background: url(http://www.opennasa.com/wp-content/themes/typebased/images/menu_bg.gif) repeat-x 0 bottom;
 }
 
 #menu ul li {
@@ -202,7 +202,7 @@ text-decoration: none;}
 /* Content Area - Content and Sidebar */
 
 .background {
-	background: #F5F5F5 url(images/content_bg.gif) repeat-y right top;
+	background: #F5F5F5 url(http://www.opennasa.com/wp-content/themes/typebased/images/content_bg.gif) repeat-y right top;
 }
 
 /* Content */

@@ -15,14 +15,14 @@
     <ul class="wrap">
         <a href="/search">New Search</a>
 </div>
-
-<h2>{{ profile['Name'][0]}}</h2>
-
+<div id="content" class="left-col wrap">
+    
 <!-- gravatar -->
 <p class="gravatar">
 <img src="{{ gravatar_url }}">
 </p>
 
+<h1>{{ profile['Name'][0]}}</h1>
 <!-- 
 
 profile data:
@@ -46,6 +46,20 @@ lists, so careful :).
 
 <!-- is this you? -->
 <p>Is this you? Click <a href="">here</a> to edit</p>
+</div>
+<div id="sidebar" class="right-col">
+<h2> Google Maps</h2>
+
+<img src="{{ map('ARC')}}"/>
+
+
+<h2>Follow {{ profile['Name'][0]}} on Twitter</h2>
+
+
+<h2>Connect {{ profile['Name'][0]}} via Facebook</h2>
+
+
+</div>
 </div>
 </div>
 {% end %} <!-- end block -->

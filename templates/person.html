@@ -10,7 +10,22 @@
 
     <img src="{{ gravatar_url }}" class="photo" alt="gravatar" />
     <span class="fn">{{ profile['Name'][0] }}</span>
-    <div class="org">[[Ames Research Center - Nebula Project]]</div>
+    
+    <div class="category">
+      {% if profile.has_key('category') %}  
+        {{ profile['category'] }}   
+      {% end %}      
+    </div>
+    
+    <div class="org">
+      {% if profile.has_key('title') %}  
+        {{ profile['title'][0] }}   
+      {% end %}
+      
+      {% if profile.has_key('main_project') %}  
+        {{ profile['main_project'][0] }}   
+      {% end %}
+    </div>
 
     <div class="contact">
       {% if profile.has_key('Internet Addresses') %}
@@ -22,104 +37,121 @@
           <span class="value">{{ profile['Phone'][0] }}</span>
         </span>
       {% end %}
+      {% if profile.has_key('Pager Telephone Number') %}
+        <span class="tel">
+          <span class="type">mobile</span>:
+          <span class="value">{{ profile['Pager Telephone Number'][0] }}</span>
+        </span>
+      {% end %}
     </div>         
   </div>
   
+  {% if profile.has_key('bio') %}  
   
-  <div class="wide_block">
-    <h3>Biography</h3>
-    <p>Description of role on project</p>
-  </div>
+    <div class="wide_block">
+      <h3>Biography</h3>
+      <p>{{ profile['bio'][0] }}</p>
+    </div>
+  {% end %}
+
+  {% if profile.has_key('main_project_description') %}  
   
-  <div class="wide_block">
-    <h3>ProjectName</h3>
-    <a href="#">http://project.com</a>
-    <p>Description of role on project</p>
-  </div>
-
+    <div class="wide_block">
+      <h3>{{ profile['main_project'][0] }}</h3>
+      
+      {% if profile.has_key('main_project_web') %} 
+        <a href="http://{{ profile['main_project_web'][0] }}">{{ profile['main_project'][0] }} Website</a>
+      {% end %}
+      
+      <p>{{ profile['main_project_description'][0] }}</p>
+    </div>
+  {% end %}
   
+  
+  {% if profile.has_key('skills') %}  
+    <div class="narrow_block">
+      <h3>Skills</h3>
+        {{ profile['skills'] }}
+    </div>
+  {% end %}
 
-  <div class="narrow_block">
-    <h3>Skills</h3>
-    [insert tagcloud here]
-  </div>
+  {% if profile.has_key('tags') %}  
+    <div class="narrow_block">
+      <h3>Tags</h3>
+        {{ profile['tags'] }}
+    </div>
+  {% end %}
 
-  <div class="narrow_block">
-    <h3>Tags</h3>
-    [insert tagcloud here]
-  </div>
+  {% if profile.has_key('previous_projects') %}  
+    <div class="narrow_block">
+      <h3>Previous Projects</h3>
+        {{ profile['previous_projects'] }}
+    </div>
+  {% end %}
 
-  <div class="narrow_block">
-    <h3>Previous Projects</h3>
-    <ul>
-      <li>Project 1</li>
-      <li>project 2</li>
-    </ul>
-  </div>
-
-  <div class="narrow_block">
-    <h3>Side Projects</h3>
-    <ul>
-      <li>Project 1</li>
-      <li>project 2</li>
-    </ul>
-  </div>
-  <div class=" narrow_block">
-    <h3>Address</h3>
-    <address>
-      Code I - Office of the CIO<br />
-      Building 122, Room 255<br />
-      (202) 260-3967 - office<br />
-      <br />
-      NASA Ames Research Center<br />
-      M/S 133-3<br />
-      Moffett Field, CA 95053
-    </address>
-
-  </div>
+  {% if profile.has_key('side_projects') %}  
+    <div class="narrow_block">
+      <h3>Side Projects</h3>
+        {{ profile['side_projects'] }}
+    </div>
+  {% end %}
+  
+  {% if profile.has_key('Postal Address') or profile.has_key('building') %} 
+    <div class=" narrow_block">
+      <h3>Address</h3>
+      <address>
+        {% if profile.has_key('office') %}  
+          {{ profile['office'] }}<br />
+        {% end %}
+        
+        {% if profile.has_key('building') %}
+          {{ profile['building'] }}, Room {{ profile['room_num'] }}<br /><br />
+        {% end %}
+        
+        {{ profile['Postal Address'][0] }}<br />
+        {{ profile['Postal Address'][1] }}<br />
+        {{ mailing(profile['Postal Address'][0]) }}
+      </address>
+    </div>
+  {% end %}
 
   <div class=" narrow_block">
     <h3>Other Information</h3>
-    <ul>
-      <li>Employer: Mission Critical Technologies</li>
-      <li>Hire Date: September 17, 2009</li>
-      <li>Personal Blog: <a href="http://blog.quaternia.net">http://blog.quaternia.net</a></li>
-    </ul>
+    {% if profile.has_key('User Class') %}  
+      {{ profile['User Class'][0] }}<br />
+    {% end %}
+    {% if profile.has_key('hire_date') %}  
+      {{ profile['office'] }}<br />
+    {% end %}
+    {% if profile.has_key('personal_web') %}  
+      {{ profile['office'] }}<br />
+    {% end %}
   </div>
 </div>
 
 <div id="sidebar">
   <div id="map">
-    <img src="{{ map('ARC')}}"/>
+    <img src="{{ map(profile['Postal Address'][0]) }}"class="photo"/>
+    <h3>{{ profile['Postal Address'][0] }}</h3>
   </div>
 
-  <div id="twitter">
-    Connect {{ profile['Name'][0]}} via Twitter
-  </div>
-
-  <div id="facebook">
-    Connect {{ profile['Name'][0]}} via Facebook
-  </div>
-
-  <div id="x500">
-    <p>ALL DATA</p>
-      {% for field, values in profile.iteritems() %}
-      {% if isinstance(values, str) %}
-         <h3>{{ field }}</h3><br>
-         {{ values }}
-      {% else %}
-         <h3>{{ field }}</h3> 
-         {% for value in values %}
-            {{ value }}<br>
-         {% end %} <!-- end for -->
-      {% end %} <!-- end else -->
-      {% end %} <!-- end for -->
-  </div>
-
+  {% if profile.has_key('twitter') %}  
+    <div id="twitter">
+      Follow @{{ profile['twitter'][0]}} on Twitter
+    </div>
+  {% end %}
+    
+  {% if profile.has_key('facebook') %}  
+    <div id="facebook">
+      Connect with {{ profile['Name'][0]}} via Facebook
+    </div>
+  {% end %}
 
   <!-- is this you? -->
-  <p>Is this you? Click <a href="{{ edit_request }}">here</a> to edit</p>
-
+  <div id="edit_alert">
+    Are you {{ profile['Name'][0] }}? Click <a href="{{ edit_request }}">here</a> to edit your profile.
+  </div>
+  
 </div>
 
 {% end %} <!-- end block -->

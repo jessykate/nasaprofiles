@@ -68,7 +68,7 @@ class PersonHandler(BaseHandler):
         # save the uid for the edit request.
         edit_request = '/request/'+uid
         self.render('templates/person.html', title=profile['Name'], edit_request=edit_request,
-                    gravatar_url=self.gravatar_url('jk@f00d.org'), profile=profile, map=helper.map)
+                    gravatar_url=self.gravatar_url('jk@f00d.org'), profile=profile, map=helper.map, mailing=helper.mailing)
         
     def gravatar_url(self, email, size=125):
         base = "http://www.gravatar.com/avatar.php?"
@@ -118,6 +118,7 @@ class EditRequestHandler(BaseHandler):
         message = 'An email with one-time login has been sent to your email address at %s' % email
         print 'One-time login sent'
         self.render('templates/email_notify.html', message=message)
+        return
 
 class LoginHandler(BaseHandler):
     def get(self, uuid):

@@ -14,21 +14,28 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 import tornado.escape
-#import tornado.web.authenticated
 import os
 from database import Database
+from settings import settings
 from x500DisplayParser import x500DisplayPageParser
 
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
         return self.get_cookie("uid")
 
-
 class PersonHandler(BaseHandler):
     def get(self, name):
         db = settings['db']
+
+        print 'search results 1'
+        print self.get_cookie('search_results')
+        print '============================='
+
         search_results = tornado.escape.json_decode(tornado.escape.url_unescape(self.get_cookie('search_results')))
 
+        print 'search_results 2'
+        print str(search_results)
+        print '=============='
         # check if we already have this person's record. if so, then
         # it contains both the x500 info AND any local extensions.
         existing_profiles = db.view('main/existing_profiles')
@@ -61,7 +68,8 @@ class PersonHandler(BaseHandler):
         # get gravatar. use the first email address as the defaul for
         # now.
         try:
-            email = profile['Internet Addresses'][0]
+            # gravatar uses hashes-- cases sensitive
+            email = profile['Internet Addresses'][0].lower()
         except:
             email = "empty@opennasa.com"
 
@@ -110,13 +118,18 @@ class EditRequestHandler(BaseHandler):
         msg['Subject'] = '[NASA Profiles] Update your Information'
         msg['From'] = 'profiles@opennasa.com'
         msg['To'] = email
-        #s = smtplib.SMTP('smtp.gmail.com:587')
-        #s.starttls()
-        #s.login(settings['smtp_user'], settings['smtp_pass'] )
-        #s.sendmail(msg['From'], msg['To'], msg.as_string())
-        #s.quit()
-        message = 'An email with one-time login has been sent to your email address at %s' % email
-        print 'One-time login sent'
+        if settings['email_enabled']:
+            s = smtplib.SMTP('smtp.gmail.com:587')
+            s.starttls()
+            s.login(settings['smtp_user'], settings['smtp_pass'] )
+            s.sendmail(msg['From'], msg['To'], msg.as_string())
+            s.quit()
+            message = 'An email with one-time login has been sent to your email address at %s' % email
+            print 'One-time login sent'
+        elif settings['debug']:
+            # careful with this-- it will allow anyone to log into any
+            # profile to edit its fields. 
+            message = 'Click <a href="%s">here</a> to log in.' % edit_url
         self.render('templates/email_notify.html', message=message)
         return
 
@@ -141,6 +154,7 @@ class LogoutHandler(BaseHandler):
     def get(self):
         if self.current_user:
             self.clear_cookie("uid")
+            self.set_cookie("message","You were successfully logged out")
         self.redirect('/')
 
 class EditHandler(BaseHandler):
@@ -158,14 +172,24 @@ class EditHandler(BaseHandler):
 class RefreshHandler(BaseHandler):
     pass
 
-class SearchHandler(BaseHandler):
+class MainHandler(BaseHandler):
     def post(self):
         # pull in x500 data
         query = self.get_argument("query")
         results = self.x500_search(query)
+        print 'query'
+        print query
+        print 'results'
+        print results
+        print '---------------'
 
         # save the search results in a session variable
         json = tornado.escape.url_escape(tornado.escape.json_encode(results))
+
+        print 'json'
+        print json
+        print '---------------'
+
         self.set_cookie('search_results', json)
 
         # if there's only one search result, redirect to the display
@@ -180,8 +204,8 @@ class SearchHandler(BaseHandler):
 
     def get(self):
         # present user w search form
-        self.set_header("Content-Type", "text/html")
-        self.render('templates/search.html', title='Search for your NASA Homies')
+        self.render('templates/index.html', title='Search for your NASA Homies', 
+                    message = self.get_cookie("message"))
 
     def x500_search(self, query):
         # base url searches for entries in country = US and org = NASA
@@ -227,17 +251,8 @@ class SearchHandler(BaseHandler):
 ######################################################
 ######################################################
 
-settings = {
-    'db':Database().connect(),
-    "static_path": os.path.join(os.path.dirname(__file__), "static"),
-    'domain': 'localhost',
-    'port': 8989,
-    #'smtp_user': 'jessy.cowansharp@gmail.com',
-    #'smtp_pass': open('/home/jessy/.gmailpw').read().strip(),
-}
-
 application = tornado.web.Application([
-        (r'/', SearchHandler),
+        (r'/', MainHandler),
         # XXX FIXME this regex probably wouldnt support many names
         (r'/person/([A-Za-z0-9\+,\-%]+)', PersonHandler),
         (r'/person/([A-Za-z0-9\+,\-%]+/refresh)', RefreshHandler),
@@ -251,7 +266,7 @@ application = tornado.web.Application([
 if __name__ == '__main__':
 
     # make sure the couchdb views are up to date
-    Database().configure()
+    # Database().configure()
 
     # start tornado
     http_server = tornado.httpserver.HTTPServer(application)

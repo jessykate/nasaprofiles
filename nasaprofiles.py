@@ -28,7 +28,7 @@ class PersonHandler(BaseHandler):
     def get(self, name):
         db = settings['db']
         search_results = tornado.escape.json_decode(tornado.escape.url_unescape(self.get_cookie('search_results')))
-        
+
         # check if we already have this person's record. if so, then
         # it contains both the x500 info AND any local extensions.
         existing_profiles = db.view('main/existing_profiles')
@@ -57,23 +57,23 @@ class PersonHandler(BaseHandler):
         profile.pop('x500_url')
         profile.pop('_id')
         profile.pop('_rev')
-        
+
         # get gravatar. use the first email address as the defaul for
         # now.
         try:
             email = profile['Internet Addresses'][0]
         except:
-            email = "empty@opennasa.com"        
-            
+            email = "empty@opennasa.com"
+
         # save the uid for the edit request.
         edit_request = '/request/'+uid
         self.render('templates/person.html', title=profile['Name'], edit_request=edit_request,
-                    gravatar_url=self.gravatar_url('jk@f00d.org'), profile=profile, map=helper.map, mailing=helper.mailing)
-        
+                    gravatar_url=self.gravatar_url(email), profile=profile, map=helper.map, mailing=helper.mailing)
+
     def gravatar_url(self, email, size=125):
         base = "http://www.gravatar.com/avatar.php?"
-        return base+urllib.urlencode({'gravatar_id':hashlib.md5(email).hexdigest(), 
-                                      'size':str(size)})                
+        return base+urllib.urlencode({'gravatar_id':hashlib.md5(email).hexdigest(),
+                                      'size':str(size)})
 
 
 class EditRequestHandler(BaseHandler):
@@ -94,10 +94,10 @@ class EditRequestHandler(BaseHandler):
         db['edit_requests'] = edit_requests
         user = db[uid]
         email = user['Internet Addresses'][0]
-        
+
         # construct and send the email
         base = 'http://'+settings['domain']
-        if settings['port'] != 80:       
+        if settings['port'] != 80:
             base += ':'+str(settings['port'])
         edit_url = base+'/login/'+onetime_uuid
         text = '''Please click the following link to update your information:\n%s''' % edit_url
@@ -146,7 +146,7 @@ class LogoutHandler(BaseHandler):
 class EditHandler(BaseHandler):
 
     @tornado.web.authenticated
-    def get(self):        
+    def get(self):
         db = settings['db']
         uid = self.get_current_user()
         current_profile = db[uid]
@@ -164,7 +164,7 @@ class SearchHandler(BaseHandler):
         query = self.get_argument("query")
         results = self.x500_search(query)
 
-        # save the search results in a session variable   
+        # save the search results in a session variable
         json = tornado.escape.url_escape(tornado.escape.json_encode(results))
         self.set_cookie('search_results', json)
 
@@ -196,7 +196,7 @@ class SearchHandler(BaseHandler):
         level2 = 'Organization'
         level1 = 'Country'
         style = 'Substring'
-        request = urllib.urlencode({'NAME':query, 'ORG':org, 'COUNTRY':country, 
+        request = urllib.urlencode({'NAME':query, 'ORG':org, 'COUNTRY':country,
                                     'SUBTREE':subtree, 'TYPE':type, 'LEVEL2':level2,
                                     'LEVEL1':country, 'STYLE':style})
         html = urllib2.urlopen(base_url, request)
@@ -206,7 +206,7 @@ class SearchHandler(BaseHandler):
         ''' scrape through x500 search results and build a set of
         structured results.'''
         contents = ''.join(html.readlines())
-        links = re.findall(r'''http://x500root.nasa.gov:80/cgi\-bin/wlDisplay/cn%3d.*">.*</a>''', 
+        links = re.findall(r'''http://x500root.nasa.gov:80/cgi\-bin/wlDisplay/cn%3d.*">.*</a>''',
                            contents, re.IGNORECASE)
         # we match on everything up to the ending quote and '>' symbol,
         # just to be certain we're not matching on a quote in the url
@@ -214,15 +214,15 @@ class SearchHandler(BaseHandler):
         # strip them off.
         results = {}
         for link in links:
-            link = link.strip('</aA>')        
-            url, name = link.rsplit('>')        
+            link = link.strip('</aA>')
+            url, name = link.rsplit('>')
 
             # properly encode the urls
             url = tornado.escape.url_escape(url.strip('">'))
             name = tornado.escape.url_escape(name.strip())
             results[name] = url
         return results
-        
+
 
 ######################################################
 ######################################################

@@ -1,0 +1,93 @@
+{% extends base.html %}
+
+{% block body %}
+
+<h2>Hi {{ current_profile['Name'][0] }}! </h2>
+
+<i>You will be logged in until you click <a href="/logout">logout</a> or close this browser session.</i>
+<h3>Share your info: connect faster, collaborate better</h3>
+
+<p>All fields are optional</p>
+
+<p><form>
+<label for="bio">A brief Bio</label><br>
+<textarea name="bio" width=300 height=100></textarea><br>
+
+<label for="tags">Tags (comma separated)</label><br>
+<input type="text" name="tags"><br>
+
+<label for="skills">Skills (comma separated)</label><br>
+<input type="text" name="skills"><br>
+
+<label for="skills">Twitter ID</label><br>
+<input type="text" name="twitter"><br>
+
+<label for="personal_web">Your Website: </label><input type="text" name="personal_web"><br>
+
+<label for="hire_date">Hire Date at NASA (Need a date-select)</label><br>
+<input type="text" name="hire_date"><br>
+
+<label for="title">Your Current Job Title</label><br>
+<input type="text" name="title"><br>
+
+<label for="main_project_name">Main Project: </label><input type="text" name="main_project_name"><br>
+<label for="main_project_web">Project Website: </label><input type="text" name="main_project_web"><br>
+<label for="main_project_description">Description</label><br>
+<textarea name="main_project_description" width=300 height=100></textarea><br>
+
+<label for="title">Building: </label><input type="text" name="building"><br>
+<label for="title">Room Number: </label><input type="text" name="room_num"><br>
+
+<label for="side_projects">List any side projects you'd like to share:</label><br>
+<textarea name="side_projects" width=300 height=100></textarea><br>
+
+<label for="previous_projects">Previous Projects You've Worked On</label><br>
+<textarea name="previous_projects" width=300 height=100></textarea><br>
+
+<label for="category">Job Category (this helps people find you using search)</label><br>
+<select>
+  <option id="blank" selected></option>
+  <option id="developer">Developer</option>
+  <option id="scientist">Scientist</option>
+  <option id="engineer">Engineer</option>
+  <option id="management">Management</option>
+  <option id="center_ops">Center Operations</option>
+  <option id="mission_ops">Mission Operations</option>
+  <option id="admin">Administrative</option>
+  <option id="legal">Legal</option>
+  <option id="finance">Finance</option>
+  <option id="communications">Communications</option>
+</select>
+
+
+<input type="submit" value="Share">
+</form></p>
+
+<!-- Fields:
+building
+room_num
+bio
+tags
+skills
+hire_date
+title
+main_project_name
+main_project_description
+main_project_web
+side_projects
+personal_web
+previous_projects
+category = [
+ Developer
+ Scientist
+ Engineer
+ Management
+ Center Operations
+ Mission Operations
+ Administrative
+ Legal
+ Finance/Procurement
+ Communications
+-->
+
+{% end %}

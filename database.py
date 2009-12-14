@@ -30,11 +30,19 @@ class Database(object):
         # define/update the views
         all_docs_fun = '''
         function(doc) {
-          emit(uid, doc);
+          emit(doc._id, doc);
         }
         '''
         all_docs_view = ViewDefinition('main', 'all_docs', all_docs_fun )
         all_docs_view.sync(self.db)
+
+        existing_profiles_fun = '''
+        function(doc) {
+          emit(doc.x500_url, doc._id);
+        }
+        '''
+        existing_profiles_view = ViewDefinition('main', 'existing_profiles', existing_profiles_fun )
+        existing_profiles_view.sync(self.db)        
 
 if __name__ == '__main__':
     database = Database()

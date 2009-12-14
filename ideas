@@ -1,20 +1,22 @@
 todo:
-* make one-time login work link-wise
-* 
-* tie into into tornado auth system; wrap edit view in auth. 
 * build the profile edit page
-* PersonHandler: We should be able to detect if the person is in our
-  local database BEFORE we hit the remote x500 server. (store a hash
-  of the url with each user record)
+* edit button on your OWN page should not requie email if already logged in
+* pre-propulate fields with existing info
 * add center selection in search form
 * use secure cookies
 * mark primary email, name, etc. 
-* user click to manually cause x500 field update
-* default gravatar (plus remove fallback email)
+* User object
+  * convert User class to two fields
+  * 
+* uservoice feedback button
 * add google-analytics
+
+* user click to manually cause x500 field update
 * option to override x500 info
+* default gravatar (plus remove fallback email)
 * make the url /person/somename/ work directly
 * search by tag, keyword etc. 
+* why is the map not loading sometimes?
 
 future features:
 * show a map with locations of contacts (eg. search results or
@@ -30,6 +32,11 @@ future features:
 
 done:
 * pull in gravatars
+* detect if the person is in our local database BEFORE we hit the
+  remote x500 server.
+* make one-time login work link-wise
+* tie into into tornado auth system; wrap edit view in auth. 
+* atuomatically redirect single search results to display page
 
 example nasa ldap stuff (from linton)
 http://babelfish.arc.nasa.gov/trac/dashlink/browser/main/trunk/ivhm/utils/helper.py

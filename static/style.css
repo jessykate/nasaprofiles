@@ -40,13 +40,11 @@ h6 {
     margin-top: 0px;
 }
 #slogan {
-    padding:0 0 0 400px;
-    width:500px;
+    text-align: center;
 }
 
 #tagline {
-    padding:0 0 0 558px;
-    width:500px;
+    text-align: center;
     margin-bottom: 120px;
 }
 
@@ -86,7 +84,7 @@ ul#nav li a:hover {
 }
 
 #search_home{
-    width: 915px;
+    width: 985px;
     min-height: 500px;    
 }
 

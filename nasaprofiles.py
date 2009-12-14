@@ -60,7 +60,7 @@ class PersonHandler(tornado.web.RequestHandler):
         # save the uid for the edit request.
         edit_request = '/edit/'+uid
         self.render('templates/person.html', title=profile['Name'], edit_request=edit_request,
-                    gravatar_url=self.gravatar_url('jk@f00d.org'), profile=profile, map=helper.map)
+                    gravatar_url=self.gravatar_url('jk@f00d.org'), profile=profile, map=helper.map, mailing=helper.mailing)
         
     def gravatar_url(self, email, size=125):
         base = "http://www.gravatar.com/avatar.php?"

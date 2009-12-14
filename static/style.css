@@ -172,6 +172,14 @@ img.photo {
 	padding: 0;
 }
 
+#edit_alert{
+    background-color: #F5E39C;
+    text-align:center;
+    float: left;
+    width: 325px;
+    margin: 10px;
+}
+
 #footer {
 	color: #ccc;
 	border-top: 1px dotted #999;

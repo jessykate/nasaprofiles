@@ -110,7 +110,7 @@
         
         {{ profile['Postal Address'][0] }}<br />
         {{ profile['Postal Address'][1] }}<br />
-        Moffett Field, CA 95053
+        {{ mailing(profile['Postal Address'][0]) }}
       </address>
     </div>
   {% end %}
@@ -118,7 +118,7 @@
   <div class=" narrow_block">
     <h3>Other Information</h3>
     {% if profile.has_key('User Class') %}  
-      {{ profile['User Class'] }}<br />
+      {{ profile['User Class'][0] }}<br />
     {% end %}
     {% if profile.has_key('hire_date') %}  
       {{ profile['office'] }}<br />
@@ -131,7 +131,7 @@
 
 <div id="sidebar">
   <div id="map">
-    <img src="{{ map('ARC')}}"class="photo"/>
+    <img src="{{ map(profile['Postal Address'][0]) }}"class="photo"/>
     <h3>{{ profile['Postal Address'][0] }}</h3>
   </div>
 
@@ -148,8 +148,10 @@
   {% end %}
 
   <!-- is this you? -->
-  <p>Is this you? Click <a href="{{ edit_request }}">here</a> to edit</p>
-
+  <div id="edit_alert">
+    Are you {{ profile['Name'][0] }}? Click <a href="{{ edit_request }}">here</a> to edit your profile.
+  </div>
+  
 </div>
 
 {% end %} <!-- end block -->

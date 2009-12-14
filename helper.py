@@ -53,38 +53,42 @@
 # }
 
 
-Mailing = {
-    "ARC": "Moffett Field, California 94035",
-    "DFRC": "4800 Lilly Drive, Edwards, California 93523-0273",
-    "GRC": "21000 Brookpark Rd, Cleveland, OH 44135",
-    "GSFC": "Greenbelt, MD 20771",
-    "GISS": "2880 Broadway, New York, NY",
-    "IVV": "100 University Dr Fairmont, WV 26554",
-    "JPL": "4800 Oak Grove Drive, Pasadena, California 91109",
-    "JSC": "Houston, TX 77058",
-    "KSC": "FL 32899-0001",
-    "LaRC": "Hampton, Virginia 23681",
-    "MSFC": "One Tranquility Base, Huntsville, AL 35805",
-    "HQ": "300 E Street SW, Washington, DC 20546",
-    "NSSC": "Building 1111 C Road, MS 39529",
-    "SSC": "MS,39529",
-    "WFF": "VA 23337",
-    "WSTF": "12600 NASA Road Las Cruces, NM 88012"
+Address = {
+    "NASA Ames Research Center": "Moffett Field, California 94035",
+    "NASA Dryden Flight Research Center": "4800 Lilly Drive, Edwards, California 93523-0273",
+    "NASA Glenn Research Center": "21000 Brookpark Rd, Cleveland, OH 44135",
+    "NASA Goddard Space Flight Center": "Greenbelt, MD 20771",
+    "NASA Global Institute of Space Studies": "2880 Broadway, New York, NY",
+    "NASA Fairmont IVV Facility": "100 University Dr Fairmont, WV 26554",
+    "NASA Jet Propulsion Laboratory": "4800 Oak Grove Drive, Pasadena, California 91109",
+    "NASA Johnson Space Center": "Houston, TX 77058",
+    "NASA Kennedy Space Center": "FL 32899-0001",
+    "NASA Langley Research Center": "Hampton, Virginia 23681",
+    "NASA Marshall Spaceflight Center": "One Tranquility Base, Huntsville, AL 35805",
+    "NASA Headquarters": "300 E Street SW, Washington, DC 20546",
+    "NASA Shared Services Center": "Building 1111 C Road, MS 39529",
+    "NASA Stennis Space Center": "MS,39529",
+    "NASA Wallops Flight Facility": "VA 23337",
+    "NASA White Sands Test Facility": "12600 NASA Road Las Cruces, NM 88012"
 }
 
 
 Centers = {
-    "ARC": "label:ARC|37.411870,-122.062333",
-    "DFRC": "label:DFRC|34.901944,-117.891026",
-    "GSFC": "label:GSFC|38.995938,-76.851768",
-    "JPL": "label:JPL|34.203138,-118.172207",
-    "JSC": "label:JSC|29.560726,-95.093365",
-    "KSC": "label:KSC|28.58583,-80.651321",
-    "GRC": "label:GRC|41.412728,-81.862178",
-    "LaRC": "label:LaRC|37.102681,-76.385536",
-    "SSC": "label:SSC|30.302121,-89.594879",
-    "HQ": "label:HQ|38.883128,-77.016413"
+    "NASA Ames Research Center": "label:ARC|37.411870,-122.062333",
+    "NASA Dryden Flight Research Center": "label:DFRC|34.901944,-117.891026",
+    "NASA Goddard Space Flight Center": "label:GSFC|38.995938,-76.851768",
+    "NASA Jet Propulsion Laboratory": "label:JPL|34.203138,-118.172207",
+    "NASA Johnson Space Center": "label:JSC|29.560726,-95.093365",
+    "NASA Kennedy Space Center": "label:KSC|28.58583,-80.651321",
+    "NASA Glenn Research Center": "label:GRC|41.412728,-81.862178",
+    "NASA Langley Research Center": "label:LaRC|37.102681,-76.385536",
+    "NASA Stennis Space Center": "label:SSC|30.302121,-89.594879",
+    "NASA Headquarters": "label:HQ|38.883128,-77.016413"
 }
+def mailing(address):
+    mailing_address = Address[address]
+    return mailing_address
+
 
 
 def map(center):

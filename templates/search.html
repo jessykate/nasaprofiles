@@ -2,21 +2,37 @@
 
 {% block body %}
 
-<form action="/" method="post">
-<label for="query">Search for a NASA person</label><br>
-<input type="text" name="query"><br>
-<label for="center">Select a Center for your Search</label><br>
-<input type="checkbox" name="Ames%20Research%20Center">Ames Research Center<br>
-<input type="checkbox" name="Dryden%20Flight%20Research%20Center">Dryden Flight Research Center<br>
-<input type="checkbox" name="Glenn%20Research%20Center">Glenn Research Center<br>
-<input type="checkbox" name="Goddard%20Space%20Flight%20Center">Goddard Space Flight Center<br>
-<input type="checkbox" name="Headquarters">Headquarters<br>
-<input type="checkbox" name="Jet%20Propulsion%20Laboratory">Jet Propulsion Laboratory<br>
-<input type="checkbox" name="Johnson%20Space%20Center">Johnson Space Center<br>
-<input type="checkbox" name="Kennedy%20Space%20Center">Kennedy Space Center<br>
-<input type="checkbox" name="Marshall%20Space%20Flight%20Center">Marshall Space Flight Center<br>
-<input type="checkbox" name="Stennis%20Space%20Center">Stennis Space Center<br>
-<input type="submit" value="Find me some Space Peeps!">
-</form>
+  <div id="search">
+    <form action="/" method="post">
+      <label for="query">Search for a NASA person</label><br>
+      <input type="text" name="query"><br>
+      <label for="center">Select a Center for your Search</label><br>
+      <input type="checkbox" name="Ames%20Research%20Center">Ames Research Center<br>
+      <input type="checkbox" name="Dryden%20Flight%20Research%20Center">Dryden Flight Research Center<br>
+      <input type="checkbox" name="Glenn%20Research%20Center">Glenn Research Center<br>
+      <input type="checkbox" name="Goddard%20Space%20Flight%20Center">Goddard Space Flight Center<br>
+      <input type="checkbox" name="Headquarters">Headquarters<br>
+      <input type="checkbox" name="Jet%20Propulsion%20Laboratory">Jet Propulsion Laboratory<br>
+      <input type="checkbox" name="Johnson%20Space%20Center">Johnson Space Center<br>
+      <input type="checkbox" name="Kennedy%20Space%20Center">Kennedy Space Center<br>
+      <input type="checkbox" name="Marshall%20Space%20Flight%20Center">Marshall Space Flight Center<br>
+      <input type="checkbox" name="Stennis%20Space%20Center">Stennis Space Center<br>
+      <input type="submit" value="Find me some Space Peeps!">
+    </form>
+  </div>
+</div>
 
+<div id="sidebar">
+  <div id="community">
+    <a>We should have some community metrics here</a>
+    <ul>
+      <li>Number of searches</li>
+      <li>Number of updated profiles</li>
+      <li>etc ...</li>
+    </ul>
+  </div>
+</div>
+
+<div>
 {% end %}
+

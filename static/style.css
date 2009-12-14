@@ -87,6 +87,11 @@ ul#nav li a:hover {
     margin: 10px;    
 }
 
+#search {
+	float: left;
+	width: 100%;
+}
+
 #person {
 	float: left;
 	width: 100%;
@@ -163,7 +168,7 @@ img.photo {
 }
 
 .wide_block {
-	width: 600px; 
+	width: 575px; 
 	float: left;
 	margin-bottom: 20px;
 }

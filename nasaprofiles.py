@@ -110,11 +110,11 @@ class EditRequestHandler(BaseHandler):
         msg['Subject'] = '[NASA Profiles] Update your Information'
         msg['From'] = 'profiles@opennasa.com'
         msg['To'] = email
-        s = smtplib.SMTP('smtp.gmail.com:587')
-        s.starttls()
-        s.login(settings['smtp_user'], settings['smtp_pass'] )
-        s.sendmail(msg['From'], msg['To'], msg.as_string())
-        s.quit()
+        #s = smtplib.SMTP('smtp.gmail.com:587')
+        #s.starttls()
+        #s.login(settings['smtp_user'], settings['smtp_pass'] )
+        #s.sendmail(msg['From'], msg['To'], msg.as_string())
+        #s.quit()
         message = 'An email with one-time login has been sent to your email address at %s' % email
         print 'One-time login sent'
         self.render('templates/email_notify.html', message=message)
@@ -232,8 +232,8 @@ settings = {
     "static_path": os.path.join(os.path.dirname(__file__), "static"),
     'domain': 'localhost',
     'port': 8989,
-    'smtp_user': 'jessy.cowansharp@gmail.com',
-    'smtp_pass': open('/home/jessy/.gmailpw').read().strip(),
+    #'smtp_user': 'jessy.cowansharp@gmail.com',
+    #'smtp_pass': open('/home/jessy/.gmailpw').read().strip(),
 }
 
 application = tornado.web.Application([

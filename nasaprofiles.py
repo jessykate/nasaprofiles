@@ -26,7 +26,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
 class PersonHandler(BaseHandler):
     def x500_profile_search(self, query):
-        results = x500_search(query, wildcard=False)
+        results = x500_search(query, ou=None, wildcard=False)
         return results[tornado.escape.url_escape(query)]
     def get(self, name):
         db = settings['db']
@@ -169,7 +169,10 @@ class SearchHandler(BaseHandler):
     def post(self):
         # pull in x500 data
         query = self.get_argument("query")
-        results = self.x500_user_search(query)
+        center = self.get_argument("center")
+        if center == "all":
+            center = None
+        results = self.x500_user_search(query, center=center)
 
         # save the search results in a session variable
         json = tornado.escape.url_escape(tornado.escape.json_encode(results))
@@ -190,34 +193,12 @@ class SearchHandler(BaseHandler):
         self.set_header("Content-Type", "text/html")
         self.render('templates/search.html', title='Search for your NASA Homies')
 
-#    def x500_search(self, query):
-        # base url searches for entries in country = US and org = NASA
-#        base_url = "http://x500root.nasa.gov:80/cgi-bin/wlDoSearch/ou%3dAmes%20Research%20Center%2co%3dNational%20Aeronautics%20and%20Space%20Administration%2cc%3dUS"
-
-        #name = raw_input('name? >> ')
-#        org = 'National Aeronautics and Space Administration'
-#        country = 'US'
-#        subtree = 'on' # checkbox to indicate search within Ames subtree
-        # form drop down list options
-#        type = 'Full Name'
-#        level2 = 'Organization'
-#        level1 = 'Country'
-#        style = 'Substring'
-#        request = urllib.urlencode({'NAME':query, 'ORG':org, 'COUNTRY':country,
-#                                    'SUBTREE':subtree, 'TYPE':type, 'LEVEL2':level2,
-#                                    'LEVEL1':country, 'STYLE':style})
-#        html = urllib2.urlopen(base_url, request)
-#        return self.structured_results(html)
-
-
-    def x500_user_search(self, query):
-        results = x500_search(query, wildcard=True)
+    def x500_user_search(self, query, center):
+        results = x500_search(query, ou=center, wildcard=True)
         mapped = {}
 	for k, v in results.iteritems():
 		mapped[k] = v['cn'][0]
         return mapped
-
-
 
     def structured_results(self,html):
         ''' scrape through x500 search results and build a set of
@@ -240,14 +221,18 @@ class SearchHandler(BaseHandler):
             results[name] = url
         return results
 
-def x500_search(query, wildcard=True):
+def x500_search(query, ou="Ames Research Center", wildcard=True):
 	import ldap
 	l = ldap.open("x500.nasa.gov")
-	dn="ou=Ames Research Center,o=National Aeronautics and Space Administration,c=US"
-	if wildcard:
-		filter = "cn=*%s*" % (query)
+	if ou:
+		dn="ou=%s,o=National Aeronautics and Space Administration,c=US" % (ou)
 	else:
-		filter = "cn=%s" % (query)
+		dn="o=National Aeronautics and Space Administration,c=US"
+	print dn
+	if wildcard:
+		filter = "(&(objectClass=organizationalPerson)(cn=*%s*))" % (query)
+	else:
+		filter = "(&(objectClass=organizationalPerson)(cn=%s))" % (query)
 	print filter
 	result_id = l.search(dn, ldap.SCOPE_SUBTREE, filter, None)
 	timeout = 0

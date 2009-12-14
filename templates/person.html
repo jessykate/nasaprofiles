@@ -6,16 +6,16 @@
 
 {% block body %}
 
-
-hire_date
-personal_web
-category
-
-
   <div id="person" class="vcard">    
 
     <img src="{{ gravatar_url }}" class="photo" alt="gravatar" />
     <span class="fn">{{ profile['Name'][0] }}</span>
+    
+    <div class="category">
+      {% if profile.has_key('category') %}  
+        {{ profile['category'] }}   
+      {% end %}      
+    </div>
     
     <div class="org">
       {% if profile.has_key('title') %}  
@@ -96,13 +96,18 @@ category
     </div>
   {% end %}
   
-  {% if profile.has_key('Postal Address') %} 
+  {% if profile.has_key('Postal Address') or profile.has_key('building') %} 
     <div class=" narrow_block">
       <h3>Address</h3>
       <address>
-        Code I - Office of the CIO<br />
-        {{ profile['building'] }}, Room {{ profile['room_num'] }}<br />
-        <br />
+        {% if profile.has_key('office') %}  
+          {{ profile['office'] }}<br />
+        {% end %}
+        
+        {% if profile.has_key('building') %}
+          {{ profile['building'] }}, Room {{ profile['room_num'] }}<br /><br />
+        {% end %}
+        
         {{ profile['Postal Address'][0] }}<br />
         {{ profile['Postal Address'][1] }}<br />
         Moffett Field, CA 95053
@@ -112,42 +117,35 @@ category
 
   <div class=" narrow_block">
     <h3>Other Information</h3>
-    <ul>
-      <li>Employer: Mission Critical Technologies</li>
-      <li>Hire Date: September 17, 2009</li>
-      <li>Personal Blog: <a href="http://blog.quaternia.net">http://blog.quaternia.net</a></li>
-    </ul>
+    {% if profile.has_key('User Class') %}  
+      {{ profile['User Class'] }}<br />
+    {% end %}
+    {% if profile.has_key('hire_date') %}  
+      {{ profile['office'] }}<br />
+    {% end %}
+    {% if profile.has_key('personal_web') %}  
+      {{ profile['office'] }}<br />
+    {% end %}
   </div>
 </div>
 
 <div id="sidebar">
   <div id="map">
     <img src="{{ map('ARC')}}"class="photo"/>
+    <h3>{{ profile['Postal Address'][0] }}</h3>
   </div>
 
-  <div id="twitter">
-    Follow {{ profile['Name'][0]}} on Twitter
-  </div>
-
-  <div id="facebook">
-    Connect {{ profile['Name'][0]}} via Facebook
-  </div>
-
-  <div id="x500">
-    <p>ALL DATA</p>
-      {% for field, values in profile.iteritems() %}
-      {% if isinstance(values, str) %}
-         <h3>{{ field }}</h3><br>
-         {{ values }}
-      {% else %}
-         <h3>{{ field }}</h3> 
-         {% for value in values %}
-            {{ value }}<br>
-         {% end %} <!-- end for -->
-      {% end %} <!-- end else -->
-      {% end %} <!-- end for -->
-  </div>
-
+  {% if profile.has_key('twitter') %}  
+    <div id="twitter">
+      Follow @{{ profile['twitter'][0]}} on Twitter
+    </div>
+  {% end %}
+    
+  {% if profile.has_key('facebook') %}  
+    <div id="facebook">
+      Connect with {{ profile['Name'][0]}} via Facebook
+    </div>
+  {% end %}
 
   <!-- is this you? -->
   <p>Is this you? Click <a href="{{ edit_request }}">here</a> to edit</p>

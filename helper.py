@@ -8,7 +8,7 @@
 # EOS=Earth%20Observing%20System 
 # //GSFC
 # 
-# FIVVF=Fairmont%20IVV%20Facility
+# IVV=Fairmont%20IVV%20Facility
 # //LaRC
 # 
 # GISS=Goddard%20Institute%20for%20Space%20Studies
@@ -53,7 +53,24 @@
 # }
 
 
-
+Mailing = {
+    "ARC": "Moffett Field, California 94035",
+    "DFRC": "4800 Lilly Drive, Edwards, California 93523-0273",
+    "GRC": "21000 Brookpark Rd, Cleveland, OH 44135",
+    "GSFC": "Greenbelt, MD 20771",
+    "GISS": "2880 Broadway, New York, NY",
+    "IVV": "100 University Dr Fairmont, WV 26554",
+    "JPL": "4800 Oak Grove Drive, Pasadena, California 91109",
+    "JSC": "Houston, TX 77058",
+    "KSC": "FL 32899-0001",
+    "LaRC": "Hampton, Virginia 23681",
+    "MSFC": "One Tranquility Base, Huntsville, AL 35805",
+    "HQ": "300 E Street SW, Washington, DC 20546",
+    "NSSC": "Building 1111 C Road, MS 39529",
+    "SSC": "MS,39529",
+    "WFF": "VA 23337",
+    "WSTF": "12600 NASA Road Las Cruces, NM 88012"
+}
 
 
 Centers = {
@@ -69,10 +86,11 @@ Centers = {
     "HQ": "label:HQ|38.883128,-77.016413"
 }
 
+
 def map(center):
     """ return a google maps static url for a nasa center """
     selected = '|'.join(["markers=size:large|color:red", Centers[center]])
-    others = '|'.join(["markers=size:tiny|color:green"] + Centers.values())
+    others = '|'.join(["markers=size:tiny|color:orange"] + Centers.values())
     return "http://maps.google.com/maps/api/staticmap?" + \
        "&".join(["center=United+States",
                  "zoom=3",

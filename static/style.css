@@ -56,6 +56,7 @@ ul#nav li a:hover {
 
 #content {
 	width: 575px;
+	min-height: 400px;
 	margin-right: 20px;
 	float: left;
 	padding: 20px;
@@ -156,7 +157,7 @@ img.photo {
 
 .narrow_block {
 	width: 275px;
-	margin-right: 20px;
+	margin-right: 10px;
 	float: left;
 	margin-bottom: 20px;
 }

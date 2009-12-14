@@ -24,6 +24,9 @@ class BaseHandler(tornado.web.RequestHandler):
         return self.get_cookie("uid")
 
 class PersonHandler(BaseHandler):
+    def x500_profile_search(self, query):
+        results = x500_search(query, wildcard=False)
+        return results[tornado.escape.url_escape(query)]
     def get(self, name):
         db = settings['db']
 
@@ -47,23 +50,27 @@ class PersonHandler(BaseHandler):
             print 'Retrieved local record for %s' % name
         else:
             print 'Retrieving x500 record for %s' % name
+            profile = self.x500_profile_search(x500_url)
+            print profile
+
             # retrieve the x500 info and create a new record
-            html = urllib2.urlopen(x500_url)
-            parser = x500DisplayPageParser()
-            parser.feed(''.join(html.readlines()))
-            profile = parser.profile_fields
+            #html = urllib2.urlopen(x500_url)
+            #parser = x500DisplayPageParser()
+            #parser.feed(''.join(html.readlines()))
+            #profile = parser.profile_fields
 
             # get the NASA uid, which is also the index into our data
             # store. all the scraped values from x500 are lists, even if
             # only one item.
-            uid = profile['Unique Identifier'][0]
-
+            #uid = profile['Unique Identifier'][0]
+            uid = profile['uniqueIdentifier'][0]
             profile['x500_url'] = x500_url
             db[uid] = profile
         # remove profile fields that we dont want to render.
         profile.pop('x500_url')
         profile.pop('_id')
         profile.pop('_rev')
+	profile['Name'] = profile['cn'][0]
 
         # get gravatar. use the first email address as the defaul for
         # now.
@@ -176,12 +183,7 @@ class MainHandler(BaseHandler):
     def post(self):
         # pull in x500 data
         query = self.get_argument("query")
-        results = self.x500_search(query)
-        print 'query'
-        print query
-        print 'results'
-        print results
-        print '---------------'
+        results = self.x500_user_search(query)
 
         # save the search results in a session variable
         json = tornado.escape.url_escape(tornado.escape.json_encode(results))
@@ -202,24 +204,34 @@ class MainHandler(BaseHandler):
         self.render('templates/index.html', title='Search for your NASA Homies', 
                     message = self.get_cookie("message"))
 
-    def x500_search(self, query):
+#    def x500_search(self, query):
         # base url searches for entries in country = US and org = NASA
-        base_url = "http://x500root.nasa.gov:80/cgi-bin/wlDoSearch/ou%3dAmes%20Research%20Center%2co%3dNational%20Aeronautics%20and%20Space%20Administration%2cc%3dUS"
+#        base_url = "http://x500root.nasa.gov:80/cgi-bin/wlDoSearch/ou%3dAmes%20Research%20Center%2co%3dNational%20Aeronautics%20and%20Space%20Administration%2cc%3dUS"
 
         #name = raw_input('name? >> ')
-        org = 'National Aeronautics and Space Administration'
-        country = 'US'
-        subtree = 'on' # checkbox to indicate search within Ames subtree
+#        org = 'National Aeronautics and Space Administration'
+#        country = 'US'
+#        subtree = 'on' # checkbox to indicate search within Ames subtree
         # form drop down list options
-        type = 'Full Name'
-        level2 = 'Organization'
-        level1 = 'Country'
-        style = 'Substring'
-        request = urllib.urlencode({'NAME':query, 'ORG':org, 'COUNTRY':country,
-                                    'SUBTREE':subtree, 'TYPE':type, 'LEVEL2':level2,
-                                    'LEVEL1':country, 'STYLE':style})
-        html = urllib2.urlopen(base_url, request)
-        return self.structured_results(html)
+#        type = 'Full Name'
+#        level2 = 'Organization'
+#        level1 = 'Country'
+#        style = 'Substring'
+#        request = urllib.urlencode({'NAME':query, 'ORG':org, 'COUNTRY':country,
+#                                    'SUBTREE':subtree, 'TYPE':type, 'LEVEL2':level2,
+#                                    'LEVEL1':country, 'STYLE':style})
+#        html = urllib2.urlopen(base_url, request)
+#        return self.structured_results(html)
+
+
+    def x500_user_search(self, query):
+        results = x500_search(query, wildcard=True)
+        mapped = {}
+	for k, v in results.iteritems():
+		mapped[k] = v['cn'][0]
+        return mapped
+
+
 
     def structured_results(self,html):
         ''' scrape through x500 search results and build a set of
@@ -242,6 +254,27 @@ class MainHandler(BaseHandler):
             results[name] = url
         return results
 
+def x500_search(query, wildcard=True):
+	import ldap
+	l = ldap.open("x500.nasa.gov")
+	dn="ou=Ames Research Center,o=National Aeronautics and Space Administration,c=US"
+	if wildcard:
+		filter = "cn=*%s*" % (query)
+	else:
+		filter = "cn=%s" % (query)
+	print filter
+	result_id = l.search(dn, ldap.SCOPE_SUBTREE, filter, None)
+	timeout = 0
+	result_set = {}
+	while 1:
+		result_type, result_data = l.result(result_id, timeout)
+		if (result_data == []):
+			break
+		else:
+			if result_type == ldap.RES_SEARCH_ENTRY:
+				name = tornado.escape.url_escape(result_data[0][1]['cn'][0])
+				result_set[name] = result_data[0][1]
+	return result_set
 
 ######################################################
 ######################################################

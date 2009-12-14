@@ -2,7 +2,7 @@ Dependencies:
 0. python
 1. couchdb
 2. python-couchdb
-3. tornado
+3. Tornado
 
 Settings:
 1. in nasaprofiles.py, customize the settings as appropriate. 

@@ -1,7 +1,7 @@
 {% extends base.html %}
 
 {% block meta %}
-    <meta content="openNASA Profile page of {{ ', '.join(profile['Name']) }}" name='description' />
+    <meta content="openNASA Profile page of {{ ', '.join(profile['cn']) }}" name='description' />
 {% end %}
 
 {% block body %}
@@ -9,7 +9,7 @@
   <div id="person" class="vcard">    
 
     <img src="{{ gravatar_url }}" class="photo" alt="gravatar" />
-    <span class="fn">{{ profile['Name'][0] }}</span>
+    <span class="fn">{{ profile['cn'][0] }}</span>
     
     <div class="category">
       {% if profile.has_key('category') %}  
@@ -28,13 +28,13 @@
     </div>
 
     <div class="contact">
-      {% if profile.has_key('Internet Addresses') %}
-        <a class="email" href="mailto:{{ profile['Internet Addresses'][0] }}">{{ profile['Internet Addresses'][0] }}</a>
+      {% if profile.has_key('mail') %}
+        <a class="email" href="mailto:{{ profile['mail'][0] }}">{{ profile['mail'][0] }}</a>
       {% end %}
-      {% if profile.has_key('Phone') %}
+      {% if profile.has_key('telephoneNumber') %}
         <span class="tel">
           <span class="type">office</span>:
-          <span class="value">{{ profile['Phone'][0] }}</span>
+          <span class="value">{{ profile['telephoneNumber'][0] }}</span>
         </span>
       {% end %}
       {% if profile.has_key('Pager Telephone Number') %}
@@ -96,7 +96,7 @@
     </div>
   {% end %}
   
-  {% if profile.has_key('Postal Address') or profile.has_key('building') %} 
+  {% if profile.has_key('postalAddress') or profile.has_key('roomNumber') %} 
     <div class=" narrow_block">
       <h3>Address</h3>
       <address>
@@ -104,21 +104,22 @@
           {{ profile['office'] }}<br />
         {% end %}
         
-        {% if profile.has_key('building') %}
-          {{ profile['building'] }}, Room {{ profile['room_num'] }}<br /><br />
+        {% if profile.has_key('roomNumber') %}
+          {{ profile['roomNumber'][0] }}<br /><br />
         {% end %}
         
-        {{ profile['Postal Address'][0] }}<br />
-        {{ profile['Postal Address'][1] }}<br />
-        {{ mailing(profile['Postal Address'][0]) }}
+        {{ profile['postalAddress'][0] }}<br />
+	{% if len(profile['postalAddress']) > 1 %}
+        {{ profile['postalAddress'][1] }}<br />
+	{% end %}
       </address>
     </div>
   {% end %}
 
   <div class=" narrow_block">
     <h3>Other Information</h3>
-    {% if profile.has_key('User Class') %}  
-      {{ profile['User Class'][0] }}<br />
+    {% if profile.has_key('userClass') %}  
+      {{ profile['userClass'][0] }}<br />
     {% end %}
     {% if profile.has_key('hire_date') %}  
       {{ profile['office'] }}<br />
@@ -131,8 +132,10 @@
 
 <div id="sidebar">
   <div id="map">
-    <img src="{{ map(profile['Postal Address'][0]) }}"class="photo"/>
-    <h3>{{ profile['Postal Address'][0] }}</h3>
+    {% if profile.has_key('postalAddress') %}
+    <img src="{{ map(profile['postalAddress'][0].partition(" $")[0]) }}"class="photo"/>
+    <h3>{{ profile['postalAddress'][0] }}</h3>
+    {% end %}
   </div>
 
   {% if profile.has_key('twitter') %}  
@@ -149,7 +152,7 @@
 
   <!-- is this you? -->
   <div id="edit_alert">
-    Are you {{ profile['Name'][0] }}? Click <a href="{{ edit_request }}">here</a> to edit your profile.
+    Are you {{ profile['cn'][0] }}? Click <a href="{{ edit_request }}">here</a> to edit your profile.
   </div>
   
 </div>

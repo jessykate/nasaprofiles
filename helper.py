@@ -76,7 +76,7 @@ def map(center):
     return "http://maps.google.com/maps/api/staticmap?" + \
        "&".join(["center=United+States",
                  "zoom=3",
-                 "size=340x240",
+                 "size=320x220",
                  "maptype=hybrid",
                  selected,
                  others,

@@ -6,11 +6,26 @@
 
 {% block body %}
 
+
+hire_date
+personal_web
+category
+
+
   <div id="person" class="vcard">    
 
     <img src="{{ gravatar_url }}" class="photo" alt="gravatar" />
     <span class="fn">{{ profile['Name'][0] }}</span>
-    <div class="org">[[Ames Research Center - Nebula Project]]</div>
+    
+    <div class="org">
+      {% if profile.has_key('title') %}  
+        {{ profile['title'][0] }}   
+      {% end %}
+      
+      {% if profile.has_key('main_project') %}  
+        {{ profile['main_project'][0] }}   
+      {% end %}
+    </div>
 
     <div class="contact">
       {% if profile.has_key('Internet Addresses') %}
@@ -22,61 +37,78 @@
           <span class="value">{{ profile['Phone'][0] }}</span>
         </span>
       {% end %}
+      {% if profile.has_key('Pager Telephone Number') %}
+        <span class="tel">
+          <span class="type">mobile</span>:
+          <span class="value">{{ profile['Pager Telephone Number'][0] }}</span>
+        </span>
+      {% end %}
     </div>         
   </div>
   
+  {% if profile.has_key('bio') %}  
   
-  <div class="wide_block">
-    <h3>Biography</h3>
-    <p>Description of role on project</p>
-  </div>
+    <div class="wide_block">
+      <h3>Biography</h3>
+      <p>{{ profile['bio'][0] }}</p>
+    </div>
+  {% end %}
+
+  {% if profile.has_key('main_project_description') %}  
   
-  <div class="wide_block">
-    <h3>ProjectName</h3>
-    <a href="#">http://project.com</a>
-    <p>Description of role on project</p>
-  </div>
-
+    <div class="wide_block">
+      <h3>{{ profile['main_project'][0] }}</h3>
+      
+      {% if profile.has_key('main_project_web') %} 
+        <a href="http://{{ profile['main_project_web'][0] }}">{{ profile['main_project'][0] }} Website</a>
+      {% end %}
+      
+      <p>{{ profile['main_project_description'][0] }}</p>
+    </div>
+  {% end %}
   
+  
+  {% if profile.has_key('skills') %}  
+    <div class="narrow_block">
+      <h3>Skills</h3>
+        {{ profile['skills'] }}
+    </div>
+  {% end %}
 
-  <div class="narrow_block">
-    <h3>Skills</h3>
-    [insert tagcloud here]
-  </div>
+  {% if profile.has_key('tags') %}  
+    <div class="narrow_block">
+      <h3>Tags</h3>
+        {{ profile['tags'] }}
+    </div>
+  {% end %}
 
-  <div class="narrow_block">
-    <h3>Tags</h3>
-    [insert tagcloud here]
-  </div>
+  {% if profile.has_key('previous_projects') %}  
+    <div class="narrow_block">
+      <h3>Previous Projects</h3>
+        {{ profile['previous_projects'] }}
+    </div>
+  {% end %}
 
-  <div class="narrow_block">
-    <h3>Previous Projects</h3>
-    <ul>
-      <li>Project 1</li>
-      <li>project 2</li>
-    </ul>
-  </div>
-
-  <div class="narrow_block">
-    <h3>Side Projects</h3>
-    <ul>
-      <li>Project 1</li>
-      <li>project 2</li>
-    </ul>
-  </div>
-  <div class=" narrow_block">
-    <h3>Address</h3>
-    <address>
-      Code I - Office of the CIO<br />
-      Building 122, Room 255<br />
-      (202) 260-3967 - office<br />
-      <br />
-      NASA Ames Research Center<br />
-      M/S 133-3<br />
-      Moffett Field, CA 95053
-    </address>
-
-  </div>
+  {% if profile.has_key('side_projects') %}  
+    <div class="narrow_block">
+      <h3>Side Projects</h3>
+        {{ profile['side_projects'] }}
+    </div>
+  {% end %}
+  
+  {% if profile.has_key('Postal Address') %} 
+    <div class=" narrow_block">
+      <h3>Address</h3>
+      <address>
+        Code I - Office of the CIO<br />
+        {{ profile['building'] }}, Room {{ profile['room_num'] }}<br />
+        <br />
+        {{ profile['Postal Address'][0] }}<br />
+        {{ profile['Postal Address'][1] }}<br />
+        Moffett Field, CA 95053
+      </address>
+    </div>
+  {% end %}
 
   <div class=" narrow_block">
     <h3>Other Information</h3>
@@ -90,11 +122,11 @@
 
 <div id="sidebar">
   <div id="map">
-    <img src="{{ map('ARC')}}"/>
+    <img src="{{ map('ARC')}}"class="photo"/>
   </div>
 
   <div id="twitter">
-    Connect {{ profile['Name'][0]}} via Twitter
+    Follow {{ profile['Name'][0]}} on Twitter
   </div>
 
   <div id="facebook">

@@ -6,15 +6,16 @@ body {
 	border: 0;
 	color: #404040;
 	padding-bottom: 30px;
-	background: #fff url(images/bg.jpg) center top no-repeat;
+	background: #fff url(images/body_bg.jpg) center top no-repeat;
 	margin: 0;
 }
 
 h1 {
+    font-family: century gothic;
 	background: #000;
-	padding: 20px;
+	padding: 30px 0 10px 20px;
 	color: #fff;
-	width: 174px;
+	width: 245px;
 	margin: 0;
 }
 
@@ -54,17 +55,35 @@ ul#nav li a:hover {
 }
 
 #content {
-	width: 600px;
+	width: 575px;
 	margin-right: 20px;
 	float: left;
 	padding: 20px;
 }
 
 #sidebar {
-	width: 300px;
+	width: 340px;
 	float: left;
 	margin-left: 25px;
-	margin-top: 25px;
+	margin-top: 20px;
+}
+
+#map {
+	margin: 0px 5px;
+	width: 325px;
+	float: left;
+}
+
+#twitter{
+    float: left;
+    width: 325px;
+    margin: 10px;    
+}
+
+#facebook{
+    float: left;
+    width: 325px;
+    margin: 10px;    
 }
 
 #person {

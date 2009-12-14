@@ -185,11 +185,6 @@ class MainHandler(BaseHandler):
 
         # save the search results in a session variable
         json = tornado.escape.url_escape(tornado.escape.json_encode(results))
-
-        print 'json'
-        print json
-        print '---------------'
-
         self.set_cookie('search_results', json)
 
         # if there's only one search result, redirect to the display

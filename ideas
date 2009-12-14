@@ -1,15 +1,16 @@
 todo:
 * build the profile edit page
-* edit button on your OWN page should not requie email if already logged in
 * pre-propulate fields with existing info
 * add center selection in search form
 * use secure cookies
 * mark primary email, name, etc. 
 * User object
   * convert User class to two fields
-  * 
-* uservoice feedback button
-* add google-analytics
+  * nicely formatted 'Name' option
+* server deploy:
+  * uservoice feedback button
+  * add google-analytics
+  * gmaps key (make that a setting)
 
 * user click to manually cause x500 field update
 * option to override x500 info
@@ -37,6 +38,8 @@ done:
 * make one-time login work link-wise
 * tie into into tornado auth system; wrap edit view in auth. 
 * atuomatically redirect single search results to display page
+* edit button on your OWN page should not requie email if already
+  logged in
 
 example nasa ldap stuff (from linton)
 http://babelfish.arc.nasa.gov/trac/dashlink/browser/main/trunk/ivhm/utils/helper.py

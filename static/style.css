@@ -9,6 +9,9 @@ body {
 	background: #fff url(images/body_bg.jpg) center top no-repeat;
 	margin: 0;
 }
+#header{
+    padding:0px 0px 50px 100px;    
+}
 
 h1 {
     font-family: century gothic;
@@ -17,6 +20,34 @@ h1 {
 	color: #fff;
 	width: 245px;
 	margin: 0;
+}
+
+h5 {
+    font-family: century;
+    font-size: 42px;
+    font-style: bold;
+    color: #404040;
+    margin-top: 40px; 
+    margin-bottom: 0px;   
+}
+
+h6 {
+    font-family: century;
+    font-size: 20px;
+    font-style: italic;
+    color: #404040;   
+    margin-bottom: 70px; 
+    margin-top: 0px;
+}
+#slogan {
+    padding:0 0 0 400px;
+    width:500px;
+}
+
+#tagline {
+    padding:0 0 0 558px;
+    width:500px;
+    margin-bottom: 120px;
 }
 
 #wrapper {
@@ -54,6 +85,11 @@ ul#nav li a:hover {
 	color: #fff;
 }
 
+#search_home{
+    width: 915px;
+    min-height: 500px;    
+}
+
 #content {
 	width: 575px;
 	min-height: 400px;
@@ -65,7 +101,7 @@ ul#nav li a:hover {
 #sidebar {
 	width: 340px;
 	float: left;
-	margin-left: 25px;
+	margin-left: 5px;
 	margin-top: 20px;
 }
 
@@ -156,8 +192,17 @@ img.photo {
 
 
 #container {
-	background: url(images/wrapper_bg.png) top left repeat-y;
+	// background: url(images/wrapper_bg.png) top left repeat-y;
+	background-color: white;
+	width: 985px;
 	float: left;
+}
+
+#profile_page {
+    background: url(images/wrapper_bg.png) top left repeat-y;
+    float: left;
+    width: 985px;
+    padding: 20px;
 }
 
 .narrow_block {

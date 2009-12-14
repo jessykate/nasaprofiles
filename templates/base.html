@@ -10,31 +10,37 @@
       <meta name="Description" content="people.openNASA" />
     {% end %}    
     <link rel="stylesheet" href="/static/style.css" type="text/css" media="screen" />
+    <SCRIPT LANGUAGE="JavaScript">
+
+    <!-- Begin -->
+    function formHandler(form){
+    var URL = document.form.site.options[document.form.site.selectedIndex].value;
+    window.location.href = URL;
+    }
+    <!-- End -->
+    </SCRIPT>
   </head>
   <body>
     <div id="wrapper">
       <div id="header">
         <h1>people.openNASA</h1>
-        <ul id="nav">
-          <li><a href="/search">Search</a></li>
-          <li><a href="#">NASA-only View</a></li>
-          <li><a href="#">Edit</a></li>
-          <li><a href="#">Help</a></li>
-        </ul>
       </div>      
       <div id="container">
-        <div id="content">
+        <!-- <div id="content"> -->
             {% block header %}{% end %}
             {% block body %}{% end %}
-        </div>
+        <!-- </div> -->
       </div>
       {% block footer %}
       <div id="footer">
         <p class="copy">Copyright &copy; 2009 blahblah</p>
         <ul id="footNav">
-          <li><a href="#">about</a></li>
+          <li><a href="#">search</a></li>
           <li><a href="#">faq</a></li>
-          <li><a href="#">stuff</a></li>
+          <li><a href="#">help</a></li>
+          <li><a href="#">feedback</a></li>
+          <li><a href="http://www.opennasa.com/">blog</a></li>
+          <li><a href="#">log out</a></li>
         </ul>
       </div>  
       {% end %}

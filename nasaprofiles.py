@@ -250,10 +250,10 @@ application = tornado.web.Application([
 
 if __name__ == '__main__':
 
-   # set up the elixir mapper functions
-    #setup_all()
+    # make sure the couchdb views are up to date
+    Database().configure()
 
-    # set up tornado handling
+    # start tornado
     http_server = tornado.httpserver.HTTPServer(application)
     http_server.listen(settings['port'])
     tornado.ioloop.IOLoop.instance().start()

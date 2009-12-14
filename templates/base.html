@@ -16,10 +16,13 @@
       <div id="header">
         <h1>people.openNASA</h1>
         <ul id="nav">
-          <li><a href="/search">Search</a></li>
-          <li><a href="#">NASA-only View</a></li>
-          <li><a href="#">Edit</a></li>
-          <li><a href="#">Help</a></li>
+          <li><a href="/">Search</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">FAQ</a></li>
+	  {% if current_user %}
+          <li><a href="/edit">Edit</a></li>
+          <li><a href="/logout">Logout</a></li>
+	  {% end %}
         </ul>
       </div>      
       <div id="container">

@@ -6,8 +6,6 @@
   {% for name in results %}
      <a href="/person/{{ name }}">{{ name }}</a><br>
   {% end %}
-{% end %}
-
 {% else %}
   <p>No results for that search. Try again</p>
 {% end %}

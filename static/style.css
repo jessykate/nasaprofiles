@@ -203,6 +203,20 @@ img.photo {
     padding: 20px;
 }
 
+#results_page {
+    background: url(images/wrapper_bg.png) top left repeat-y;
+    float: left;
+    width: 985px;
+    padding: 20px;
+}
+
+#no_search {
+    text-align: center;
+    color: red;
+    
+    
+}
+
 .narrow_block {
 	width: 275px;
 	margin-right: 10px;

@@ -185,7 +185,7 @@ class MainHandler(BaseHandler):
         query = self.get_argument("query", None)
         if query:
             # pull in x500 data
-            center = self.get_argument("center")
+            center = self.get_argument("ou")
             if center == "all":
                 center = None
             results = self.x500_user_search(query, center=center)
@@ -206,7 +206,7 @@ class MainHandler(BaseHandler):
 
         else:
             # present user w search form
-            self.render('templates/index.html', title='Search for your NASA Homies',
+            self.render('templates/search.html', title='Search for your NASA Homies',
                         message = self.get_cookie("message"))
 
     def x500_user_search(self, query, center):

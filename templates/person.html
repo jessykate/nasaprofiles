@@ -1,11 +1,14 @@
 {% extends base.html %}
 
+
+  
 {% block meta %}
     <meta content="openNASA Profile page of {{ ', '.join(profile['cn']) }}" name='description' />
 {% end %}
 
 {% block body %}
-
+<div id="profile_page">
+  <div id="content">
   <div id="person" class="vcard">    
 
     <img src="{{ gravatar_url }}" class="photo" alt="gravatar" />
@@ -156,5 +159,8 @@
   </div>
   
 </div>
+</div>
+</div>
+<div>
 
 {% end %} <!-- end block -->

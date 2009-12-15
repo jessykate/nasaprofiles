@@ -5,11 +5,22 @@
 {% if results %}
   <div id="results_page">
     <div id="content">
+      
+      There are {{ len(results) }} results<br><br>
 
       {% for name in results %}
-        <a href="/person/{{ name }}">{{ name }}</a><br>
+        <div id="profile_card" onclick="location.href='/person/{{ name }}';" style="cursor:pointer;">
+          <div id="results_gravatar">
+            <img src="http://geeknews.net/images/no_gravatar.jpg">
+          </div>
+          <div id="results_name">
+            <a>{{ name }}</a>
+          </div>
+        </div>
+        
       {% end %}
-    
+      <br><br><br><br>
+      {% include "search_form.html" %}
     </div>
     
     <div id="sidebar">
@@ -23,11 +34,12 @@
 
   <div id="search_home">
     <div id="no_search">
-      <p>No results for that search. Try again</p>
+      <a>No results for that search. Please try again.</a>
     </div>
-      
+    {% include "search_slogan.html" %} 
     {% include "search_form.html" %}
-    {% end %}
+
+{% end %}
       
   </div>
 </div>

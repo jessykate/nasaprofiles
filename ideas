@@ -1,18 +1,19 @@
 todo:
-* change from post to get request
+* have better error handling for fields that dont exist on all
+  templates. (results, person, edit, etc.)
 * build the profile edit page
 * pre-propulate fields with existing info
-* add center selection in search form
+* ability to mark primary email, name, number. 
+* center selection in search form
+* handle 'server not available' errors. 
 * use secure cookies
 * custom 404 page
-* mark primary email, name, etc. 
-* Person object
-  * convert User class to two fields
-  * nicely formatted 'Name' option
+
 * server deploy:
   * uservoice feedback button
   * add google-analytics
   * gmaps key (make that a setting)
+  * munin
 
 * user click to manually cause x500 field update
 * option to override x500 info
@@ -22,6 +23,7 @@ todo:
 * why is the map not loading sometimes?
 
 future features:
+* overwrite x500 info
 * show a map with locations of contacts (eg. search results or
   individuals).
 * make people.opennasa.com an openID server, too. 
@@ -32,6 +34,8 @@ future features:
 * allow new employees to put in their own contact page while waiting to be in the system - also allows summer interns to have a directory.
 * pull in stuff from http://ntrs.nasa.gov/search.jsp
 * lists/groups
+* moocards
+
 
 done:
 * pull in gravatars
@@ -40,8 +44,14 @@ done:
 * make one-time login work link-wise
 * tie into into tornado auth system; wrap edit view in auth. 
 * atuomatically redirect single search results to display page
-* edit button on your OWN page should not requie email if already
+* edit button on your OWN page should not require email if already
   logged in
+* change forms from post to get requests
+* Person object
+  * convert User class to two fields
+  * nicely formatted 'Name' option
+  * have it wrap the db doc create function
+
 
 example nasa ldap stuff (from linton)
 http://babelfish.arc.nasa.gov/trac/dashlink/browser/main/trunk/ivhm/utils/helper.py

@@ -1,9 +1,7 @@
 {% extends base.html %}
-
-
-  
+ 
 {% block meta %}
-    <meta content="openNASA Profile page of {{ ', '.join(profile['cn']) }}" name='description' />
+    <meta content="openNASA Profile page of {{ person.display_name() }}" name='description' />
 {% end %}
 
 {% block body %}
@@ -11,151 +9,63 @@
   <div id="content">
   <div id="person" class="vcard">    
 
-    <img src="{{ gravatar_url }}" class="photo" alt="gravatar" />
-    <span class="fn">{{ profile['cn'][0] }}</span>
+    <img src="{{ person.gravatar() }}" class="photo" alt="gravatar" />
+    <span class="fn">{{ person.display_name() }}</span>
     
     <div class="category">
-      {% if profile.has_key('category') %}  
-        {{ profile['category'] }}   
-      {% end %}      
-    </div>
-    
-    <div class="org">
-      {% if profile.has_key('title') %}  
-        {{ profile['title'][0] }}   
-      {% end %}
-      
-      {% if profile.has_key('main_project') %}  
-        {{ profile['main_project'][0] }}   
-      {% end %}
+        {{ person.get('category') }}   
     </div>
 
+    
+    <div class="org">
+      {{ person.get('title') }}
+      {{ person.get('main_project') }}         
+    </div>
+
+
     <div class="contact">
-      {% if profile.has_key('mail') %}
-        <a class="email" href="mailto:{{ profile['mail'][0] }}">{{ profile['mail'][0] }}</a>
-      {% end %}
-      {% if profile.has_key('telephoneNumber') %}
+        <a class="email" href="mailto:{{ person.get('all_email')[0] }}">{{ person.get('all_email')[0] }}</a>
+      {% if person.get('all_phones') %}
         <span class="tel">
           <span class="type">office</span>:
-          <span class="value">{{ profile['telephoneNumber'][0] }}</span>
-        </span>
-      {% end %}
-      {% if profile.has_key('Pager Telephone Number') %}
-        <span class="tel">
-          <span class="type">mobile</span>:
-          <span class="value">{{ profile['Pager Telephone Number'][0] }}</span>
+          <span class="value">{{ person.get('all_phones')[0] }}</span>
         </span>
       {% end %}
     </div>         
   </div>
   
-  {% if profile.has_key('bio') %}  
+  {% if person.get('bio') %}  
   
     <div class="wide_block">
       <h3>Biography</h3>
-      <p>{{ profile['bio'][0] }}</p>
+      <p>{{ person.get('bio') }}</p>
     </div>
   {% end %}
 
-  {% if profile.has_key('main_project_description') %}  
-  
-    <div class="wide_block">
-      <h3>{{ profile['main_project'][0] }}</h3>
-      
-      {% if profile.has_key('main_project_web') %} 
-        <a href="http://{{ profile['main_project_web'][0] }}">{{ profile['main_project'][0] }} Website</a>
-      {% end %}
-      
-      <p>{{ profile['main_project_description'][0] }}</p>
-    </div>
-  {% end %}
-  
-  
-  {% if profile.has_key('skills') %}  
-    <div class="narrow_block">
-      <h3>Skills</h3>
-        {{ profile['skills'] }}
-    </div>
-  {% end %}
-
-  {% if profile.has_key('tags') %}  
-    <div class="narrow_block">
-      <h3>Tags</h3>
-        {{ profile['tags'] }}
-    </div>
-  {% end %}
-
-  {% if profile.has_key('previous_projects') %}  
-    <div class="narrow_block">
-      <h3>Previous Projects</h3>
-        {{ profile['previous_projects'] }}
-    </div>
-  {% end %}
-
-  {% if profile.has_key('side_projects') %}  
-    <div class="narrow_block">
-      <h3>Side Projects</h3>
-        {{ profile['side_projects'] }}
-    </div>
-  {% end %}
-  
-  {% if profile.has_key('postalAddress') or profile.has_key('roomNumber') %} 
-    <div class=" narrow_block">
-      <h3>Address</h3>
-      <address>
-        {% if profile.has_key('office') %}  
-          {{ profile['office'] }}<br />
-        {% end %}
-        
-        {% if profile.has_key('roomNumber') %}
-          {{ profile['roomNumber'][0] }}<br /><br />
-        {% end %}
-        
-        {{ profile['postalAddress'][0] }}<br />
-	{% if len(profile['postalAddress']) > 1 %}
-        {{ profile['postalAddress'][1] }}<br />
-	{% end %}
-      </address>
-    </div>
-  {% end %}
-
-  <div class=" narrow_block">
-    <h3>Other Information</h3>
-    {% if profile.has_key('userClass') %}  
-      {{ profile['userClass'][0] }}<br />
-    {% end %}
-    {% if profile.has_key('hire_date') %}  
-      {{ profile['office'] }}<br />
-    {% end %}
-    {% if profile.has_key('personal_web') %}  
-      {{ profile['office'] }}<br />
-    {% end %}
-  </div>
 </div>
 
 <div id="sidebar">
   <div id="map">
-    {% if profile.has_key('postalAddress') %}
-    <img src="{{ map(profile['postalAddress'][0].partition(" $")[0]) }}"class="photo"/>
-    <h3>{{ profile['postalAddress'][0] }}</h3>
-    {% end %}
+    <img src="{{ map(person.get('center')).strip() }}"class="photo"/>
+    <h3>{{ person.get('building') }}, {{ person.get('room_num') }}</h3>
   </div>
 
-  {% if profile.has_key('twitter') %}  
+  {% if person.get('twitter') %}  
     <div id="twitter">
-      Follow @{{ profile['twitter'][0]}} on Twitter
+      Follow @{{ person.get('twitter') }} on Twitter
     </div>
   {% end %}
     
-  {% if profile.has_key('facebook') %}  
+  {% if person.get('facebook') %}  
     <div id="facebook">
-      Connect with {{ profile['Name'][0]}} via Facebook
+      Connect with {{ person.get('facebook') }} via Facebook
     </div>
   {% end %}
 
   <!-- is this you? -->
+
   <div id="edit_alert">
-    Are you {{ profile['cn'][0] }}? Click <a href="{{ edit_request }}">here</a> to edit your profile.
+    Are you {{ person.display_name() }}? Click <a href="/request/{{ person.uid }}">here</a> to edit your profile.
   </div>
   
 </div>
@@ -163,4 +73,4 @@
 </div>
 <div>
 
-{% end %} <!-- end block -->
+ {% end %}<!-- end block -->

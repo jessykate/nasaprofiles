@@ -4,6 +4,7 @@ Dependencies:
 2. python-couchdb module
 3. Tornado
 4. python-ldap module
+6. python json or simplejson
 
 Settings:
 1. in nasaprofiles.py, customize the settings as appropriate. 

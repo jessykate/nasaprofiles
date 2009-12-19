@@ -1,4 +1,6 @@
 todo:
+* change from post to get request
+* build Person class
 * build the profile edit page
 * pre-propulate fields with existing info
 * add center selection in search form

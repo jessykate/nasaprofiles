@@ -7,7 +7,7 @@ settings = {
     'port': 8989,
     'email_enabled': True,
     'debug': True,
-    'smtp_user': 'jessy.cowansharp@gmail.com',
-    'smtp_pass': open('/home/jessy/.gmailpw').read().strip(),
+    'smtp_user': 'people@opennasa.com',
+    'smtp_pass': '',
     'login_url': '/',
 }

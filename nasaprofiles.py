@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import urllib2, urllib, re, time, hashlib, uuid, helper
-import smtplib, os
+import smtplib, os, ldap
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
@@ -14,7 +14,6 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 import tornado.escape
-import os
 from database import Database
 from settings import settings
 from x500DisplayParser import x500DisplayPageParser
@@ -27,18 +26,12 @@ class PersonHandler(BaseHandler):
     def x500_profile_search(self, query):
         results = x500_search(query, wildcard=False)
         return results[tornado.escape.url_escape(query)]
+
     def get(self, name):
         db = settings['db']
 
-        print 'search results 1'
-        print self.get_cookie('search_results')
-        print '============================='
-
         search_results = tornado.escape.json_decode(tornado.escape.url_unescape(self.get_cookie('search_results')))
 
-        print 'search_results 2'
-        print str(search_results)
-        print '=============='
         # check if we already have this person's record. if so, then
         # it contains both the x500 info AND any local extensions.
         existing_profiles = db.view('main/existing_profiles')
@@ -52,12 +45,6 @@ class PersonHandler(BaseHandler):
             print 'Retrieving x500 record for %s' % name
             profile = self.x500_profile_search(x500_url)
             print profile
-
-            # retrieve the x500 info and create a new record
-            #html = urllib2.urlopen(x500_url)
-            #parser = x500DisplayPageParser()
-            #parser.feed(''.join(html.readlines()))
-            #profile = parser.profile_fields
 
             # get the NASA uid, which is also the index into our data
             # store. all the scraped values from x500 are lists, even if
@@ -179,8 +166,15 @@ class EditHandler(BaseHandler):
 class RefreshHandler(BaseHandler):
     pass
 
-class MainHandler(BaseHandler):
-    def post(self):
+class ResultHandler(BaseHandler):
+    def x500_user_search(self, query):
+        results = x500_search(query, wildcard=True)
+        mapped = {}
+	for k, v in results.iteritems():
+            mapped[k] = v['cn'][0]
+        return mapped
+ 
+    def get(self):
         # pull in x500 data
         query = self.get_argument("query")
         results = self.x500_user_search(query)
@@ -199,6 +193,7 @@ class MainHandler(BaseHandler):
         people = results.keys()
         self.render('templates/results.html', title='Search Results', results=people)
 
+class MainHandler(BaseHandler):
     def get(self):
         # present user w search form
         self.render('templates/index.html', title='Search for your NASA Homies', 
@@ -222,40 +217,30 @@ class MainHandler(BaseHandler):
 #                                    'LEVEL1':country, 'STYLE':style})
 #        html = urllib2.urlopen(base_url, request)
 #        return self.structured_results(html)
-
-
-    def x500_user_search(self, query):
-        results = x500_search(query, wildcard=True)
-        mapped = {}
-	for k, v in results.iteritems():
-		mapped[k] = v['cn'][0]
-        return mapped
-
-
-
-    def structured_results(self,html):
-        ''' scrape through x500 search results and build a set of
-        structured results.'''
-        contents = ''.join(html.readlines())
-        links = re.findall(r'''http://x500root.nasa.gov:80/cgi\-bin/wlDisplay/cn%3d.*">.*</a>''',
-                           contents, re.IGNORECASE)
+#
+#
+#    def structured_results(self,html):
+#        ''' scrape through x500 search results and build a set of
+#        structured results.'''
+#        contents = ''.join(html.readlines())
+#        links = re.findall(r'''http://x500root.nasa.gov:80/cgi\-bin/wlDisplay/cn%3d.*">.*</a>''',
+#                           contents, re.IGNORECASE)
         # we match on everything up to the ending quote and '>' symbol,
         # just to be certain we're not matching on a quote in the url
         # itself. but we actually dont want to keep those symbols, so
         # strip them off.
-        results = {}
-        for link in links:
-            link = link.strip('</aA>')
-            url, name = link.rsplit('>')
-
+#        results = {}
+#        for link in links:
+#            link = link.strip('</aA>')
+#            url, name = link.rsplit('>')
+#
             # properly encode the urls
-            url = tornado.escape.url_escape(url.strip('">'))
-            name = tornado.escape.url_escape(name.strip())
-            results[name] = url
-        return results
+#            url = tornado.escape.url_escape(url.strip('">'))
+#            name = tornado.escape.url_escape(name.strip())
+#            results[name] = url
+#        return results
 
 def x500_search(query, wildcard=True):
-	import ldap
 	l = ldap.open("x500.nasa.gov")
 	dn="ou=Ames Research Center,o=National Aeronautics and Space Administration,c=US"
 	if wildcard:
@@ -267,13 +252,13 @@ def x500_search(query, wildcard=True):
 	timeout = 0
 	result_set = {}
 	while 1:
-		result_type, result_data = l.result(result_id, timeout)
-		if (result_data == []):
-			break
-		else:
-			if result_type == ldap.RES_SEARCH_ENTRY:
-				name = tornado.escape.url_escape(result_data[0][1]['cn'][0])
-				result_set[name] = result_data[0][1]
+            result_type, result_data = l.result(result_id, timeout)
+            if (result_data == []):
+                break
+            else:
+                if result_type == ldap.RES_SEARCH_ENTRY:
+                    name = tornado.escape.url_escape(result_data[0][1]['cn'][0])
+                    result_set[name] = result_data[0][1]
 	return result_set
 
 ######################################################
@@ -281,6 +266,7 @@ def x500_search(query, wildcard=True):
 
 application = tornado.web.Application([
         (r'/', MainHandler),
+        (r'/results', ResultHandler),
         # XXX FIXME this regex probably wouldnt support many names
         (r'/person/([A-Za-z0-9\+,\-%]+)', PersonHandler),
         (r'/person/([A-Za-z0-9\+,\-%]+/refresh)', RefreshHandler),

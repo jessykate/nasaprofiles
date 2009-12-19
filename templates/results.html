@@ -8,13 +8,13 @@
       
       There are {{ len(results) }} results<br><br>
 
-      {% for name in results %}
-        <div id="profile_card" onclick="location.href='/person/{{ name }}';" style="cursor:pointer;">
+      {% for person in results %}
+        <div id="profile_card" onclick="location.href='/person/{{ person.display_name() }}';" style="cursor:pointer;">
           <div id="results_gravatar">
-            <img src="http://geeknews.net/images/no_gravatar.jpg">
+            <img src="{{ person.gravatar(80) }}">
           </div>
           <div id="results_name">
-            <a>{{ name }}</a>
+            <a href="person/{{ person.get('uid') }}">{{ person.display_name() }}</a>
           </div>
         </div>
         

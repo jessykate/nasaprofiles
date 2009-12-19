@@ -1,16 +1,15 @@
 Dependencies:
-0. python
+0. python (ideally 2.6)
 1. couchdb
-2. python-couchdb
+2. python-couchdb module
 3. Tornado
+4. python-ldap module
 
 Settings:
 1. in nasaprofiles.py, customize the settings as appropriate. 
 
-2. the first the the app is run, if any views are defined, then run
-   the database file standalone:
-   ./database.py
-   which will call the configure() method to populate permanent views.
+2. the first the the app is run, you must run the database file. this
+   will define the views needed to run the app: ./database.py
 
 Running
 1. ./nasaprofiles.py

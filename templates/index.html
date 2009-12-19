@@ -3,24 +3,28 @@
 {% block body %}
 
 {% if message %}
-<p>{{message}}</p>
+  <p>{{message}}</p>
 {% end %}
 
-<form action="/results" method="get">
-<label for="query">Search for a NASA person</label><br>
-<input type="text" name="query"><br>
-<label for="center">Select a Center for your Search</label><br>
-<input type="checkbox" name="Ames%20Research%20Center">Ames Research Center<br>
-<input type="checkbox" name="Dryden%20Flight%20Research%20Center">Dryden Flight Research Center<br>
-<input type="checkbox" name="Glenn%20Research%20Center">Glenn Research Center<br>
-<input type="checkbox" name="Goddard%20Space%20Flight%20Center">Goddard Space Flight Center<br>
-<input type="checkbox" name="Headquarters">Headquarters<br>
-<input type="checkbox" name="Jet%20Propulsion%20Laboratory">Jet Propulsion Laboratory<br>
-<input type="checkbox" name="Johnson%20Space%20Center">Johnson Space Center<br>
-<input type="checkbox" name="Kennedy%20Space%20Center">Kennedy Space Center<br>
-<input type="checkbox" name="Marshall%20Space%20Flight%20Center">Marshall Space Flight Center<br>
-<input type="checkbox" name="Stennis%20Space%20Center">Stennis Space Center<br>
-<input type="submit" value="Find me some Space Peeps!">
+<form action="/" method="get">
+  <label for="query">Search for a NASA person</label><br>
+  <input type="text" name="query"><br>
+  <label for="center">Select a Center for your Search</label><br>
+  <select name="center">
+    <option value="Ames Research Center">Ames Research Center<br>
+    <option value="Dryden Flight Research Center">Dryden Flight Research Center<br>
+    <option value="Glenn Research Center">Glenn Research Center<br>
+    <option value="Goddard Space Flight Center">Goddard Space Flight Center<br>
+    <option value="Langley Research Center">Langley Research Center<br>
+    <option value="headquarters">Headquarters<br>
+      <!-- <option value="Jet%20Propulsion%20Laboratory">Jet Propulsion Laboratory<br> -->
+    <option value="Johnson Space Flight Center">Johnson Space Center<br>
+    <option value="Kennedy Space Flight Center">Kennedy Space Center<br>
+    <option value="Marshall Space Flight Center">Marshall Space Flight Center<br>
+    <option value="Stennis Space Center">Stennis Space Center<br>
+    <option value="all">All of Nasa (Slow!)<br>
+  </select>
+  <input type="submit" value="Find me some Space Peeps!">
 </form>
 
 {% end %}

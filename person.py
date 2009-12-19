@@ -41,6 +41,8 @@ class Person(object):
         self.main_project_web = ''
         self.side_projects = ''
         self.personal_web = ''
+        self.twitter = ''
+        self.facebook = ''
 
         if uid:
             self._populate(db[uid].copy())

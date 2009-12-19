@@ -15,19 +15,20 @@ from couchdb.design import *
 # - twitter
 
 class Database(object):
-    def __init__(self):
+
+    def connect(self):
         # connect to the db, creating it if it doesnt exist. 
         couch = couchdb.Server('http://localhost:5984/')
         if 'nasaprofiles' not in couch:
             self.db = couch.create('nasaprofiles')
         else:
             self.db = couch['nasaprofiles']
-
-    def connect(self):
         return self.db
 
     def configure(self):
         # define/update the views
+
+        self.connect()
         all_docs_fun = '''
         function(doc) {
           emit(doc._id, doc);
@@ -45,6 +46,6 @@ class Database(object):
         existing_profiles_view.sync(self.db)        
 
 if __name__ == '__main__':
-    database = Database()
+    database = Database()    
     database.configure()
     

@@ -263,8 +263,9 @@ img.photo {
     background-color: #F5E39C;
     text-align:center;
     float: left;
-    width: 325px;
+    width: 305px;
     margin: 10px;
+    padding: 10px;
 }
 
 #footer {

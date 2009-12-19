@@ -48,6 +48,11 @@ h6 {
     margin-bottom: 120px;
 }
 
+.submit{
+    font-size:35px;
+    text-align:center;
+}
+
 #wrapper {
 	width: 1000px;
 	margin: 0 auto;

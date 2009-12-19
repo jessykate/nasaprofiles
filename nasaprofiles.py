@@ -15,6 +15,7 @@ import tornado.ioloop
 import tornado.web
 import tornado.escape
 from database import Database
+from person import Person
 from settings import settings
 from x500DisplayParser import x500DisplayPageParser
 
@@ -27,55 +28,16 @@ class PersonHandler(BaseHandler):
         results = x500_search(query, ou=None, wildcard=False)
         return results[tornado.escape.url_escape(query)]
 
-    def get(self, name):
+    def get(self, uid): 
         db = settings['db']
 
-        search_results = tornado.escape.json_decode(tornado.escape.url_unescape(self.get_cookie('search_results')))
-
-        # check if we already have this person's record. if so, then
-        # it contains both the x500 info AND any local extensions.
-        existing_profiles = db.view('main/existing_profiles')
-        x500_url = tornado.escape.url_unescape(search_results[name])
-        if len(existing_profiles[x500_url]):
-            uid = list(existing_profiles[x500_url])[0]['value']
-            doc = db[uid]
-            profile = doc.copy()
-            print 'Retrieved local record for %s' % name
-        else:
-            print 'Retrieving x500 record for %s' % name
-            profile = self.x500_profile_search(x500_url)
-            print profile
-
-            # get the NASA uid, which is also the index into our data
-            # store. all the scraped values from x500 are lists, even if
-            # only one item.
-            #uid = profile['Unique Identifier'][0]
-            uid = profile['uniqueIdentifier'][0]
-            profile['x500_url'] = x500_url
-            db[uid] = profile
-        # remove profile fields that we dont want to render.
-        profile.pop('x500_url')
-        profile.pop('_id')
-        profile.pop('_rev')
-        profile['Name'] = profile['cn'][0]
-
-        # get gravatar. use the first email address as the defaul for
-        # now.
         try:
-            # gravatar uses hashes-- cases sensitive
-            email = profile['Internet Addresses'][0].lower()
+            person = Person(uid)
         except:
-            email = "empty@opennasa.com"
+            self.redirect('/')
 
-        # save the uid for the edit request.
-        edit_request = '/request/'+uid
-        self.render('templates/person.html', title=profile['Name'], edit_request=edit_request,
-                    gravatar_url=self.gravatar_url(email), profile=profile, map=helper.map, mailing=helper.mailing)
-
-    def gravatar_url(self, email, size=125):
-        base = "http://www.gravatar.com/avatar.php?"
-        return base+urllib.urlencode({'gravatar_id':hashlib.md5(email).hexdigest(),
-                                      'size':str(size)})
+        self.render('templates/person.html', title=person.display_name(), 
+                    person=person, map=helper.map, mailing=helper.mailing)
 
 
 class EditRequestHandler(BaseHandler):
@@ -95,7 +57,9 @@ class EditRequestHandler(BaseHandler):
         edit_requests[onetime_uuid] = uid
         db['edit_requests'] = edit_requests
         user = db[uid]
-        email = user['Internet Addresses'][0]
+        # right now we're being lazy and choosing the first email
+        # address with no rhyme or reason.
+        email = user['mail'][0]
 
         # construct and send the email
         base = 'http://'+settings['domain']
@@ -121,7 +85,7 @@ class EditRequestHandler(BaseHandler):
             message = 'An email with one-time login has been sent to your email address at %s' % email
             print 'One-time login sent'
         elif settings['debug']:
-            # careful with this-- it will allow anyone to log into any
+            # careful with this! it will allow anyone to log into any
             # profile to edit its fields.
             message = 'Click <a href="%s">here</a> to log in.' % edit_url
         self.render('templates/email_notify.html', message=message)
@@ -168,108 +132,83 @@ class RefreshHandler(BaseHandler):
 
 class MainHandler(BaseHandler):
     def get(self):
-        # pull in x500 data
+        db = settings['db']
         query = self.get_argument("query", None)
         if query:
-            # pull in x500 data
             center = self.get_argument("ou")
             if center == "all":
                 center = None
-            results = self.x500_user_search(query, center=center)
 
-            # save the search results in a session variable
-            json = tornado.escape.url_escape(tornado.escape.json_encode(results))
-            self.set_cookie('search_results', json)
-
+            # results is a key value store of the name, info pairs
+            # from the ldap server. info is itself a dict. for each
+            # new result, check if we already have this person's
+            # record. if so, then it contains both the x500 info AND
+            # any local additions. if not, add it. each value is a
+            # list, no matter if it has one or more values.
+            results = self.x500_search(query, ou=center)
+            # as we parse the results, build an list of people objects
+            # which will be used to present the search results in the
+            # template.
+            people = []
+            for name, info in results.iteritems():
+                print 'search results: %s' % name
+                # get the uid so we can uniquely reference each search
+                # result
+                try:
+                    uid = info['uniqueIdentifier'][0]
+                except KeyError:
+                    # xxx todo actually handle this error. 
+                    print '*** Warning! User %s did not have a unique identifier. Weird. Here is their user data:' % name
+                    print info
+                    continue
+                if uid not in db:            
+                    print 'Adding %s to data store' % name
+                    person = Person()
+                    person.build(info)                    
+                    person.save()
+                else:
+                    person = Person(uid)
+                    print 'User %s is already in the data store' % name
+                people.append(person)
+            
             # if there's only one search result, redirect to the display
             # page for that person.
             if len(results) == 1:
-                self.redirect('person/'+results.keys()[0])
+                self.redirect('person/'+results.values()[0]['uniqueIdentifier'][0])
                 return
 
             # display the search results
-            people = results.keys()
             self.render('templates/results.html', title='Search Results', results=people)
 
-        else:
-            # present user w search form
+        else: 
+            # if no search has been done yet, just present user w
+            # search form
             self.render('templates/search.html', title='Search for your NASA Homies',
                         message = self.get_cookie("message"))
 
-    def x500_user_search(self, query, center):
-        results = x500_search(query, ou=center, wildcard=True)
-        mapped = {}
-        for k, v in results.iteritems():
-                mapped[k] = v['cn'][0]
-        return mapped
-
-#
-#    def x500_search(self, query):
-        # base url searches for entries in country = US and org = NASA
-#        base_url = "http://x500root.nasa.gov:80/cgi-bin/wlDoSearch/ou%3dAmes%20Research%20Center%2co%3dNational%20Aeronautics%20and%20Space%20Administration%2cc%3dUS"
-
-        #name = raw_input('name? >> ')
-#        org = 'National Aeronautics and Space Administration'
-#        country = 'US'
-#        subtree = 'on' # checkbox to indicate search within Ames subtree
-        # form drop down list options
-#        type = 'Full Name'
-#        level2 = 'Organization'
-#        level1 = 'Country'
-#        style = 'Substring'
-#        request = urllib.urlencode({'NAME':query, 'ORG':org, 'COUNTRY':country,
-#                                    'SUBTREE':subtree, 'TYPE':type, 'LEVEL2':level2,
-#                                    'LEVEL1':country, 'STYLE':style})
-#        html = urllib2.urlopen(base_url, request)
-#        return self.structured_results(html)
-#
-#
-#     def structured_results(self,html):
-#        ''' scrape through x500 search results and build a set of
-#        structured results.'''
-#        contents = ''.join(html.readlines())
-#        links = re.findall(r'''http://x500root.nasa.gov:80/cgi\-bin/wlDisplay/cn%3d.*">.*</a>''',
-#                           contents, re.IGNORECASE)
-
-        # we match on everything up to the ending quote and '>' symbol,
-        # just to be certain we're not matching on a quote in the url
-        # itself. but we actually dont want to keep those symbols, so
-        # strip them off.
-#        results = {}
-#        for link in links:
-#            link = link.strip('</aA>')
-#            url, name = link.rsplit('>')
-#
-            # properly encode the urls
-#            url = tornado.escape.url_escape(url.strip('">'))
-#            name = tornado.escape.url_escape(name.strip())
-#            results[name] = url
-#        return results
-
-def x500_search(query, ou="Ames Research Center", wildcard=True):
-        import ldap
+    def x500_search(self,query, ou="Ames Research Center", wildcard=True):
         l = ldap.open("x500.nasa.gov")
         if ou:
-                dn="ou=%s,o=National Aeronautics and Space Administration,c=US" % (ou)
+            dn="ou=%s,o=National Aeronautics and Space Administration,c=US" % (ou)
         else:
-                dn="o=National Aeronautics and Space Administration,c=US"
+            dn="o=National Aeronautics and Space Administration,c=US"
         print dn
         if wildcard:
-                filter = "(&(objectClass=organizationalPerson)(cn=*%s*))" % (query)
+            filter = "(&(objectClass=organizationalPerson)(cn=*%s*))" % (query)
         else:
-                filter = "(&(objectClass=organizationalPerson)(cn=%s))" % (query)
+            filter = "(&(objectClass=organizationalPerson)(cn=%s))" % (query)
         print filter
         result_id = l.search(dn, ldap.SCOPE_SUBTREE, filter, None)
         timeout = 0
         result_set = {}
         while 1:
-                result_type, result_data = l.result(result_id, timeout)
-                if (result_data == []):
-                        break
-                else:
-                        if result_type == ldap.RES_SEARCH_ENTRY:
-                                name = tornado.escape.url_escape(result_data[0][1]['cn'][0])
-                                result_set[name] = result_data[0][1]
+            result_type, result_data = l.result(result_id, timeout)
+            if (result_data == []):
+                break
+            else:
+                if result_type == ldap.RES_SEARCH_ENTRY:
+                    name = tornado.escape.url_escape(result_data[0][1]['cn'][0])
+                    result_set[name] = result_data[0][1]
         return result_set
 
 ######################################################
@@ -296,4 +235,3 @@ if __name__ == '__main__':
     http_server = tornado.httpserver.HTTPServer(application)
     http_server.listen(settings['port'])
     tornado.ioloop.IOLoop.instance().start()
-

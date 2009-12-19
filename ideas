@@ -1,12 +1,12 @@
 todo:
 * change from post to get request
-* build Person class
 * build the profile edit page
 * pre-propulate fields with existing info
 * add center selection in search form
 * use secure cookies
+* custom 404 page
 * mark primary email, name, etc. 
-* User object
+* Person object
   * convert User class to two fields
   * nicely formatted 'Name' option
 * server deploy:

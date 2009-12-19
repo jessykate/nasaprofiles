@@ -196,6 +196,25 @@ img.photo {
 	float: left;
 }
 
+#profile_card{
+    background:#E3EEF1;
+    width: 300px;
+    height: 80px;
+    margin: 20px;
+    padding: 5px;
+}
+#results_gravatar{
+    float: left;
+    display: block;
+}
+
+#results_name{
+    float: left;
+    padding-left: 10px;
+    font-style: bold;
+    display: block;
+}
+
 #profile_page {
     background: url(images/wrapper_bg.png) top left repeat-y;
     float: left;
@@ -212,9 +231,10 @@ img.photo {
 
 #no_search {
     text-align: center;
-    color: red;
-    
-    
+    margin-left: 350px;
+    margin-top: 20px;
+    width:300px;
+    background-color: #F5E39C;
 }
 
 .narrow_block {

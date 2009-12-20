@@ -56,10 +56,12 @@ class EditRequestHandler(BaseHandler):
         onetime_uuid = str(uuid.uuid4())
         edit_requests[onetime_uuid] = uid
         db['edit_requests'] = edit_requests
-        user = db[uid]
-        # right now we're being lazy and choosing the first email
-        # address with no rhyme or reason.
-        email = user['mail'][0]
+        user = Person(uid)
+        email = user.email()
+        if not email:
+            message = "This user does not have any email addresses, so we cannot verify your identity. You should update your official x500 information. If this isn't possible, email support@people.opennasa.com and we can help you work it out."
+            self.render('templates/email_notify.html', message=message)
+            return
 
         # construct and send the email
         base = 'http://'+settings['domain']
@@ -82,7 +84,7 @@ class EditRequestHandler(BaseHandler):
             s.login(settings['smtp_user'], settings['smtp_pass'] )
             s.sendmail(msg['From'], msg['To'], msg.as_string())
             s.quit()
-            message = 'An email with one-time login has been sent to your email address at %s' % email
+            message = 'An email with one-time login has been sent to your email address at %s. (You can change your primary email address when you log in to edit your profile)' % email
             print 'One-time login sent'
         elif settings['debug']:
             # careful with this! it will allow anyone to log into any
@@ -105,6 +107,7 @@ class LoginHandler(BaseHandler):
             db['edit_requests'] = edit_requests
             print 'Expired cookie for one-time login %s' % uuid
             self.redirect('/edit')
+            return
         else:
             self.write('Invalid/Expired')
 
@@ -112,21 +115,23 @@ class LogoutHandler(BaseHandler):
     def get(self):
         if self.current_user:
             self.clear_cookie("uid")
-            self.set_cookie("message","You were successfully logged out")
+            #self.set_cookie("message","You were successfully logged out")
         self.redirect('/')
 
 class EditHandler(BaseHandler):
 
     @tornado.web.authenticated
     def get(self):
-        db = settings['db']
-        uid = self.get_current_user()
-        current_profile = db[uid]
-        self.render('templates/profile_edit.html', current_profile=current_profile)
+        if not self.get_argument('submitted', None):
+            db = settings['db']
+            uid = self.get_current_user()
+            person = Person(uid)
+            self.render('templates/profile_edit.html', person=person)
+        else:
+            
+            self.write('success')
 
-    def post(self):
-        pass
-
+        
 class RefreshHandler(BaseHandler):
     pass
 

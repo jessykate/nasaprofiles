@@ -36,6 +36,7 @@ class Person(object):
         self.skills = ''
         self.hire_date = ''
         self.title = ''
+        self.category = ''
         self.main_project_name = ''
         self.main_project_description = ''
         self.main_project_web = ''
@@ -43,42 +44,48 @@ class Person(object):
         self.personal_web = ''
         self.twitter = ''
         self.facebook = ''
+        # all the original values pulled from x500
+        self.x500 = {}
 
         if uid:
             self._populate(db[uid].copy())
 
     def build(self, ldap_dict):
         ''' Build a Person object from information returned by x500
-        ldap'''
+        ldap. each x500 field gets stored in two fields, one with an
+        x500_ prefix, and one without.  '''
         if settings['debug']:
-            print 'debug:'
+            print 'Person.build() debug:'
             print ldap_dict
 
         for field, values in ldap_dict.iteritems():
             if field == 'cn':
+                self.x500['all_names'] = []
                 for value in values:
-                    self.all_names.append(value)
+                    self.x500['all_names'].append(value)
 
             if field == 'mail':
+                self.x500['all_email'] = []
                 for value in values:
-                    self.all_email.append(value)
+                    self.x500['all_email'].append(value)
 
             if field == 'postalAddress':
                 for value in values:
                     center, mail_stop = value.split('$')
-                self.center = center.strip()
-                self.mail_stop = mail_stop.strip()
+                self.x500['center'] = center.strip()
+                self.x500['mail_stop'] = mail_stop.strip()
 
             if field == 'roomNumber':
                 # assumes there is only one list item for this
                 # result. might turn out to be wrong.
                 building, room = values[0].split(',')
-                self.building = building[building.find(':')+1:].strip()
-                self.room_num = room[room.find(':')+1:].strip()
+                self.x500['building'] = building[building.find(':')+1:].strip()
+                self.x500['room_num'] = room[room.find(':')+1:].strip()
 
             if field == 'telephoneNumber':
+                self.x500['all_phones'] = []
                 for value in values:
-                    self.all_phones.append(value)
+                    self.x500['all_phones'].append(value)
 
             if field == 'uniqueIdentifier':
                 self.uid = values[0]
@@ -87,8 +94,8 @@ class Person(object):
                 # assumes there is only one list item for this
                 # result. might turn out to be wrong.
                 value = values[0]
-                self.organization = value[value.find('Organization:')+14 : value.find(',')].strip()
-                self.employer = value[value.find('Employer:')+10 : ].strip()
+                self.x500['organization'] = value[value.find('Organization:')+14 : value.find(',')].strip()
+                self.x500['employer'] = value[value.find('Employer:')+10 : ].strip()
 
             if field == '':
                 pass
@@ -107,11 +114,7 @@ class Person(object):
         db[self.uid] = self.__dict__
 
     def _populate(self, user_dict):
-        ''' Populate a Person object from the data store. user_dict
-        should have every field defined already, since we only store
-        objects that have been built by a Person this class, via the
-        build() method. if for some reason it doesnt already exist, it
-        WILL be created anyway. '''
+        ''' Populate a Person object from the data store. '''
         if settings['debug']:
             print '_populate() debug:'
             print user_dict
@@ -120,11 +123,20 @@ class Person(object):
             self.__dict__[field] = value
 
     def get(self, field, default=''):
-        if field in self.__dict__:
+        ''' Return the value of field, first looking for a locally
+        modified version, and returning the original x500 version
+        otherwise. If the field doesnt exist, return the value of
+        default instead.'''
+        if field in self.__dict__ and self.__dict__[field]:
             return self.__dict__[field]
+        elif field in self.__dict__['x500']:
+            return self.__dict__['x500'][field]
         else: return default
 
     def set(self, field, value):
+        if field.find('x500'):
+            print 'error: you cannot overwrite an x500 field.'
+            return
         self.__dict__[field] = value
 
     def gravatar(self, size=125):
@@ -142,4 +154,28 @@ class Person(object):
         if self.primary_name:
             return self.primary_name
         else:
-            return self.all_names[0]
+            names = self.get('all_names')
+            if names:
+                return names[0]
+            else: return '<< Name Missing >>'
+
+    def phone(self):
+        if self.primary_phone:
+            return self.primary_phone
+        else:
+            names = self.get('all_phones')
+            if names:
+                return names[0]
+            else: return ''
+
+    def email(self):
+        ''' get the user's primary email if they have set one,
+        otherwise grab the first email in their profile, or return an
+        empty string if the user has no emails'''
+        if self.primary_email:
+            return self.primary_email
+        else:
+            emails = self.get('all_email')
+            if emails:
+                return emails[0]
+            else: return ''

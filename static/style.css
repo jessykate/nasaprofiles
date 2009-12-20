@@ -22,6 +22,30 @@ h1 {
 	margin: 0;
 }
 
+h2 {
+	font-family: arial, sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.h2 {
+	font-family: arial, sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.h2_web {
+	font-family: arial, sans-serif;
+    font-size: 16px;
+    color:#1CACC4;
+}
+
+h3 {
+	font-family: arial, sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+}
+
 h5 {
     font-family: century;
     font-size: 42px;
@@ -105,8 +129,13 @@ ul#nav li a:hover {
 #sidebar {
 	width: 340px;
 	float: left;
-	margin-left: 5px;
+	margin-left: 8px;
 	margin-top: 20px;
+}
+
+#sidebar_text{
+    margin: -30px 0px 0px 4px;
+    float: left;
 }
 
 #map {
@@ -117,13 +146,13 @@ ul#nav li a:hover {
 
 #twitter{
     float: left;
-    width: 325px;
+    width: 310px;
     margin: 10px;    
 }
 
 #facebook{
     float: left;
-    width: 325px;
+    width: 310px;
     margin: 10px;    
 }
 
@@ -138,7 +167,7 @@ ul#nav li a:hover {
 }
 
 span.fn {
-	font-size: 30px;
+	font-size: 36px;
 	font-weight: bold;
 	float: left;
 	display: block;
@@ -148,7 +177,7 @@ span.fn {
 	float: left;
 	display: block;
 	width: 400px;
-	font-size: 16px;
+	font-size: 20px;
 }
 
 .email {
@@ -298,9 +327,41 @@ img.photo {
     background-color: #F5E39C;
     text-align:center;
     float: left;
-    width: 305px;
+    width: 290px;
     margin: 10px;
     padding: 10px;
+}
+
+#profile_edit {
+    background: url(images/wrapper_bg.png) top left repeat-y;
+    float: left;
+    width: 985px;
+    padding: 20px;
+}
+#profile_edit_form {
+    
+    
+    
+}
+
+#name_column {
+    width: 191px;
+    float: left;
+}
+
+#email_column {
+    width: 240px;
+    float: left;
+}
+
+#number_column {
+    width: 144px;
+    float: left;
+}
+
+#three_column {
+    width: 191px;
+    float: left;
 }
 
 #footer {
@@ -338,8 +399,8 @@ a img {
 }
 
 .profile_edit_fieldset {
-    border-width: 2px;
-    border-color: #ccccff;
+    border: 1px dotted #999;
+    border-color: #cccccc;
     margin-top: 20px;
     margin-bottom: 20px;
     padding: 

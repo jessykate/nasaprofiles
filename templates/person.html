@@ -16,8 +16,8 @@
     </div>
     <div class="contact">
       <div class="org">
-        {{ person.get('title') }}
-        {{ person.get('main_project') }}         
+        {{ person.get('title') }}{% if person.get('main_project_name') %}, {{ person.get('main_project_name') }}
+        {% end %}   
       </div>
       <a class="email" href="mailto:{{ person.email() }}">{{ person.email() }}</a> 
         <span class="tel"><!--write the all phones parser function!! -->
@@ -49,56 +49,63 @@
   {% if person.get('bio') %}  
   
     <div class="wide_block">
-      <h3>Biography</h3>
+      <h2>Biography</h2>
       <p>{{ person.get('bio') }}</p>
     </div>
   {% end %}
 
-  {% if person.get('main_project_description') %}  
+  {% if person.get('main_project_name') or person.get('main_project_web') or person.get('main_project_description') %}
   
     <div class="wide_block">
-      <h3>{{ person.get('main_project_name') }}</h3>
+      <span class="h2">{{ person.get('main_project_name') }}</span>
       
       {% if person.get('main_project_web') %} 
-        <a href="http://{{ person.get('main_project_web') }}">{{ person.get('main_project_web') }} </a>
+        <a href="http://{{ person.get('main_project_web') }}">http://{{ person.get('main_project_web') }} </a>
       {% end %}<br>
       
       <p>{{ person.get('main_project_description') }}</p>
     </div>
   {% end %}
   
+  {% if person.get('skills') or person.get('tags') %} 
+    <div class="wide_block">
+      {% if person.get('skills') %}  
+        <div class="narrow_block">
+          <h2>Skills</h2>
+            {{ person.get('skills') }}
+        </div>
+      {% end %}
+
+      {% if person.get('tags') %}  
+        <div class="narrow_block">
+          <h2>Tags</h2>
+            {{ person.get('tags') }}
+        </div>
+      {% end %}
+    </div>
+  {% end %}
   
-  {% if person.get('skills') %}  
-    <div class="narrow_block">
-      <h3>Skills</h3>
-        {{ person.get('skills') }}
-    </div>
-  {% end %}
+  {% if person.get('previous_projects') or person.get('side_projects') %} 
+    <div class="wide_block">
+      {% if person.get('previous_projects') %}  
+        <div class="narrow_block">
+          <h2>Previous Projects</h2>
+            {{ person.get('previous_projects') }}
+        </div>
+      {% end %}
 
-  {% if person.get('tags') %}  
-    <div class="narrow_block">
-      <h3>Tags</h3>
-        {{ person.get('tags') }}
-    </div>
-  {% end %}
-
-  {% if person.get('previous_projects') %}  
-    <div class="narrow_block">
-      <h3>Previous Projects</h3>
-        {{ person.get('previous_projects') }}
-    </div>
-  {% end %}
-
-  {% if person.get('side_projects') %}  
-    <div class="narrow_block">
-      <h3>Side Projects</h3>
-        {{ person.get('side_projects') }}
+      {% if person.get('side_projects') %}  
+        <div class="narrow_block">
+          <h2>Side Projects</h2>
+            {{ person.get('side_projects') }}
+        </div>
+      {% end %}
     </div>
   {% end %}
   
   {% if person.get('mail_stop') or person.get('room_num') %} 
     <div class=" narrow_block">
-      <h3>Address</h3>
+      <h2>Address</h2>
       <address>
         <span>Code {{ person.get('organization') }}</span><br>
         <span>Building {{ person.get('building') }}, Room {{ person.get('room_num') }}</span><br><br>
@@ -113,7 +120,7 @@
     </div>
 
   <div class=" narrow_block">
-    <h3>Other Information</h3>
+    <h2>Other Information</h2>
     
     {% if person.get('employer') %}
       <span>Employer: {{ person.get('employer') }} <br /> 
@@ -135,27 +142,27 @@
 <div id="sidebar">
   <div id="map">
     <img src="{{ map(person.get('center')).strip() }}"class="photo"/>
-    <h3>{{ person.get('center') }}</h3>
   </div>
-
-  {% if person.get('twitter') %}  
-    <div id="twitter">
-      Follow @{{ person.get('twitter') }} on Twitter
-    </div>
-  {% end %}
+  <div id="sidebar_text">
+    <h3 align="center">{{ person.get('center') }}</h3>
+    {% if person.get('twitter') %}  
+      <div id="twitter">
+        <h3>Follow <a href="http://www.twitter.com/{{ person.get('twitter') }}">@{{ person.get('twitter') }}</a> on Twitter</h3>
+      </div>
+    {% end %}
     
-  {% if person.get('facebook') %}  
-    <div id="facebook">
-      Connect with {{ person.get('facebook') }} via Facebook
+    {% if person.get('facebook') %}  
+      <div id="facebook">
+        <h3>Connect with {{ person.get('facebook') }} via Facebook</h3>
+      </div>
+    {% end %}
+
+    <!-- is this you? -->
+
+    <div id="edit_alert">
+      Are you {{ person.display_name() }}? Click <a href="/request/{{ person.uid }}">here</a> to edit your profile.
     </div>
-  {% end %}
-
-  <!-- is this you? -->
-
-  <div id="edit_alert">
-    Are you {{ person.display_name() }}? Click <a href="/request/{{ person.uid }}">here</a> to edit your profile.
   </div>
-  
 </div>
 </div>
 </div>

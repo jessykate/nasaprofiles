@@ -1,14 +1,15 @@
 todo:
 * have better error handling for fields that dont exist on all
   templates. (results, person, edit, etc.)
-* build the profile edit page
-* pre-propulate fields with existing info
-* ability to mark primary email, name, number. 
-* center selection in search form
+* profile editing
+  * pre-propulate fields with existing info
+  * ability to mark primary email, name, number. 
+  * delineate information that came from x500; let user change it, but save x500 info. 
+
+* make center selection in search form work
 * handle 'server not available' errors. 
 * use secure cookies
 * custom 404 page
-
 * server deploy:
   * uservoice feedback button
   * add google-analytics

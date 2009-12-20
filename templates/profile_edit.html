@@ -1,115 +1,160 @@
 {% extends base.html %}
 
+{% block meta %}
+    <meta content="Editing openNASA Profile page of {{ person.display_name() }}" name='description' />
+{% end %}
+
 {% block body %}
 
-<h2>Hi {{ person.display_name() }}! </h2>
+<div id="profile_edit">
+  <div id="content">
+    <div id="profile_edit_intro">
+      <h2>Hi {{ person.display_name() }}! </h2>
 
-<i>You will be logged in until you click <a href="/logout">logout</a> or close this browser session.</i>
-<h3>Share your info: connect faster, collaborate better</h3>
+      <i>You will be logged in until you click <a href="/logout">logout</a> or close this browser session.</i>
+      <h3>Share your info: connect faster, collaborate better</h3>
+      <p>Remember, all fields are optional - you are sharing information at your own discretion!</p>
+    </div>
+    
+    <div id="profile_edit_form">
+      <p>
+        <form action="/edit" method="get">
+          <fieldset class="profile_edit_fieldset"> <!-- display info -->
+            <legend>Display Information</legend>
+      
+            <p>Many people have multiple names, e-mails and phone numbers.  Please select your primary display name, email and phone number.</p>
+            <br>
+            <span class="wide_block">
+                <div id="name_column">
+                <label for="primary_name">Display name:</label>
+                <br>
+                {% for name in person.get('all_names') %}
+                  <input type="radio" name="primary_name" value="{{ name }} " {% if name.strip() == person.display_name().strip() %} checked="on" {% end %} /> {{name}}<br>
+                {% end %}
+              </div>
+              <div id="email_column">
+                <label for="primary_email">Select your primary email:</label><br>
+                {% for email in person.get('all_email') %}
+                  <input type="radio" name="primary_email" value="{{ email }}" {% if email == person.email() %} checked="on" {% end %} /> {{email}}<br>
+                {% end %}
+              </div>
+              <div id="number_column">
+                <label for="primary_phone">Main phone number:</label><br>
+                {% for phone in person.get('all_phones') %}
+                  <input type="radio" name="primary_phone" value="{{ phone }}" {% if phone == person.phone() %} checked="on" {% end %} /> {{phone}}<br>
+                {% end %}
+              </div>
+            </span>
+            <br><br>
+            <a href="http://en.gravatar.com/site/signup"><img src="{{ person.gravatar() }}" class="photo" alt="gravatar" /></a>
+            <p>Gravatar setting:</p>
+            <p>The picture on your badge is not publicly available, so we elected to use a webservice called Gravatar to pull in a picture.  The primary e-mail set up above will be linked to the picture displayed via Gravatar.  To set-up a gravatar, simply visit their <a href="http://en.gravatar.com/site/signup">website</a> and upload a picture to be affiliated with your primary e-mail address. If you would like more information, please visit the <a href="/faq">FAQ's</a>.
+            </p>
+            <label for="category">Select a job category that best matches your expertise:</label><br>
+            <select name="category">
+              {% for value in ["", "developer", "scientist", "engineer", "management", "center_ops", "mission_ops", "admin", "legal", "finance", "communications"] %}
+                <option value="{{ value }}" {% if value ==  person.get('category') %} selected="selected" {% end %}>{{ value }}</option>
+              {% end %}
+            </select>
+          
+          </fieldset> <!-- end display info -->
 
-<p>All fields are optional</p>
+          <fieldset class="profile_edit_fieldset"> <!-- main nasa project -->
+            <legend>Main NASA Project</legend>
+            <p>Information about your main NASA project.  This is what you do every day.  Please provide the following information, and the Job Title you fill out below will be directly below your name on your profile page.</p></br><br>
+            <span class="wide_block">
+              <div id="three_column">
+                <label for="main_project_name">Project Name: </label> 
+                <input type="text" name="main_project_name" size="25" value="{{ person.get('main_project_name') }}"><br>
+              </div>
+              <div id="three_column">
+                <label for="main_project_web">Project Website: </label>
+                <input type="text" name="main_project_web" size="25" value="{{ person.get('main_project_web') }}"><br>
+              </div
+              <div id="three_column">
+                <label for="title">Your Job Title:</label>
+                <input type="text" name="title" size="25" value="{{ person.get('title') }}"><br>
+              </div>
+            </span>
+            <br>
+            <label for="main_project_description">Project Description</label><br>
+            <textarea name="main_project_description" rows=7 cols=80>
+              {{ person.get('main_project_description') }}
+            </textarea><br>
+          </fieldset> <!-- end main project -->
 
-<p><form action="/edit" method="get">
+          <fieldset class="profile_edit_fieldset"> <!-- more info -->
+            <legend>More Info about You!</legend>
 
-<fieldset class="profile_edit_fieldset"> <!-- display info -->
-<legend>Display Information</legend>
-<p>Select your display name and primary contact email. The display
-  name will be used across the site, and your primary email will be
-  used to retrieve your gravatar.</p>
+            <label for="bio">A brief Bio</label><br>
+            <textarea name="bio" rows=10 cols=80>
+              {{ person.get('bio') }}
+            </textarea><br><br>
 
-<label for="primary_name">Display Name</label><br>
-{% for name in person.get('all_names') %}
-<input type="radio" name="primary_name" value="{{ name }} " {% if name.strip() == person.display_name().strip() %} checked="on" {% end %} /> {{name}}<br>
-{% end %}
-<br>
-<label for="primary_email">Select your primary email</label><br>
-{% for email in person.get('all_email') %}
-<input type="radio" name="primary_email" value="{{ email }}" {% if email == person.email() %} checked="on" {% end %} /> {{email}}<br>
-{% end %}
-<br>
-<label for="primary_phone">Main phone number</label><br>
-{% for phone in person.get('all_phones') %}
-<input type="radio" name="primary_phone" value="{{ phone }}" {% if phone == person.phone() %} checked="on" {% end %} /> {{phone}}<br>
-{% end %}
+            <div class="narrow_block">
+              <label for="tags">Tags (comma separated)</label><br>
+              <input type="text" name="tags" size="40" value="{{ person.get('tags') }}"><br>
+            </div>
+            
+            <div class="narrow_block">
+              <label for="skills">Skills (comma separated)</label><br>
+              <input type="text" name="skills" size="40"  value="{{ person.get('skills') }}"><br>
+            </div>
+            <div class="wide_block">
+              <div id="three_column">
+                <label for="skills">Twitter ID</label><br>
+                <input type="text" name="twitter" value="{{ person.get('twitter') }}"><br>
+              </div>
+            
+              <div id="three_column">
+                <label for="personal_web">Your Website</label><br>
+                <input type="text" name="personal_web" value="{{ person.get('personal_web') }}"><br>
+              </div>
+            
+              <div id="three_column">
+                <label for="hire_date">Hire date at NASA</label><br>
+                <input type="text" name="hire_date" value="{{ person.get('hire_date') }}"><br>
+              </div>
+            </div>
+            <div class="wide_block">
+              <label for="side_projects">Information about any side projects you'd like to share:</label><br>
+              <textarea name="side_projects" rows=7 cols=80>
+                {{ person.get('side_projects') }}
+              </textarea><br>
+            </div>
+            <div class="wide_block">
+              <label for="previous_projects">Previous Projects You've Worked On</label><br>
+              <textarea name="previous_projects" rows=7 cols=80>
+                {{ person.get('previous_projects') }}
+              </textarea><br>
+            </div>
+          </fieldset> <!-- end more info -->
 
-</fieldset> <!-- end display info -->
+          <input type="submit" name="submitted" value="Share">
+        </form>
+      </p>
+    </div>
+  </div>
+  
+  <div id="sidebar">
 
-<fieldset class="profile_edit_fieldset"> <!-- main nasa project -->
-<legend>Main NASA Project</legend>
-<p>Information about your main NASA project</p>
-<label for="main_project_name">Name: </label> 
-<input type="text" name="main_project_name" value="{{ person.get('main_project_name') }}"><br>
-<label for="main_project_web">Website: </label> 
-<input type="text" name="main_project_web" value="{{ person.get('main_project_web') }}"><br>
-<label for="main_project_description">Description</label><br>
-<textarea name="main_project_description" rows=5 cols=70 >
-{{ person.get('main_project_description') }}
-</textarea><br>
-</fieldset> <!-- end main project -->
+    <fieldset class="profile_edit_fieldset"> <!-- x500 info -->
+      <legend>x500 information</legend>
+      <p>Note that information you edit here <span class="warning">will NOT
+        be stored in the official NASA x500</span>. It would be preferable
+        for you to update it through the formal channels, since then the two
+        systems will be in sync. But if you really want to edit these here,
+        go ahead. </p>
 
-<fieldset class="profile_edit_fieldset"> <!-- more info -->
-<legend>More Info about You!</legend>
+      {% for field, values in person.x500.iteritems() %}
+        <label for="{{ field }}">{{ field }} </label><br>
+        {{ values }}<br>
+        <br>
+      {% end %}
+    </fieldset> <!-- end x500 info -->
 
-<label for="bio">A brief Bio</label><br>
-<textarea name="bio" rows=7 cols=70>
-{{ person.get('bio') }}
-</textarea><br>
-
-<label for="tags">Tags (comma separated)</label><br>
-<input type="text" name="tags" size="60" value="{{ person.get('tags') }}"><br>
-
-<label for="skills">Skills (comma separated)</label><br>
-<input type="text" name="skills" size="60"  value="{{ person.get('skills') }}"><br>
-
-<label for="skills">Twitter ID</label><br>
-<input type="text" name="twitter"  value="{{ person.get('twitter') }}"><br>
-
-<label for="personal_web">Your Website</label><br>
-<input type="text" name="personal_web"  value="{{ person.get('personal_web') }}"><br>
-
-<label for="hire_date">Hire Date at NASA (Need a date-select)</label><br>
-<input type="text" name="hire_date"  value="{{ person.get('hire_date') }}"><br>
-
-<label for="title">Current Job Title</label><br>
-<input type="text" name="title"  value="{{ person.get('title') }}"><br>
-
-<label for="side_projects">Information about any side projects you'd like to share:</label><br>
-<textarea name="side_projects" rows=7 cols=70>
-{{ person.get('side_projects') }}
-</textarea><br>
-
-<label for="previous_projects">Previous Projects You've Worked On</label><br>
-<textarea name="previous_projects" rows=7 cols=70>
-{{ person.get('previous_projects') }}
-</textarea><br>
-
-<label for="category">Select a job category to help people find you using search</label><br>
-<select name="category">
-  {% for value in ["", "developer", "scientist", "engineer", "management", "center_ops", "mission_ops", "admin", "legal", "finance", "communications"] %}
-  <option value="{{ value }}" {% if value ==  person.get('category') %} selected="selected" {% end %}>{{ value }}</option>
-  {% end %}
-</select>
-
-</fieldset> <!-- end more info -->
-
-<fieldset class="profile_edit_fieldset"> <!-- x500 info -->
-<legend>x500 information</legend>
-<p>Note that information you edit here <span class="warning">will NOT
-  be stored in the official NASA x500</span>. It would be preferrable
-  for you to update it through the formal channels, since then the two
-  systems will be in sync. But if you really want to edit these here,
-  go ahead. </p>
-
-{% for field, values in person.x500.iteritems() %}
-<label for="{{ field }}">{{ field }} </label><br>
-{{ values }}<br>
-<br>
-{% end %}
-</fieldset> <!-- end x500 info -->
-
-<input type="submit" name="submitted" value="Share">
-</form></p>
-
+  </div>
+</div>
 <!-- Fields:
 building
 room_num

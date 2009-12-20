@@ -1,18 +1,16 @@
-todo:
+Todo:
+* parsing and storage
+  * generalize parsing results for differences between centers
+  * store additional arbitrary x500 fields
+  * recognize different phone number fields
 * ability to update x500 info
 * FAQs
   * how are you able to do this?
   * are you stealing this information?
-* make center selection in search form work
-  * add in hq ldap server
-  * add in jpl ldap server
   * why is it so slow?
-* have better error handling for fields that dont exist on all
-  templates. (results, person, edit, etc.)
+* find ldap servers for remaining centers
 * turn personal url into a link
 * fix work project link
-* get example search results from each center and make sure they
-  display on the person.html page accurately.
 * handle 'server not available' errors. 
 * use secure cookies
 * custom 404 page
@@ -65,7 +63,7 @@ done:
   * ability to mark primary email, name, number. 
     * show existing selection for primaries
     * tag and skill handling
-
+* make center selection in search form work
 
 example nasa ldap stuff (from linton)
 http://babelfish.arc.nasa.gov/trac/dashlink/browser/main/trunk/ivhm/utils/helper.py

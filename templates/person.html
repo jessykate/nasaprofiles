@@ -14,7 +14,7 @@
     <span class="fn">{{ person.display_name() }}</span>
     
     <div class="category">
-        {{ person.get('category') }}   
+         {{ category(person.get('category')) }}  
     </div>
 
     
@@ -25,13 +25,14 @@
 
 
     <div class="contact">
-      {% if person.get('all_email') %} <!--this should really be person.primary_email(), which isnt written yet -->
-        <a class="email" href="mailto:{{ person.get('all_email')[0] }}">{{ person.get('all_email')[0] }}</a>
-      {% end %}	
-      {% if person.get('all_phones') %}
-        <span class="tel">
+      <a class="email" href="mailto:{{ person.email() }}">{{% person.email() %}}</a> <!--write the person.email() function!! -->
+        <span class="tel"><!--write the all phones parser function!! -->
           <span class="type">office</span>:
-          <span class="value">{{ person.get('all_phones')[0] }}</span>
+          <span class="value">{{ person.get('office' }}</span><br>
+          <span class="type">mobile</span>:
+          <span class="value">{{ person.get('mobile' }}</span><br>
+          <span class="type">pager</span>:
+          <span class="value">{{ person.get('pager' }}</span><br>
         </span>
       {% end %}
     </div>         
@@ -48,13 +49,13 @@
   {% if person.get('main_project_description') %}  
   
     <div class="wide_block">
-      <h3>{{ profile['main_project'][0] }}</h3>
+      <h3>{{ person.get['main_project_name'] }}</h3>
       
       {% if person.get('main_project_web') %} 
-        <a href="http://{{ profile['main_project_web'][0] }}">{{ profile['main_project'][0] }} Website</a>
-      {% end %}
+        <a href="http://{{ person.get('main_project_web') }}">{{ person.get('main_project_web') }} </a>
+      {% end %}<br>
       
-      <p>{{ profile['main_project_description'][0] }}</p>
+      <p>{{ person.get('main_project_description') }}</p>
     </div>
   {% end %}
   
@@ -62,28 +63,28 @@
   {% if person.get('skills') %}  
     <div class="narrow_block">
       <h3>Skills</h3>
-        {{ profile['skills'] }}
+        {{ person.get('skills') }}
     </div>
   {% end %}
 
   {% if person.get('tags') %}  
     <div class="narrow_block">
       <h3>Tags</h3>
-        {{ profile['tags'] }}
+        {{ person.get('tags') }}
     </div>
   {% end %}
 
   {% if person.get('previous_projects') %}  
     <div class="narrow_block">
       <h3>Previous Projects</h3>
-        {{ profile['previous_projects'] }}
+        {{ person.get('previous_projects') }}
     </div>
   {% end %}
 
   {% if person.get('side_projects') %}  
     <div class="narrow_block">
       <h3>Side Projects</h3>
-        {{ profile['side_projects'] }}
+        {{ person.get('side_projects') }}
     </div>
   {% end %}
   

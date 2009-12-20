@@ -200,6 +200,10 @@ img.photo {
 	background-color: white;
 	width: 985px;
 	float: left;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	padding-left: 50px;
+	padding-right: 50px;
 }
 
 #profile_card{
@@ -320,9 +324,17 @@ a img {
 	border: none;
 }
 
+.profile_edit_fieldset {
+    border-width: 2px;
+    border-color: #ccccff;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 
+}
 
-
-
+.warning {
+    color: red;
+}
 
 
 

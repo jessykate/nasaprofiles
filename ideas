@@ -4,7 +4,11 @@ todo:
 * profile editing
   * pre-propulate fields with existing info
   * ability to mark primary email, name, number. 
-  * delineate information that came from x500; let user change it, but save x500 info. 
+    * show existing selection for primaries
+    * tag and skill handling
+* turn personal url into a link
+* pull in indivuals' twitter feed. 
+* ability to update x500 info
 
 * make center selection in search form work
 * handle 'server not available' errors. 

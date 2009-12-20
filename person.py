@@ -111,7 +111,18 @@ class Person(object):
                 pass
 
     def save(self):
-        db[self.uid] = self.__dict__
+        ''' save or update a person object '''
+        if self.uid not in db:
+            db[self.uid] = self.__dict__
+        else:
+            person = db[self.uid]
+            for field, value in self.__dict__.iteritems():
+                if field == 'x500':
+                    continue
+                # couch will automatically convert non-string values
+                # to json.
+                person[field] = value
+            db[self.uid] = person
 
     def _populate(self, user_dict):
         ''' Populate a Person object from the data store. '''
@@ -134,17 +145,14 @@ class Person(object):
         else: return default
 
     def set(self, field, value):
-        if field.find('x500'):
-            print 'error: you cannot overwrite an x500 field.'
+        if field.find('x500') >= 0:
+            print 'Error: You cannot overwrite an x500 field. Skipping request to update %s = %s' % (field, value)
             return
         self.__dict__[field] = value
 
     def gravatar(self, size=125):
-        if self.primary_email:
-            email = self.primary_email
-        elif self.all_email:
-            email = self.all_email[0]
-        else:
+        email = self.email()
+        if not email:
             email = 'noone@opennasa.com'
         base = "http://www.gravatar.com/avatar.php?"
         return base+urllib.urlencode({'gravatar_id':hashlib.md5(email.lower()).hexdigest(),

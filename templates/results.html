@@ -18,8 +18,8 @@
               <span> {{ person.email()}}</span><br>
               <span> {{ person.phone()}}</span><br>
           </div>
-          <div id="job_category">
-            
+          <div id="results_category">
+            {{ category_sm(person.get('category')) }}
           </div>
           <div id="results_center">
             <span>{{ person.get('center') }}</span>

@@ -60,7 +60,7 @@
       <h3>{{ person.get('main_project_name') }}</h3>
       
       {% if person.get('main_project_web') %} 
-        <a href="http://{{ person.get('main_project_web') }}">{{ person.get('main_project_web') }} </a>
+        <a href="{{ person.get('main_project_web') }}">{{ person.get('main_project_web') }} </a>
       {% end %}<br>
       
       <p>{{ person.get('main_project_description') }}</p>
@@ -124,7 +124,7 @@
     {% end %}
 
     {% if person.get('personal_web') %}
-      <span>Personal Website: {{ person.get('personal_web') }} <br /> 
+      <span>Personal Website: <a href="{{ person.get('personal_web') }}">{{ person.get('personal_web') }}</a><br/> 
     {% end %}
   </div>
 

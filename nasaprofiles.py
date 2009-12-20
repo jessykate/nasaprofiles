@@ -161,6 +161,7 @@ class EditHandler(BaseHandler):
 
         
 class RefreshHandler(BaseHandler):
+    ''' supports refreshing of x500 info'''
     pass
 
 

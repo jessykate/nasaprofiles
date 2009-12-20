@@ -5,6 +5,7 @@
 {% end %}
 
 {% block body %}
+
 <div id="profile_page">
   <div id="content">
   <div id="person" class="vcard">    
@@ -43,6 +44,83 @@
       <p>{{ person.get('bio') }}</p>
     </div>
   {% end %}
+
+  {% if person.get('main_project_description') %}  
+  
+    <div class="wide_block">
+      <h3>{{ profile['main_project'][0] }}</h3>
+      
+      {% if person.get('main_project_web') %} 
+        <a href="http://{{ profile['main_project_web'][0] }}">{{ profile['main_project'][0] }} Website</a>
+      {% end %}
+      
+      <p>{{ profile['main_project_description'][0] }}</p>
+    </div>
+  {% end %}
+  
+  
+  {% if person.get('skills') %}  
+    <div class="narrow_block">
+      <h3>Skills</h3>
+        {{ profile['skills'] }}
+    </div>
+  {% end %}
+
+  {% if person.get('tags') %}  
+    <div class="narrow_block">
+      <h3>Tags</h3>
+        {{ profile['tags'] }}
+    </div>
+  {% end %}
+
+  {% if person.get('previous_projects') %}  
+    <div class="narrow_block">
+      <h3>Previous Projects</h3>
+        {{ profile['previous_projects'] }}
+    </div>
+  {% end %}
+
+  {% if person.get('side_projects') %}  
+    <div class="narrow_block">
+      <h3>Side Projects</h3>
+        {{ profile['side_projects'] }}
+    </div>
+  {% end %}
+  
+  {% if person.get('postalAddress') or person.get('roomNumber') %} 
+    <div class=" narrow_block">
+      <h3>Address</h3>
+      <address>
+        {% if person.get('office') %}  
+          {{ profile['office'] }}<br />
+        {% end %}
+        
+        {% if person.get('roomNumber') %}
+          {{ profile['roomNumber'][0] }}<br /><br />
+        {% end %}
+        
+        {{ profile['postalAddress'][0] }}<br />
+	{% if len(profile['postalAddress']) > 1 %}
+        {{ profile['postalAddress'][1] }}<br />
+	{% end %}
+      </address>
+    </div>
+  {% end %}
+
+  <div class=" narrow_block">
+    <h3>Other Information</h3>
+    {% if person.get('userClass') %}  
+      {{ profile['userClass'][0] }}<br />
+    {% end %}
+    {% if person.get('hire_date') %}  
+      {{ profile['office'] }}<br />
+    {% end %}
+    {% if person.get('personal_web') %}  
+      {{ profile['office'] }}<br />
+    {% end %}
+  </div>
+
+<!-- END STUFF -->
 
 </div>
 

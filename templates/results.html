@@ -13,14 +13,16 @@
           <div id="results_gravatar">
             <img src="{{ person.gravatar(80) }}">
           </div>
-          <div id="results_name">
-            <a href="person/{{ person.get('uid') }}">{{ person.display_name() }}</a><br>
-              <span> {{ person.email()}}</span><br>
-              <span> {{ person.phone()}}</span><br>
+          <div id="results_info">
+            <span class="results_name"> {{ person.display_name() }}</span><br><br>
+            <span> {{ person.email()}}</span><br>
+            <span> {{ person.phone()}}</span><br>
           </div>
           <div id="results_category">
             {% if person.get('category') %}
               {{ category_sm(person.get('category')) }}
+            {% else %}
+              <img src="static/images/job_category_sm.png">
             {% end %}
           </div>
           <div id="results_center">

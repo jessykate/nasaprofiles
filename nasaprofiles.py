@@ -183,7 +183,7 @@ class MainHandler(BaseHandler):
                 return
 
             # display the search results
-            self.render('templates/results.html', title='Search Results', results=people)
+            self.render('templates/results.html', title='Search Results', results=people, category_sm=helper.category_sm)
 
         else: 
             # if no search has been done yet, just present user w

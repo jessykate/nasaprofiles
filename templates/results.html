@@ -19,7 +19,9 @@
               <span> {{ person.phone()}}</span><br>
           </div>
           <div id="results_category">
-            {{ category_sm(person.get('category')) }}
+            {% if person.get('category') %}
+              {{ category_sm(person.get('category')) }}
+            {% end %}
           </div>
           <div id="results_center">
             <span>{{ person.get('center') }}</span>

@@ -37,8 +37,8 @@ class PersonHandler(BaseHandler):
             self.redirect('/')
 
         self.render('templates/person.html', title=person.display_name(), 
-                    person=person, map=helper.map, mailing=helper.mailing, category=helper.category)
-
+                    person=person, map=helper.map, mailing=helper.mailing, 
+                    category=helper.category, category_sm=helper.category_sm)
 
 class EditRequestHandler(BaseHandler):
     def get(self, uid):
@@ -127,14 +127,47 @@ class EditHandler(BaseHandler):
             uid = self.get_current_user()
             person = Person(uid)
             self.render('templates/profile_edit.html', person=person)
+
         else:
-            
-            self.write('success')
+            new_values = self.request.arguments
+            self.write(str(new_values))
+
+            uid = self.get_current_user()
+            person = Person(uid)
+            for field, value in new_values.iteritems():            
+                field = field.strip()
+                # check to see if it's an x500 field; if so, compare
+                # it to the original value, and if it's new, set the
+                # new value as a local override.
+                if field in person.x500:
+                    if value != person.x500[field]:
+                        print 'An override value for x500 field %s was set' % field
+                        print 'Old %s value: %s' % (str(type(person.x500[field])), person.x500[field])
+                        print 'New %s value: %s' % (str(type(value)), value)
+                        person.set(field, value)
+                    else:
+                        print 'No changes were made to x500 field %s' % field
+                else:
+                    if field == 'submitted':
+                        continue
+                    # for the data store, all fields should be strings
+                    # except those starting with 'all_', which are lists.
+                    if field.find('all_') < 0:
+                        value = value[0].strip()
+                    print 'settings new value %s = %s' % (field, value)
+                    person.set(field, value)
+            person.save()
+            self.redirect('/person/'+uid)
 
         
 class RefreshHandler(BaseHandler):
     pass
 
+
+class FaqHandler(BaseHandler):
+    def get(self):
+        self.render('static/pages/faq.html')
+    
 class MainHandler(BaseHandler):
     def get(self):
         db = settings['db']
@@ -183,7 +216,8 @@ class MainHandler(BaseHandler):
                 return
 
             # display the search results
-            self.render('templates/results.html', title='Search Results', results=people, category_sm=helper.category_sm)
+            self.render('templates/results.html', title='Search Results', results=people, 
+                        category_sm=helper.category_sm)
 
         else: 
             # if no search has been done yet, just present user w
@@ -226,6 +260,7 @@ application = tornado.web.Application([
         (r'/person/([A-Za-z0-9\+,\-%]+/refresh)', RefreshHandler),
         (r'/request/([A-Za-z0-9\+,\-%]+)', EditRequestHandler),
         (r'/edit', EditHandler),
+        (r'/faq', FaqHandler),
         (r'/logout', LogoutHandler),
         (r'/login/([A-Za-z0-9\-]+)', LoginHandler),
         ], **settings)

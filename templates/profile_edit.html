@@ -17,19 +17,19 @@
   name will be used across the site, and your primary email will be
   used to retrieve your gravatar.</p>
 
-<label for="display_name">Display Name</label><br>
+<label for="primary_name">Display Name</label><br>
 {% for name in person.get('all_names') %}
-<input type="radio" name="display_name" value="{{ name }}" /> {{name}}<br>
+<input type="radio" name="primary_name" value="{{ name }} " {% if name.strip() == person.display_name().strip() %} checked="on" {% end %} /> {{name}}<br>
 {% end %}
 <br>
 <label for="primary_email">Select your primary email</label><br>
 {% for email in person.get('all_email') %}
-<input type="radio" name="primary_email" value="{{ email }}" /> {{email}}<br>
+<input type="radio" name="primary_email" value="{{ email }}" {% if email == person.email() %} checked="on" {% end %} /> {{email}}<br>
 {% end %}
 <br>
 <label for="primary_phone">Main phone number</label><br>
 {% for phone in person.get('all_phones') %}
-<input type="radio" name="primary_phone" value="{{ phone }}" /> {{phone}}<br>
+<input type="radio" name="primary_phone" value="{{ phone }}" {% if phone == person.phone() %} checked="on" {% end %} /> {{phone}}<br>
 {% end %}
 
 </fieldset> <!-- end display info -->
@@ -42,14 +42,18 @@
 <label for="main_project_web">Website: </label> 
 <input type="text" name="main_project_web" value="{{ person.get('main_project_web') }}"><br>
 <label for="main_project_description">Description</label><br>
-<textarea name="main_project_description" value="{{ person.get('main_project_description')}}" rows=5 cols=70 ></textarea><br>
+<textarea name="main_project_description" rows=5 cols=70 >
+{{ person.get('main_project_description') }}
+</textarea><br>
 </fieldset> <!-- end main project -->
 
 <fieldset class="profile_edit_fieldset"> <!-- more info -->
 <legend>More Info about You!</legend>
 
 <label for="bio">A brief Bio</label><br>
-<textarea name="bio" rows=7 cols=70 value="{{ person.get('bio') }}"></textarea><br>
+<textarea name="bio" rows=7 cols=70>
+{{ person.get('bio') }}
+</textarea><br>
 
 <label for="tags">Tags (comma separated)</label><br>
 <input type="text" name="tags" size="60" value="{{ person.get('tags') }}"><br>
@@ -70,24 +74,20 @@
 <input type="text" name="title"  value="{{ person.get('title') }}"><br>
 
 <label for="side_projects">Information about any side projects you'd like to share:</label><br>
-<textarea name="side_projects"  value="{{ person.get('side_projects') }}" rows=7 cols=70></textarea><br>
+<textarea name="side_projects" rows=7 cols=70>
+{{ person.get('side_projects') }}
+</textarea><br>
 
 <label for="previous_projects">Previous Projects You've Worked On</label><br>
-<textarea name="previous_projects"  value="{{ person.get('previous_projects') }}" rows=7 cols=70></textarea><br>
+<textarea name="previous_projects" rows=7 cols=70>
+{{ person.get('previous_projects') }}
+</textarea><br>
 
 <label for="category">Select a job category to help people find you using search</label><br>
-<select>
-  <option id="blank" selected="selected"></option>
-  <option id="developer">Developer</option>
-  <option id="scientist">Scientist</option>
-  <option id="engineer">Engineer</option>
-  <option id="management">Management</option>
-  <option id="center_ops">Center Operations</option>
-  <option id="mission_ops">Mission Operations</option>
-  <option id="admin">Administrative</option>
-  <option id="legal">Legal</option>
-  <option id="finance">Finance</option>
-  <option id="communications">Communications</option>
+<select name="category">
+  {% for value in ["", "developer", "scientist", "engineer", "management", "center_ops", "mission_ops", "admin", "legal", "finance", "communications"] %}
+  <option value="{{ value }}" {% if value ==  person.get('category') %} selected="selected" {% end %}>{{ value }}</option>
+  {% end %}
 </select>
 
 </fieldset> <!-- end more info -->
@@ -101,30 +101,9 @@
   go ahead. </p>
 
 {% for field, values in person.x500.iteritems() %}
-
 <label for="{{ field }}">{{ field }} </label><br>
-{% if isinstance(values, list) %}
-{% for value in values %}
-<input type="text" name="{{ field}}" value="{{ value }}"><br>
-{% end %}
-{% elif field == 'center' %}
-<select name="center" size=1>
-  <option value="Ames Research Center">Ames Research Center</option>
-  <option value="Dryden Flight Research Center">Dryden Flight Research Center</option>
-  <option value="Glenn Research Center">Glenn Research Center</option>
-  <option value="Goddard Space Flight Center">Goddard Space Flight Center</option>
-  <option value="Headquarters">Headquarters</option>
-  <option value="Jet Propulsion Laboratory">Jet Propulsion Laboratory</option>
-  <option value="Johnson Space Center">Johnson Space Center</option>
-  <option value="Kennedy Space Center">Kennedy Space Center</option>
-  <option value="Langley Research Center">Langley Research Center</option>
-  <option value="Marshall Space Flight Center">Marshall Space Flight Center</option>
-  <option value="Stennis Space Center">Stennis Space Center</option>
-</select>
+{{ values }}<br>
 <br>
-{% else %}
-<input type="text" name="{{ field}}" value="{{ values }}"><br>
-{% end %}
 {% end %}
 </fieldset> <!-- end x500 info -->
 
@@ -156,6 +135,9 @@ category = [
  Legal
  Finance/Procurement
  Communications
+]
+twitter
+facebook
 -->
 
 {% end %}

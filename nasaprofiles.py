@@ -163,6 +163,11 @@ class EditHandler(BaseHandler):
 class RefreshHandler(BaseHandler):
     pass
 
+
+class FaqHandler(BaseHandler):
+    def get(self):
+        self.render('static/pages/faq.html')
+    
 class MainHandler(BaseHandler):
     def get(self):
         db = settings['db']
@@ -255,6 +260,7 @@ application = tornado.web.Application([
         (r'/person/([A-Za-z0-9\+,\-%]+/refresh)', RefreshHandler),
         (r'/request/([A-Za-z0-9\+,\-%]+)', EditRequestHandler),
         (r'/edit', EditHandler),
+        (r'/faq', FaqHandler),
         (r'/logout', LogoutHandler),
         (r'/login/([A-Za-z0-9\-]+)', LoginHandler),
         ], **settings)

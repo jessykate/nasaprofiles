@@ -112,7 +112,7 @@ class Person(object):
 
     def save(self):
         db[self.uid] = self.__dict__
-
+ 
     def _populate(self, user_dict):
         ''' Populate a Person object from the data store. '''
         if settings['debug']:

@@ -45,14 +45,12 @@
     </div>
   {% end %}
 
-<!-- BEGING STUFF THAT IS STILL BROKEN AND NEEDS UPDATING -->
-
-  {% if profile.has_key('main_project_description') %}  
+  {% if person.get('main_project_description') %}  
   
     <div class="wide_block">
       <h3>{{ profile['main_project'][0] }}</h3>
       
-      {% if profile.has_key('main_project_web') %} 
+      {% if person.get('main_project_web') %} 
         <a href="http://{{ profile['main_project_web'][0] }}">{{ profile['main_project'][0] }} Website</a>
       {% end %}
       
@@ -61,43 +59,43 @@
   {% end %}
   
   
-  {% if profile.has_key('skills') %}  
+  {% if person.get('skills') %}  
     <div class="narrow_block">
       <h3>Skills</h3>
         {{ profile['skills'] }}
     </div>
   {% end %}
 
-  {% if profile.has_key('tags') %}  
+  {% if person.get('tags') %}  
     <div class="narrow_block">
       <h3>Tags</h3>
         {{ profile['tags'] }}
     </div>
   {% end %}
 
-  {% if profile.has_key('previous_projects') %}  
+  {% if person.get('previous_projects') %}  
     <div class="narrow_block">
       <h3>Previous Projects</h3>
         {{ profile['previous_projects'] }}
     </div>
   {% end %}
 
-  {% if profile.has_key('side_projects') %}  
+  {% if person.get('side_projects') %}  
     <div class="narrow_block">
       <h3>Side Projects</h3>
         {{ profile['side_projects'] }}
     </div>
   {% end %}
   
-  {% if profile.has_key('postalAddress') or profile.has_key('roomNumber') %} 
+  {% if person.get('postalAddress') or person.get('roomNumber') %} 
     <div class=" narrow_block">
       <h3>Address</h3>
       <address>
-        {% if profile.has_key('office') %}  
+        {% if person.get('office') %}  
           {{ profile['office'] }}<br />
         {% end %}
         
-        {% if profile.has_key('roomNumber') %}
+        {% if person.get('roomNumber') %}
           {{ profile['roomNumber'][0] }}<br /><br />
         {% end %}
         
@@ -111,13 +109,13 @@
 
   <div class=" narrow_block">
     <h3>Other Information</h3>
-    {% if profile.has_key('userClass') %}  
+    {% if person.get('userClass') %}  
       {{ profile['userClass'][0] }}<br />
     {% end %}
-    {% if profile.has_key('hire_date') %}  
+    {% if person.get('hire_date') %}  
       {{ profile['office'] }}<br />
     {% end %}
-    {% if profile.has_key('personal_web') %}  
+    {% if person.get('personal_web') %}  
       {{ profile['office'] }}<br />
     {% end %}
   </div>

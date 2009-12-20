@@ -37,7 +37,8 @@ class PersonHandler(BaseHandler):
             self.redirect('/')
 
         self.render('templates/person.html', title=person.display_name(), 
-                    person=person, map=helper.map, mailing=helper.mailing, category=helper.category)
+                    person=person, map=helper.map, mailing=helper.mailing, 
+                    category=helper.category, category_sm=helper.category_sm)
 
 
 class EditRequestHandler(BaseHandler):
@@ -199,7 +200,8 @@ class MainHandler(BaseHandler):
                 return
 
             # display the search results
-            self.render('templates/results.html', title='Search Results', results=people)
+            self.render('templates/results.html', title='Search Results', results=people, 
+                        category_sm=helper.category_sm)
 
         else: 
             # if no search has been done yet, just present user w

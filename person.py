@@ -69,25 +69,50 @@ class Person(object):
                 for value in values:
                     self.x500['all_email'].append(value)
 
+# different centers format this differently, of course :)
+# Goddard: ['NASA ', ' Goddard Space Flight Center ', ' Mailstop 750.0 ', ' Greenbelt, MD 20771']
             if field == 'postalAddress':
                 for value in values:
-                    center, mail_stop = value.split('$')
-                self.x500['center'] = center.strip()
-                self.x500['mail_stop'] = mail_stop.strip()
+                    address = value.split('$')             
+                    # strip whitespace
+                    address = [a.strip() for a in address]
+                    if 'NASA' in address:
+                        address.remove('NASA')
+                    if 'nasa' in address:
+                        address.remove('nasa')
+                    self.x500['center'] = address[0].strip()
+                    if len(address) > 1:
+                        self.x500['mail_stop'] = address[1].strip()
+                    if len(address) > 2:
+                        print '*** Warning: some values from Postal Address Field were missed.'
+                        print 'Raw value of postal address field:'
+                        print str(address)
+
 
             if field == 'roomNumber':
                 # assumes there is only one list item for this
                 # result. might turn out to be wrong.
-                building, room = values[0].split(',')
-                self.x500['building'] = building[building.find(':')+1:].strip()
-                self.x500['room_num'] = room[room.find(':')+1:].strip()
+                location = values[0].split(',')
+                self.x500['building'] = location[0][location[0].find(':')+1:].strip()
+                if len(location) > 1:
+                    self.x500['room_num'] = location[1][location[1].find(':')+1:].strip()
+                if len(location) > 2:
+                        print '*** Warning: some values from Room Number field were missed.'
+                        print 'Raw value of room number field:'
+                        print str(location)
+
+                    
 
             if field == 'telephoneNumber':
                 self.x500['all_phones'] = []
                 for value in values:
                     self.x500['all_phones'].append(value)
 
+
+            # both are inconsistently used, of course :)
             if field == 'uniqueIdentifier':
+                self.uid = values[0]
+            elif field == 'uid':
                 self.uid = values[0]
 
             if field == 'userClass':
@@ -112,6 +137,9 @@ class Person(object):
 
     def save(self):
         ''' save or update a person object '''
+        if not self.uid:
+            print 'Error: UID is empty. Cannot save new user data.'
+            return
         if self.uid not in db:
             db[self.uid] = self.__dict__
         else:

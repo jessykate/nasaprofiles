@@ -127,9 +127,25 @@ class EditHandler(BaseHandler):
             uid = self.get_current_user()
             person = Person(uid)
             self.render('templates/profile_edit.html', person=person)
+
         else:
-            
-            self.write('success')
+            new_values = self.request.arguments
+            self.write(str(new_values))
+
+            uid = self.get_current_user()
+            person = Person(uid)
+            for field, value in new_values.iteritems():            
+                # check to see if it's an x500 field; if so, compare
+                # it to the original value, and if it's new, set the
+                # new value as a local override.
+                if field in person.x500:
+                    if value != person.x500[field]:
+                        person.set(field, value)
+                else:
+                    print 'settings new value %s = %s' % (field, value)
+                    person.set(field, value)
+            person.save()
+            self.redirect('/person/'+uid)
 
         
 class RefreshHandler(BaseHandler):

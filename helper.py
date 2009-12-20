@@ -88,16 +88,16 @@ Centers = {
 }
 
 category_lookup = {
-    "Developer": "<img src='/static/images/category/developer.png'>",
-    "Scientist": "<img src='/static/images/category/scientist.png'>",
-    "Engineer": "<img src='/static/images/category/engineer.png'>",
-    "Management": "<img src='/static/images/category/management.png'>",
-    "Center Operations": "<img src='/static/images/category/center_ops.png'>",
-    "Mission Operations": "<img src='/static/images/category/mission_ops.png'>",
-    "Administrative": "<img src='/static/images/category/administrative.png'>",
-    "Legal": "<img src='/static/images/category/legal.png'>",
-    "Finance": "<img src='/static/images/category/finance.png'>",
-    "Communications": "<img src='/static/images/category/communications.png'>"
+    "developer": "<img src='/static/images/category/developer.png'>",
+    "scientist": "<img src='/static/images/category/scientist.png'>",
+    "engineer": "<img src='/static/images/category/engineer.png'>",
+    "management": "<img src='/static/images/category/management.png'>",
+    "center_ops": "<img src='/static/images/category/center_ops.png'>", 
+    "mission_ops": "<img src='/static/images/category/mission_ops.png'>",
+    "admin": "<img src='/static/images/category/administrative.png'>",
+    "legal": "<img src='/static/images/category/legal.png'>",
+    "finance": "<img src='/static/images/category/finance.png'>",
+    "communications": "<img src='/static/images/category/communications.png'>"
 }
 
 category_sm_lookup = {

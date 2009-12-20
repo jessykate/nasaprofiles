@@ -141,7 +141,10 @@ class Person(object):
             print 'Error: UID is empty. Cannot save new user data.'
             return
         if self.uid not in db:
-            db[self.uid] = self.__dict__
+            try:
+                db[self.uid] = self.__dict__
+            except:
+                pass
         else:
             person = db[self.uid]
             for field, value in self.__dict__.iteritems():
@@ -151,7 +154,6 @@ class Person(object):
                 # to json.
                 person[field] = value
             db[self.uid] = person
-
     def _populate(self, user_dict):
         ''' Populate a Person object from the data store. '''
         if settings['debug']:

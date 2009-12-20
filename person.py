@@ -21,8 +21,8 @@ class Person(object):
         self.uid = ''
         self.primary_name = ''
         self.all_names = []
-        self.all_email = []
         self.primary_email = ''
+        self.all_email = []
         self.primary_phone = ''
         self.all_phones = []
         self.building = ''

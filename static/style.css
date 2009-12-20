@@ -95,11 +95,11 @@ ul#nav li a:hover {
 }
 
 #content {
-	width: 575px;
+	width: 600px;
 	min-height: 400px;
-	margin-right: 20px;
+	margin-right: 2px;
 	float: left;
-	padding: 20px;
+	padding: 15px;
 }
 
 #sidebar {
@@ -138,7 +138,7 @@ ul#nav li a:hover {
 }
 
 span.fn {
-	font-size: 36px;
+	font-size: 30px;
 	font-weight: bold;
 	float: left;
 	display: block;
@@ -186,7 +186,7 @@ img.photo {
 .contact {
 	float: left;
 	margin-top: 10px;
-	width: 400px;
+	width: 300px;
 }
 
 
@@ -202,19 +202,27 @@ img.photo {
 	float: left;
 }
 
+#results_page {
+    background: url(images/wrapper_bg.png) top left repeat-y;
+    float: left;
+    width: 985px;
+    padding: 20px;
+}
+
 #profile_card{
     background:#E3EEF1;
-    width: 300px;
+    width: 345px;
     height: 80px;
     margin: 20px;
     padding: 5px;
 }
+
 #results_gravatar{
     float: left;
     display: block;
 }
 
-#results_name{
+#results_info{
     float: left;
     padding-left: 10px;
     font-style: bold;
@@ -223,10 +231,15 @@ img.photo {
     height: 50px;
 }
 
+.results_name{
+    font-size: 125%;
+    font-weight: bold;
+    margin-bottom:3px;
+}
+
 #results_category{
     float:right;
     padding-right: 5px;
-   // background: url(images/job_category_sm.png);
     width: 50px;
     height: 50px;
 }
@@ -234,7 +247,7 @@ img.photo {
 #results_center{
     float: left;
     padding-left: 10px;
-    padding-top: 10px;
+    padding-top: 18px;
     
 }
 
@@ -245,11 +258,15 @@ img.photo {
     padding: 20px;
 }
 
-#results_page {
-    background: url(images/wrapper_bg.png) top left repeat-y;
-    float: left;
-    width: 985px;
-    padding: 20px;
+#profile_title{
+    float:left;
+    width:430px;
+}
+
+#profile_category{
+    float:right;
+    width: 100px;
+    height: 100px;
 }
 
 #no_search {

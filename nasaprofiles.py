@@ -188,17 +188,24 @@ class MainHandler(BaseHandler):
             # which will be used to present the search results in the
             # template.
             people = []
+            no_uid_flag = False
             for name, info in results.iteritems():
                 print 'search results: %s' % name
                 # get the uid so we can uniquely reference each search
                 # result
                 try:
-                    uid = info['uniqueIdentifier'][0]
+                    if 'uniqueIdentifier' in info:
+                        uid = info['uniqueIdentifier'][0]
+                    elif 'uid' in info:
+                        uid = info['uid'][0]
+                    else: raise KeyError
                 except KeyError:
                     # xxx todo actually handle this error. 
+                    no_uid_flag = True
                     print '*** Warning! User %s did not have a unique identifier. Weird. Here is their user data:' % name
                     print info
                     continue
+
                 if uid not in db:            
                     print 'Adding %s to data store' % name
                     person = Person()
@@ -211,8 +218,8 @@ class MainHandler(BaseHandler):
             
             # if there's only one search result, redirect to the display
             # page for that person.
-            if len(results) == 1:
-                self.redirect('person/'+results.values()[0]['uniqueIdentifier'][0])
+            if len(results) == 1 and not no_uid_flag:
+                self.redirect('person/'+uid)
                 return
 
             # display the search results
@@ -225,23 +232,42 @@ class MainHandler(BaseHandler):
             self.render('templates/search.html', title='Search for your NASA Homies',
                         message = self.get_cookie("message"))
 
-    def x500_search(self,query, ou="Ames Research Center", wildcard=True):
-        l = ldap.open("x500.nasa.gov")
+    def x500_search(self,query, ou=None, wildcard=True):
         if ou:
-            dn="ou=%s,o=National Aeronautics and Space Administration,c=US" % (ou)
+            # we have different ldap servers for some centers who dont
+            # play nice with the default x500.
+            if ou == 'headquarters':
+                server = "ldap.nasa.gov"
+                dn = "ou=headquarters, o=National Aeronautics and Space Administration,c=US"
+
+            elif ou == 'Jet Propulsion Laboratory':
+                server = 'ldap.jpl.nasa.gov'
+                dn = "dc=dir,dc=jpl,dc=nasa,dc=gov"
+
+            else:
+                server = "x500.nasa.gov"
+                dn = "ou=%s,o=National Aeronautics and Space Administration,c=US" % (ou)                            
         else:
+            # defaults
+            server = "x500.nasa.gov"
             dn="o=National Aeronautics and Space Administration,c=US"
+
         print dn
         if wildcard:
-            filter = "(&(objectClass=organizationalPerson)(cn=*%s*))" % (query)
+            filter = "cn=*%s*" % (query)
+            #filter = "(&(objectClass=organizationalPerson)(cn=*%s*))" % (query)
         else:
             filter = "(&(objectClass=organizationalPerson)(cn=%s))" % (query)
         print filter
+        l = ldap.open(server)
         result_id = l.search(dn, ldap.SCOPE_SUBTREE, filter, None)
         timeout = 0
         result_set = {}
-        while 1:
+        while 1: 
             result_type, result_data = l.result(result_id, timeout)
+            print result_type
+            print result_data
+
             if (result_data == []):
                 break
             else:

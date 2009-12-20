@@ -14,7 +14,9 @@
     <span class="fn">{{ person.display_name() }}</span>
     
     <div class="category">
+      {% if person.get('category') %}
          {{ category(person.get('category')) }}  
+      {% end %}
     </div>
 
     
@@ -25,16 +27,21 @@
 
 
     <div class="contact">
-      <a class="email" href="mailto:{{ person.email() }}">{{% person.email() %}}</a> <!--write the person.email() function!! -->
+      <a class="email" href="mailto:{{ person.email() }}">{{ person.email() }}</a> 
         <span class="tel"><!--write the all phones parser function!! -->
-          <span class="type">office</span>:
-          <span class="value">{{ person.get('office' }}</span><br>
-          <span class="type">mobile</span>:
-          <span class="value">{{ person.get('mobile' }}</span><br>
-          <span class="type">pager</span>:
-          <span class="value">{{ person.get('pager' }}</span><br>
+          {% if person.get('office') %}
+            <span class="type">office</span>:
+            <span class="value">{{ person.get('office') }}</span><br>
+          {% end %}
+          {% if person.get('mobile') %}
+            <span class="type">mobile</span>:
+            <span class="value">{{ person.get('mobile') }}</span><br>
+          {% end %}
+          {% if person.get('pager') %}
+            <span class="type">pager</span>:
+            <span class="value">{{ person.get('pager') }}</span><br>
+          {% end %}
         </span>
-      {% end %}
     </div>         
   </div>
   
@@ -49,7 +56,7 @@
   {% if person.get('main_project_description') %}  
   
     <div class="wide_block">
-      <h3>{{ person.get['main_project_name'] }}</h3>
+      <h3>{{ person.get('main_project_name') }}</h3>
       
       {% if person.get('main_project_web') %} 
         <a href="http://{{ person.get('main_project_web') }}">{{ person.get('main_project_web') }} </a>
@@ -88,36 +95,35 @@
     </div>
   {% end %}
   
-  {% if person.get('postalAddress') or person.get('roomNumber') %} 
+  {% if person.get('mail_stop') or person.get('room_num') %} 
     <div class=" narrow_block">
       <h3>Address</h3>
       <address>
-        {% if person.get('office') %}  
-          {{ profile['office'] }}<br />
-        {% end %}
+        <span>Code {{ person.get('organization') }}</span><br>
+        <span>Building {{ person.get('building') }}, Room {{ person.get('room_num') }}</span><br><br>
         
-        {% if person.get('roomNumber') %}
-          {{ profile['roomNumber'][0] }}<br /><br />
-        {% end %}
         
-        {{ profile['postalAddress'][0] }}<br />
-	{% if len(profile['postalAddress']) > 1 %}
-        {{ profile['postalAddress'][1] }}<br />
+        {{ person.get('center') }}<br>
+        {{ person.get('mail_stop') }}<br>
+        {{ mailing(person.get('center')) }}
+	
 	{% end %}
       </address>
     </div>
-  {% end %}
 
   <div class=" narrow_block">
     <h3>Other Information</h3>
-    {% if person.get('userClass') %}  
-      {{ profile['userClass'][0] }}<br />
+    
+    {% if person.get('employer') %}
+      <span>Employer: {{ person.get('employer') }} <br /> 
     {% end %}
-    {% if person.get('hire_date') %}  
-      {{ profile['office'] }}<br />
+
+    {% if person.get('hire_date') %}
+      <span>Hire Date: {{ person.get('hire_date') }} <br /> 
     {% end %}
-    {% if person.get('personal_web') %}  
-      {{ profile['office'] }}<br />
+
+    {% if person.get('personal_web') %}
+      <span>Personal Website: {{ person.get('personal_web') }} <br /> 
     {% end %}
   </div>
 
@@ -128,7 +134,7 @@
 <div id="sidebar">
   <div id="map">
     <img src="{{ map(person.get('center')).strip() }}"class="photo"/>
-    <h3>{{ person.get('building') }}, {{ person.get('room_num') }}</h3>
+    <h3>{{ person.get('center') }}</h3>
   </div>
 
   {% if person.get('twitter') %}  

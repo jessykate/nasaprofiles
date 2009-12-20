@@ -100,7 +100,7 @@ category_lookup = {
     "Communications": "<img src='/static/images/category/communications.png'>"
 }
 
-category_lookup = {
+category_sm_lookup = {
     "Developer": "<img src='/static/images/category/developer_sm.png'>",
     "Scientist": "<img src='/static/images/category/scientist_sm.png'>",
     "Engineer": "<img src='/static/images/category/engineer_sm.png'>",
@@ -134,7 +134,7 @@ def map(center):
                  "key=ABQIAAAAcA1uAFMrbjLedVsnIfdzKBTB6AAoiF2DC7aNiN_b61fgFnS7FhTHUsE12TUzpqrichBbMDc2ZKHDlw"])
 
 def category_sm(category):
-    category_img = category_lookup[category]
+    category_img = category_sm_lookup[category]
     return category_img
     
 def category(category):

@@ -37,7 +37,7 @@ class PersonHandler(BaseHandler):
             self.redirect('/')
 
         self.render('templates/person.html', title=person.display_name(), 
-                    person=person, map=helper.map, mailing=helper.mailing)
+                    person=person, map=helper.map, mailing=helper.mailing, category=helper.category)
 
 
 class EditRequestHandler(BaseHandler):

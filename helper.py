@@ -86,6 +86,33 @@ Centers = {
     "NASA Stennis Space Center": "label:SSC|30.302121,-89.594879",
     "NASA Headquarters": "label:HQ|38.883128,-77.016413"
 }
+
+category_lookup = {
+    "Developer": "<img src='/static/images/category/developer.png'>",
+    "Scientist": "<img src='/static/images/category/scientist.png'>",
+    "Engineer": "<img src='/static/images/category/engineer.png'>",
+    "Management": "<img src='/static/images/category/management.png'>",
+    "Center Operations": "<img src='/static/images/category/center_ops.png'>",
+    "Mission Operations": "<img src='/static/images/category/mission_ops.png'>",
+    "Administrative": "<img src='/static/images/category/administrative.png'>",
+    "Legal": "<img src='/static/images/category/legal.png'>",
+    "Finance": "<img src='/static/images/category/finance.png'>",
+    "Communications": "<img src='/static/images/category/communications.png'>"
+}
+
+category_sm_lookup = {
+    "Developer": "<img src='/static/images/category/developer_sm.png'>",
+    "Scientist": "<img src='/static/images/category/scientist_sm.png'>",
+    "Engineer": "<img src='/static/images/category/engineer_sm.png'>",
+    "Management": "<img src='/static/images/category/management_sm.png'>",
+    "Center Operations": "<img src='/static/images/category/center_ops_sm.png'>",
+    "Mission Operations": "<img src='/static/images/category/mission_ops_sm.png'>",
+    "Administrative": "<img src='/static/images/category/administrative_sm.png'>",
+    "Legal": "<img src='/static/images/category/legal_sm.png'>",
+    "Finance": "<img src='/static/images/category/finance_sm.png'>",
+    "Communications": "<img src='/static/images/category/communications_sm.png'>"
+}
+
 def mailing(address):
     mailing_address = Address[address]
     return mailing_address
@@ -105,6 +132,14 @@ def map(center):
                  others,
                  "sensor=false",
                  "key=ABQIAAAAcA1uAFMrbjLedVsnIfdzKBTB6AAoiF2DC7aNiN_b61fgFnS7FhTHUsE12TUzpqrichBbMDc2ZKHDlw"])
+
+def category_sm(category):
+    category_img = category_sm_lookup[category]
+    return category_img
+    
+def category(category):
+    category_img = category_lookup[category]
+    return category_img
 
 
 if __name__ == '__main__':

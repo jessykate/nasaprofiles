@@ -9,12 +9,20 @@
       There are {{ len(results) }} results<br><br>
 
       {% for person in results %}
-        <div id="profile_card" onclick="location.href='/person/{{ person.display_name() }}';" style="cursor:pointer;">
+        <div id="profile_card" onclick="location.href='person/{{ person.get('uid') }}';" style="cursor:pointer;">
           <div id="results_gravatar">
             <img src="{{ person.gravatar(80) }}">
           </div>
           <div id="results_name">
-            <a href="person/{{ person.get('uid') }}">{{ person.display_name() }}</a>
+            <a href="person/{{ person.get('uid') }}">{{ person.display_name() }}</a><br>
+              <span> {{ person.email()}}</span><br>
+              <span> {{ person.phone()}}</span><br>
+          </div>
+          <div id="job_category">
+            
+          </div>
+          <div id="results_center">
+            <span>{{ person.get('center') }}</span>
           </div>
         </div>
         

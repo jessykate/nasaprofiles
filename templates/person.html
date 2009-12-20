@@ -11,22 +11,14 @@
   <div id="person" class="vcard">    
 
     <img src="{{ person.gravatar() }}" class="photo" alt="gravatar" />
-    <span class="fn">{{ person.display_name() }}</span>
-    
-    <div class="category">
-      {% if person.get('category') %}
-         {{ category(person.get('category')) }}  
-      {% end %}
+    <div id="profile_title">
+      <span class="fn">{{ person.display_name() }}</span>
     </div>
-
-    
-    <div class="org">
-      {{ person.get('title') }}
-      {{ person.get('main_project') }}         
-    </div>
-
-
     <div class="contact">
+      <div class="org">
+        {{ person.get('title') }}
+        {{ person.get('main_project') }}         
+      </div>
       <a class="email" href="mailto:{{ person.email() }}">{{ person.email() }}</a> 
         <span class="tel"><!--write the all phones parser function!! -->
           {% if person.get('office') %}
@@ -42,7 +34,16 @@
             <span class="value">{{ person.get('pager') }}</span><br>
           {% end %}
         </span>
-    </div>         
+    </div>
+    
+    <div id="profile_category">
+      {% if person.get('category') %}
+         {{ category(person.get('category')) }}  
+      {% else %}
+        <img src="/static/images/job_category.png">
+      {% end %}
+    </div>
+             
   </div>
   
   {% if person.get('bio') %}  

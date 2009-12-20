@@ -223,10 +223,10 @@ img.photo {
     height: 50px;
 }
 
-#job_category{
+#results_category{
     float:right;
     padding-right: 5px;
-    background: url(images/job_category.png);
+    background: url(images/job_category_sm.png);
     width: 50px;
     height: 50px;
 }

@@ -31,10 +31,11 @@ class PersonHandler(BaseHandler):
     def get(self, uid): 
         db = settings['db']
 
-        try:
-            person = Person(uid)
-        except:
-            self.redirect('/')
+#        try:
+        person = Person(uid)
+#        except:
+#            self.redirect('/')
+#            return
 
         self.render('templates/person.html', title=person.display_name(), 
                     person=person, map=helper.map, mailing=helper.mailing, 
@@ -69,17 +70,24 @@ class EditRequestHandler(BaseHandler):
             base += ':'+str(settings['port'])
         edit_url = base+'/login/'+onetime_uuid
         text = '''Please click the following link to update your information:\n%s''' % edit_url
-        html = '''<html><p>Please click the following link to update your information:<br><a href="%s">%s</a></p></html>''' % (edit_url, edit_url)
+        html = '''<html><p>Welcome! People.openNASA is the open
+        extension to the NASA x500 system. We hope that you will find
+        this a useful way to share information about your skills, work
+        and interests. If you have any trouble or questions, check out
+        the <a href="http://people.opennasa.com/faq">FAQ</a>, or email
+        us at <a href="mailto:support@opennasa.com">
+        support@opennasa.com</a>.</p> <p>Happy collaborating!</p>'''
+        html += '''<p>Follow this link to update your information:<br><a href="%s">%s</a></p></html>''' % (edit_url, edit_url)
         part1 = MIMEText(text, 'text')
         part2 = MIMEText(html, 'html')
         msg = MIMEMultipart('alternative')
         msg.attach(part1)
         msg.attach(part2)
         msg['Subject'] = '[NASA Profiles] Update your Information'
-        msg['From'] = 'profiles@opennasa.com'
+        msg['From'] = 'people@opennasa.com'
         msg['To'] = email
         if settings['email_enabled']:
-            s = smtplib.SMTP('smtp.gmail.com:587')
+            s = smtplib.SMTP('smtp.gmail.com')
             s.starttls()
             s.login(settings['smtp_user'], settings['smtp_pass'] )
             s.sendmail(msg['From'], msg['To'], msg.as_string())
@@ -167,7 +175,7 @@ class RefreshHandler(BaseHandler):
 
 class FaqHandler(BaseHandler):
     def get(self):
-        self.render('static/pages/faq.html')
+        self.render('templates/faq.html')
     
 class MainHandler(BaseHandler):
     def get(self):

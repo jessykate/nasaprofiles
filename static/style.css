@@ -15,7 +15,7 @@ body {
 
 h1 {
     font-family: century gothic;
-	background: #000;
+	background: #0F222C;
 	padding: 30px 0 10px 20px;
 	color: #fff;
 	width: 245px;
@@ -343,6 +343,7 @@ img.photo {
     width: 985px;
     padding: 20px;
 }
+
 #profile_edit_form {
     
     
@@ -372,6 +373,24 @@ img.photo {
 input.share { 
     color:#404040; 
     font: bold xx-large 'trebuchet ms',helvetica,sans-serif; 
+}
+
+#static_page {
+    background: url(images/wrapper_bg.png) top left repeat-y;
+    float: left;
+    width: 985px;
+    padding: 20px;
+}
+
+#question {
+    font-weight: bold;
+    font-size: 150%;
+    margin: 10px; 
+}
+
+#answer {
+    margin: 10px 10px 20px 20px;
+    
 }
 
 #footer {

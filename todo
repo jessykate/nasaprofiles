@@ -9,10 +9,20 @@ Todo:
   * are you stealing this information?
   * why is it so slow?
 * find ldap servers for remaining centers
-* turn personal url into a link
-* fix work project link
-* handle 'server not available' errors. 
+* person.html display page
+  * turn personal url into a link
+  * bring in twitter stream
+  * header for map (" <name>'s location)
+  * fix work project link
+* edit page
+  * sanitize input
+  * note that html input is ok
+  * more space between categry and gravatar
+  * layout is wacky
+* handle 'server not available', 500, and 404 errors.
 * use secure cookies
+* check to make sure there's not more than one cookie 'open' for any
+  given email address.
 * custom 404 page
 * server deploy:
   * uservoice feedback button

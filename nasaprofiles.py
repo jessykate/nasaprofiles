@@ -60,7 +60,7 @@ class EditRequestHandler(BaseHandler):
         user = Person(uid)
         email = user.email()
         if not email:
-            message = "This user does not have any email addresses, so we cannot verify your identity. You should update your official x500 information. If this isn't possible, email support@people.opennasa.com and we can help you work it out."
+            message = "This user does not have any email addresses, so we cannot verify your identity. You should update your official x500 information. If this isn't possible, email people@opennasa.com and we can help you work it out."
             self.render('templates/email_notify.html', message=message)
             return
 
@@ -75,15 +75,15 @@ class EditRequestHandler(BaseHandler):
         this a useful way to share information about your skills, work
         and interests. If you have any trouble or questions, check out
         the <a href="http://people.opennasa.com/faq">FAQ</a>, or email
-        us at <a href="mailto:support@opennasa.com">
-        support@opennasa.com</a>.</p> <p>Happy collaborating!</p>'''
+        us at <a href="mailto:people@opennasa.com">
+        people@opennasa.com</a>.</p> <p>Happy collaborating!</p>'''
         html += '''<p>Follow this link to update your information:<br><a href="%s">%s</a></p></html>''' % (edit_url, edit_url)
         part1 = MIMEText(text, 'text')
         part2 = MIMEText(html, 'html')
         msg = MIMEMultipart('alternative')
         msg.attach(part1)
         msg.attach(part2)
-        msg['Subject'] = '[NASA Profiles] Update your Information'
+        msg['Subject'] = '[openNASA Profiles] Update your Information'
         msg['From'] = 'people@opennasa.com'
         msg['To'] = email
         if settings['email_enabled']:

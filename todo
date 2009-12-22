@@ -1,16 +1,16 @@
-todo:
-* have better error handling for fields that dont exist on all
-  templates. (results, person, edit, etc.)
-* profile editing
-  * pre-propulate fields with existing info
-  * ability to mark primary email, name, number. 
-    * show existing selection for primaries
-    * tag and skill handling
-* turn personal url into a link
-* pull in indivuals' twitter feed. 
+Todo:
+* parsing and storage
+  * generalize parsing results for differences between centers
+  * store additional arbitrary x500 fields
+  * recognize different phone number fields
 * ability to update x500 info
-
-* make center selection in search form work
+* FAQs
+  * how are you able to do this?
+  * are you stealing this information?
+  * why is it so slow?
+* find ldap servers for remaining centers
+* turn personal url into a link
+* fix work project link
 * handle 'server not available' errors. 
 * use secure cookies
 * custom 404 page
@@ -20,15 +20,17 @@ todo:
   * gmaps key (make that a setting)
   * munin
 
-* user click to manually cause x500 field update
-* option to override x500 info
-* default gravatar (plus remove fallback email)
-* make the url /person/somename/ work directly
+* tags, skills should be links to search for that tag. 
 * search by tag, keyword etc. 
+* handle random fields returned from x500 ldap (there's often more
+  being returned than we process or even store)
+* user click to manually cause x500 field update
+* default gravatar (plus remove fallback email)
+* let user select vanity urls /person/somename/
 * why is the map not loading sometimes?
 
 future features:
-* overwrite x500 info
+* pull in individuals' twitter feed. 
 * show a map with locations of contacts (eg. search results or
   individuals).
 * make people.opennasa.com an openID server, too. 
@@ -56,7 +58,12 @@ done:
   * convert User class to two fields
   * nicely formatted 'Name' option
   * have it wrap the db doc create function
-
+* profile editing
+  * pre-propulate fields with existing info
+  * ability to mark primary email, name, number. 
+    * show existing selection for primaries
+    * tag and skill handling
+* make center selection in search form work
 
 example nasa ldap stuff (from linton)
 http://babelfish.arc.nasa.gov/trac/dashlink/browser/main/trunk/ivhm/utils/helper.py

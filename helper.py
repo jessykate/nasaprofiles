@@ -114,14 +114,14 @@ category_sm_lookup = {
 }
 
 def mailing(address):
-    mailing_address = Address[address]
-    return mailing_address
-
-
+    if address in Address:
+        mailing_address = Address[address]
+        return mailing_address
+    else: return ''
 
 def map(center):
     """ return a google maps static url for a nasa center """
-    selected = '|'.join(["markers=size:large|color:red", Centers[center]])
+    selected = '|'.join(["markers=size:large|color:red", Centers.get(center,'')])
     others = '|'.join(["markers=size:tiny|color:orange"] + Centers.values())
     return "http://maps.google.com/maps/api/staticmap?" + \
        "&".join(["center=United+States",

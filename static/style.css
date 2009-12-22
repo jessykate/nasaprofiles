@@ -303,7 +303,12 @@ img.photo {
     margin-left: 350px;
     margin-top: 20px;
     width:300px;
+    font-size: 110%;
     background-color: #F5E39C;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 .narrow_block {

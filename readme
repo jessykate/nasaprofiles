@@ -7,12 +7,13 @@ Dependencies:
 6. python json or simplejson
 
 Settings:
-1. in nasaprofiles.py, customize the settings as appropriate. 
+1. customize settings.example.py as appropriate, and rename to
+   settings.py.
 
-2. the first the the app is run, you must run the database file. this
+2. the first time the app is run, you must run the database file. this
    will define the views needed to run the app: ./database.py
 
 Running
 1. ./nasaprofiles.py
-2. visit domain:port/search (tornado listens on * so it doesnt matter
+2. browse to domain:port (tornado listens on * so it doesnt matter
    where you connect from)

@@ -24,24 +24,30 @@
             <p>Many people have multiple names, e-mails and phone numbers.  Please select your primary display name, email and phone number.</p>
             <br>
             <span class="wide_block">
+
                 <div id="name_column">
                 <label for="primary_name">Display name:</label>
                 <br>
                 {% for name in person.get('all_names') %}
                   <input type="radio" name="primary_name" value="{{ name }} " {% if name.strip() == person.display_name().strip() %} checked="on" {% end %} /> {{name}}<br>
                 {% end %}
-              </div>
+		  <input type="text" name="custom_name" value="custom..." class="form_custom" onfocus="this.value=''">              
+		</div>
+
               <div id="email_column">
                 <label for="primary_email">Select your primary email:</label><br>
                 {% for email in person.get('all_email') %}
                   <input type="radio" name="primary_email" value="{{ email }}" {% if email == person.email() %} checked="on" {% end %} /> {{email}}<br>
                 {% end %}
+		  <input type="text" name="custom_email" value="custom..." class="form_custom" onfocus="this.value=''">              
               </div>
+
               <div id="number_column">
                 <label for="primary_phone">Main phone number:</label><br>
                 {% for phone in person.get('all_phones') %}
                   <input type="radio" name="primary_phone" value="{{ phone }}" {% if phone == person.phone() %} checked="on" {% end %} /> {{phone}}<br>
                 {% end %}
+		  <input type="text" name="custom_phone" value="custom..." class="form_custom" onfocus="this.value=''">              
               </div>
             </span>
             <br><br>

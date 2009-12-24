@@ -248,12 +248,18 @@ img.photo {
 
 #stat {
     font-size: 150%;
+    margin:30px;
 }
 
-.big_num {
-    font-size: 400%
-    background-color: #F5E39C;
-    
+#big_num {
+    font-size: 500%;
+    font-weight: bold;
+}
+
+#stat_description {
+    border-bottom:1px solid #888888;
+    font-size:12px;
+    font-weight:bold;
 }
 
 #results_gravatar{
@@ -273,7 +279,8 @@ img.photo {
 .results_name{
     font-size: 125%;
     font-weight: bold;
-    margin-bottom:3px;
+    margin-bottom:3px;  
+    height: 20px;
 }
 
 #results_category{

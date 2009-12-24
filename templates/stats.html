@@ -1,13 +1,50 @@
 <div id="sidebar_text">
 
 
-  <div id="big_number">Number of profiles in people.openNASA
-    
-    Number of searches
-
-Latest profile update
-
-Latest tag added
-
+  <div id="stat">
+    <div id="stat_description">
+      Custom profiles in people.openNASA
+    </div>
+    <span id="big_num">
+      {{len(results)}}
+    </span>
+  </div>
+  
+  <div id="stat">
+    <div id="stat_description">
+      Most popular Job Category
+    </div>
+    <span id="big_num">
+      {{len(results)}} 
+    </span>
+    <img src="static/images/job_category_sm.png">
+  </div>
+  
+  <div id="stat">
+    <div id="stat_description">
+      Number of queries to date
+    </div>
+    <span id="big_num">
+      {{len(results)}}
+    </span>
+  </div>
+  
+  <div id="stat">
+    <div id="stat_description">
+      Latest updated profile
+    </div>
+    <span id="big_num">
+      {{len(results)}}
+    </span>
+  </div>
+  
+  <div id="stat">
+    <div id="stat_description">
+      Most popular skill
+    </div>
+    <span id="big_num">
+      {{len(results)}}
+    </span>
+  </div>
 
 </div>

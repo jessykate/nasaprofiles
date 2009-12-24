@@ -6,7 +6,7 @@
   <div id="results_page">
     <div id="content">
       
-      <div id="stat">There are <span id="big_num">{{ len(results) }}</span> results</div><br><br>
+      There are <span id="big_num">{{ len(results) }}</span> results for your search <br><br>
 
       {% for person in results %}
         <div id="profile_card" onclick="location.href='person/{{ person.get('uid') }}';" style="cursor:pointer;">
@@ -18,13 +18,13 @@
             <span> {{ person.email()}}</span><br>
             <span> {{ person.phone()}}</span><br>
           </div>
-          <div id="results_category">
+          <!-- <div id="results_category">
             {% if person.get('category') %}
               {{ category_sm(person.get('category')) }}
             {% else %}
               <img src="static/images/job_category_sm.png">
             {% end %}
-          </div>
+          </div> -->
           <div id="results_center">
             <span>{{ person.get('center') }}</span>
           </div>

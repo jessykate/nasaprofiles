@@ -63,10 +63,6 @@ class Person(object):
     def build(self, ldap_dict):
         ''' Build a Person object from information returned by x500
         ldap. '''
-        if settings['debug']:
-            print 'Person.build() debug:'
-            print ldap_dict
-
         
         # there are two categories of fileds in the ldap results:
         # those that are part of our standard repertoire, and those
@@ -86,12 +82,12 @@ class Person(object):
             if field == 'uid' and 'uniqueIdentifier' not in ldap_dict:
                 print 'found uid instead of uniqueIdentifier. adding record with key = %s' % values[0]
                 self.uid = values[0]
-
-            if field == 'uniqueIdentifier':
+                
+            elif field == 'uniqueIdentifier':
                 print 'found uniqueIdentifier. adding record with key = %s' % values[0]
                 self.uid = values[0]
 
-            if field == 'cn':
+            elif field == 'cn':
                 # store the canonical copy under x500 info and our own
                 # copy in all_names field.
                 self.x500['all_names'] = []
@@ -99,7 +95,7 @@ class Person(object):
                     self.x500['all_names'].append(value)                    
                     self.all_names.append(value)
 
-            if field == 'mail':
+            elif field == 'mail':
                 self.x500['all_email'] = []
                 for value in values:
                     self.x500['all_email'].append(value)
@@ -115,10 +111,9 @@ class Person(object):
             # list[0] = center name
             # list[1] = mail stop
             # list[2], if if it exists, is the street address. 
-            if field == 'postalAddress':
+            elif field == 'postalAddress':
                 for value in values:
                     address = value.split('$')             
-                    # strip whitespace
                     address = [a.strip() for a in address]
                     if 'nasa' in address:
                         address.remove('nasa')
@@ -134,7 +129,7 @@ class Person(object):
                         print 'Raw value of postal address field:'
                         print str(address)
 
-            if field == 'roomNumber':
+            elif field == 'roomNumber':
                 # assumes there is only one list item for this
                 # result. might turn out to be wrong.
                 location = values[0].split(',')
@@ -146,13 +141,13 @@ class Person(object):
                         print 'Raw value of room number field:'
                         print str(location)
 
-            if field == 'telephoneNumber':
+            elif field == 'telephoneNumber':
                 self.x500['all_phones'] = []
                 for value in values:
                     self.x500['all_phones'].append(value)
                     self.all_phones.append(value)
 
-            if field == 'userClass':
+            elif field == 'userClass':
                 # assumes there is only one list item for this
                 # result. might turn out to be wrong.
                 value = values[0]
@@ -161,7 +156,7 @@ class Person(object):
 
             else:
                 # whatever is leftover, store it too
-                self.x500[field] = value
+                self.x500[field] = values
 
     def save(self):
         ''' save or update a person object '''
@@ -199,7 +194,7 @@ class Person(object):
     def _populate(self, user_dict):
         ''' Populate a Person object from the data store. '''
         if settings['debug']:
-            print '_populate() debug: Populating person object from data store with the following info:'
+            print '_populate: Populating person object from data store with the following info:'
             print user_dict
 
         for field, value in user_dict.iteritems():
@@ -222,6 +217,7 @@ class Person(object):
         self.__dict__[field] = value
 
     def add(self, field, value):
+        '''Add an item to a list-based attribute'''
         if not isinstance(self.__dict__[field], list):
             print 'Error in Person.add(): %s is not a list attribute.' % field
             return

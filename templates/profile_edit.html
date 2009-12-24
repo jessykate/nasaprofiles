@@ -24,24 +24,30 @@
             <p>Many people have multiple names, e-mails and phone numbers.  Please select your primary display name, email and phone number.</p>
             <br>
             <span class="wide_block">
+
                 <div id="name_column">
                 <label for="primary_name">Display name:</label>
                 <br>
                 {% for name in person.get('all_names') %}
                   <input type="radio" name="primary_name" value="{{ name }} " {% if name.strip() == person.display_name().strip() %} checked="on" {% end %} /> {{name}}<br>
                 {% end %}
-              </div>
+		  <input type="text" name="custom_name" value="custom..." class="form_custom" onfocus="this.value=''">              
+		</div>
+
               <div id="email_column">
                 <label for="primary_email">Select your primary email:</label><br>
                 {% for email in person.get('all_email') %}
                   <input type="radio" name="primary_email" value="{{ email }}" {% if email == person.email() %} checked="on" {% end %} /> {{email}}<br>
                 {% end %}
+		  <input type="text" name="custom_email" value="custom..." class="form_custom" onfocus="this.value=''">              
               </div>
+
               <div id="number_column">
                 <label for="primary_phone">Main phone number:</label><br>
                 {% for phone in person.get('all_phones') %}
                   <input type="radio" name="primary_phone" value="{{ phone }}" {% if phone == person.phone() %} checked="on" {% end %} /> {{phone}}<br>
                 {% end %}
+		  <input type="text" name="custom_phone" value="custom..." class="form_custom" onfocus="this.value=''">              
               </div>
             </span>
             <br><br>
@@ -134,7 +140,7 @@
             </div>
           </fieldset> <!-- end more info -->
 
-          <input type="submit" name="submitted" value="Share" class="share">
+          <div id="edit_submit"><input type="submit" name="submitted" value="Share" class="share"></div>
         </form>
       </p>
     </div>
@@ -144,12 +150,24 @@
 
     <fieldset class="profile_edit_fieldset"> <!-- x500 info -->
       <legend class="legend_title">x500 information</legend>
-      <p>Note that information you edit here <span class="warning">will NOT
-        be stored in the official NASA x500</span>. If you would like to update your information on NASA's servers, please visit <a href="http://idmax.nasa.gov">https://idmax.nasa.gov</a> (please note you'll need to be on-site / on a VPN to access this NASA webpage).  Below is what is publicly available from your NASA x500 database:</p>
+      <p>You can override certain x500 information by editing your
+        profile to the left, but it <span class="warning">will NOT be
+        stored in the official NASA x500</span>. If you would like to
+        update your information on NASA's servers, go to
+        <a href="http://idmax.nasa.gov">https://idmax.nasa.gov</a>
+        (you'll need to be on-site/on a VPN).</p><p>Below is what is
+        publicly available from your NASA x500 database:</p>
 
       {% for field, values in person.x500.iteritems() %}
-        <label for="{{ field }}">{{ field }} </label><br>
-        {{ values }}<br>
+        <b>{{ field.replace('_',' ').title() }}</b><br>
+	{% if isinstance(values,list) %}
+	  {% for value in values %}
+	     {{ value.title() }}<br>
+	  {% end %}
+	{% else %}
+          {{ values }}<br>	
+	{% end %}
+
         <br>
       {% end %}
     </fieldset> <!-- end x500 info -->

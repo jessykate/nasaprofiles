@@ -1,5 +1,6 @@
 
 import urllib, urllib2, hashlib
+from datetime import datetime
 from settings import settings
 try:
     import json
@@ -19,6 +20,9 @@ class Person(object):
         specified, populate it with the corresponding info from the
         database.'''
         self.uid = ''
+        # string formatted timestamp of when this revision of this
+        # record was saved. format: '%Y-%m-%dT%H:%M:%S'
+        self.edited = '' 
         self.primary_name = ''
         self.all_names = []
         self.primary_email = ''
@@ -52,13 +56,35 @@ class Person(object):
 
     def build(self, ldap_dict):
         ''' Build a Person object from information returned by x500
-        ldap. each x500 field gets stored in two fields, one with an
-        x500_ prefix, and one without.  '''
+        ldap. '''
         if settings['debug']:
             print 'Person.build() debug:'
             print ldap_dict
 
+        
+        # there are two categories of fileds in the ldap results:
+        # those that are part of our standard repertoire, and those
+        # that are random other fields. we handle both, parsing the
+        # former carefully, and renaming their key values to something
+        # more intuitive, and storing the additional fields unchanged.
         for field, values in ldap_dict.iteritems():
+
+            # regarding uniqueIdentifier and uid: both are
+            # inconsistently used, and some records have both. we
+            # always use uniqueIdentifier if it exists. this is a
+            # little messy, since python dicts are not ordered, so we
+            # have no guarantee uniqueIdentifier will be seen
+            # first. if we're not consistent, duplicate records with
+            # different keys will get created and messes will
+            # ensue. blah.
+            if field == 'uid' and 'uniqueIdentifier' not in ldap_dict:
+                print 'found uid instead of uniqueIdentifier. adding record with key = %s' % values[0]
+                self.uid = values[0]
+
+            if field == 'uniqueIdentifier':
+                print 'found uniqueIdentifier. adding record with key = %s' % values[0]
+                self.uid = values[0]
+
             if field == 'cn':
                 self.x500['all_names'] = []
                 for value in values:
@@ -69,25 +95,34 @@ class Person(object):
                 for value in values:
                     self.x500['all_email'].append(value)
 
-# different centers format this differently, of course :)
-# Goddard: ['NASA ', ' Goddard Space Flight Center ', ' Mailstop 750.0 ', ' Greenbelt, MD 20771']
+            # different centers format this differently, of course :)
+            # Goddard: ['NASA ', ' Goddard Space Flight Center ', ' Mailstop 750.0 ', ' Greenbelt, MD 20771']
+            # Headquarters: ['NASA Headquarters', '300 E ST SW', 'Washington DC 20546-0001']
+            # Ames: ['NASA Ames Research Center', 'MS 269-3']
+
+            # general parsing principle: once we remove the 'NASA'
+            # list item, if it exists, then:
+            # list[0] = center name
+            # list[1] = mail stop
+            # list[2], if if it exists, is the street address. 
             if field == 'postalAddress':
                 for value in values:
                     address = value.split('$')             
                     # strip whitespace
                     address = [a.strip() for a in address]
-                    if 'NASA' in address:
-                        address.remove('NASA')
                     if 'nasa' in address:
                         address.remove('nasa')
+                    if 'NASA' in address:
+                        address.remove('NASA')
                     self.x500['center'] = address[0].strip()
                     if len(address) > 1:
                         self.x500['mail_stop'] = address[1].strip()
                     if len(address) > 2:
+                        self.x500['street_address'] = address[2].strip()
+                    if len(address) > 3:
                         print '*** Warning: some values from Postal Address Field were missed.'
                         print 'Raw value of postal address field:'
                         print str(address)
-
 
             if field == 'roomNumber':
                 # assumes there is only one list item for this
@@ -101,19 +136,10 @@ class Person(object):
                         print 'Raw value of room number field:'
                         print str(location)
 
-                    
-
             if field == 'telephoneNumber':
                 self.x500['all_phones'] = []
                 for value in values:
                     self.x500['all_phones'].append(value)
-
-
-            # both are inconsistently used, of course :)
-            if field == 'uniqueIdentifier':
-                self.uid = values[0]
-            elif field == 'uid':
-                self.uid = values[0]
 
             if field == 'userClass':
                 # assumes there is only one list item for this
@@ -140,24 +166,37 @@ class Person(object):
         if not self.uid:
             print 'Error: UID is empty. Cannot save new user data.'
             return
+
+        # always include a timestamp
+        timestamp = json.dumps(datetime.now().strftime('%Y-%m-%dT%H:%M:%S'))
+        self.edited = timestamp
+
+        # if there's no uid, then it's a new record
         if self.uid not in db:
             try:
+                print 'saving new record with uid = %s' % self.uid
                 db[self.uid] = self.__dict__
             except:
-                pass
+                print 'Error: self.uid = %s was not in db, but getting error on attempting to add' % (self.uid)
+                return 
+
+        # else, we're updating an existing record
         else:
             person = db[self.uid]
             for field, value in self.__dict__.iteritems():
+                # DONT EVER overwrite the x500 fields. they are the
+                # canonical reference.
                 if field == 'x500':
                     continue
                 # couch will automatically convert non-string values
-                # to json.
+                # for simple objects into json. 
                 person[field] = value
+
             db[self.uid] = person
     def _populate(self, user_dict):
         ''' Populate a Person object from the data store. '''
         if settings['debug']:
-            print '_populate() debug:'
+            print '_populate() debug: Populating person object from data store with the following info:'
             print user_dict
 
         for field, value in user_dict.iteritems():

@@ -475,8 +475,15 @@ a img {
     color: red;
 }
 
+#edit_submit {
+    text-align: center;
+}
 
-
+.form_custom {
+    margin-top: 10px;
+    margin-left: 25px;
+    width: 80px;
+}
 
 
 

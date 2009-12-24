@@ -6,7 +6,7 @@
   <div id="results_page">
     <div id="content">
       
-      <div id="stat">There are <span id="big_num">{{ len(results) }}</span> results</div><br><br>
+      There are <span id="big_num">{{ len(results) }}</span> results for your search <br><br>
 
       {% for person in results %}
         <div id="profile_card" onclick="location.href='person/{{ person.get('uid') }}';" style="cursor:pointer;">

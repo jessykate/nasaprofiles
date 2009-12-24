@@ -248,12 +248,18 @@ img.photo {
 
 #stat {
     font-size: 150%;
+    margin:30px;
 }
 
-.big_num {
-    font-size: 400%
-    background-color: #F5E39C;
-    
+#big_num {
+    font-size: 500%;
+    font-weight: bold;
+}
+
+#stat_description {
+    border-bottom:1px solid #888888;
+    font-size:12px;
+    font-weight:bold;
 }
 
 #results_gravatar{

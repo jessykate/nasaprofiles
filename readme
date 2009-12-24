@@ -5,6 +5,8 @@ Dependencies:
 3. Tornado
 4. python-ldap module
 6. python json or simplejson
+7. for email capabilities, you need a working smtp capability
+   (sendmail, postfix, gmail, whatever)
 
 Settings:
 1. customize settings.example.py as appropriate, and rename to

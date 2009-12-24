@@ -26,17 +26,11 @@ class Person(object):
         # a flag that gets set to true if a user edits their profile 
         self.customized = False
         self.primary_name = ''
-        self.all_names = []
         self.primary_email = ''
-        self.all_email = []
         self.primary_phone = ''
+        self.all_names = []
+        self.all_email = []
         self.all_phones = []
-        self.building = ''
-        self.center = ''
-        self.mail_stop = ''
-        self.organization = ''
-        self.employer = ''
-        self.room_num = ''
         self.bio = ''
         self.tags = ''
         self.skills = ''
@@ -52,7 +46,17 @@ class Person(object):
         self.facebook = ''
         # all the original values pulled from x500
         self.x500 = {}
+        # x500 info we may want to let people customize in a future
+        # release
+        #self.building = ''
+        #self.center = ''
+        #self.mail_stop = ''
+        #self.organization = ''
+        #self.employer = ''
+        #self.room_num = ''
 
+        # if a uid was passed it, then populate it with an existing
+        # record.
         if uid:
             self._populate(db[uid].copy())
 
@@ -88,14 +92,18 @@ class Person(object):
                 self.uid = values[0]
 
             if field == 'cn':
+                # store the canonical copy under x500 info and our own
+                # copy in all_names field.
                 self.x500['all_names'] = []
                 for value in values:
-                    self.x500['all_names'].append(value)
+                    self.x500['all_names'].append(value)                    
+                    self.all_names.append(value)
 
             if field == 'mail':
                 self.x500['all_email'] = []
                 for value in values:
                     self.x500['all_email'].append(value)
+                    self.all_email.append(value)
 
             # different centers format this differently, of course :)
             # Goddard: ['NASA ', ' Goddard Space Flight Center ', ' Mailstop 750.0 ', ' Greenbelt, MD 20771']
@@ -142,6 +150,7 @@ class Person(object):
                 self.x500['all_phones'] = []
                 for value in values:
                     self.x500['all_phones'].append(value)
+                    self.all_phones.append(value)
 
             if field == 'userClass':
                 # assumes there is only one list item for this
@@ -206,10 +215,9 @@ class Person(object):
             self.__dict__[field] = value
 
     def get(self, field, default=''):
-        ''' Return the value of field, first looking for a locally
-        modified version, and returning the original x500 version
-        otherwise. If the field doesnt exist, return the value of
-        default instead.'''
+        ''' Return the value of field, first looking for a local
+        version, then looking in the x500 values. If the field doesnt
+        exist at all, return the value of default instead.'''
         if field in self.__dict__ and self.__dict__[field]:
             return self.__dict__[field]
         elif field in self.__dict__['x500']:
@@ -222,6 +230,12 @@ class Person(object):
             return
         self.__dict__[field] = value
 
+    def add(self, field, value):
+        if not isinstance(self.__dict__[field], list):
+            print 'Error in Person.add(): %s is not a list attribute.' % field
+            return
+        self.__dict__[field].append(value)
+
     def gravatar(self, size=125):
         email = self.email()
         if not email:
@@ -233,20 +247,20 @@ class Person(object):
     def display_name(self):
         if self.primary_name:
             return self.primary_name
-        else:
+        else: 
             names = self.get('all_names')
             if names:
                 return names[0]
-            else: return '<< Name Missing >>'
+        return '<< Name Missing >>'
 
     def phone(self):
         if self.primary_phone:
             return self.primary_phone
-        else:
-            names = self.get('all_phones')
-            if names:
-                return names[0]
-            else: return ''
+        else: 
+            phones = self.get('all_phones')
+            if phones:
+                return phones[0]
+        return ''
 
     def email(self):
         ''' get the user's primary email if they have set one,
@@ -254,8 +268,8 @@ class Person(object):
         empty string if the user has no emails'''
         if self.primary_email:
             return self.primary_email
-        else:
+        else: 
             emails = self.get('all_email')
             if emails:
                 return emails[0]
-            else: return ''
+        return ''

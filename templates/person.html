@@ -16,7 +16,12 @@
     </div>
     <div class="contact">
       <div class="org">
-        {{ person.get('title') }}{% if person.get('main_project_name') %}, {{ person.get('main_project_name') }}
+	{% if person.get('title') and person.get('main_project_name') %}
+           {{ person.get('title') }}, {{ person.get('main_project_name') }}
+	{% elif person.get('title') %}
+	   {{ person.get('title') }}
+	{% elif person.get('main_project_name') %}
+	   {{ person.get('main_project_name') }}
         {% end %}   
       </div>
       <a class="email" href="mailto:{{ person.email() }}">{{ person.email() }}</a> 
@@ -54,7 +59,7 @@
     </div>
   {% end %}
 
-  {% if person.get('main_project_name') or person.get('main_project_web') or person.get('main_project_description') %}
+  {% if person.get('main_project_name') and (person.get('main_project_web') or person.get('main_project_description')) %}
   
     <div class="wide_block">
       <span class="h2">{{ person.get('main_project_name') }}</span>

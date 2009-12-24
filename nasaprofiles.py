@@ -132,34 +132,66 @@ class EditHandler(BaseHandler):
             # the user had updated their information. 
             new_values = self.request.arguments
 
-            if debug:
+            if settings['debug']:
                 print 'The user submitted the following new values for their profile:'
                 print new_values
 
             uid = self.get_current_user()
             person = Person(uid)
+
+            custom_email_flag = False
+            custom_name_flag = False
+            custom_phone_flag = False
             for field, value in new_values.iteritems():            
+
                 field = field.strip()
-                # check to see if it's an x500 field; if so, compare
-                # it to the original value, and if it's new, set the
-                # new value as a local override.
-                if field in person.x500:
-                    if value != person.x500[field]:
-                        print 'An override value for x500 field %s was set' % field
-                        print 'Old %s value: %s' % (str(type(person.x500[field])), person.x500[field])
-                        print 'New %s value: %s' % (str(type(value)), value)
-                        person.set(field, value)
-                    else:
-                        print 'No changes were made to x500 field %s' % field
-                else:
-                    if field == 'submitted':
-                        continue
-                    # for the data store, all fields should be strings
-                    # except those starting with 'all_', which are lists.
-                    if field.find('all_') < 0:
-                        value = value[0].strip()
+                # the values returned by the form are lists by
+                # default. all OUR custom fields are strings, so
+                # this is easy-- if they weren't this would have
+                # to be a bit more nuanced. 
+                value = value[0].strip()
+
+                if field == 'submitted' or field == 'x500':
+                    continue
+                elif field == 'custom_name' and (value == 'custom...' or value == ''):
+                    continue
+                elif field == 'custom_email' and (value == 'custom...' or value == ''):
+                    continue
+                elif field == 'custom_phone' and (value == 'custom...' or value == ''):
+                    continue
+
+                elif field == 'custom_phone':
+                    print 'settings custom value %s = %s' % (field, value)
+                    person.add('all_phones', value)
+                    person.primary_phone = value
+                    custom_phone_flag = True
+
+                elif field == 'custom_email':
+                    print 'settings custom value %s = %s' % (field, value)
+                    person.add('all_email', value)
+                    person.primary_email = value
+                    custom_email_flag = True
+
+                elif field == 'custom_name':
+                    print 'settings custom value %s = %s' % (field, value)
+                    person.add('all_names', value)
+                    person.primary_name = value
+                    custom_name_flag = True
+
+                # dont override custom fields if they've been set
+                elif field == 'primary_email' and custom_email_flag:
+                    continue
+                elif field == 'primary_name' and custom_name_flag:
+                    continue
+                elif field == 'primary_phone' and custom_phone_flag:
+                    continue
+
+                # for all other fields, if it wasnt empty, then store
+                # the new value.
+                elif value:
                     print 'settings new value %s = %s' % (field, value)
                     person.set(field, value)
+
             person.save()
             self.redirect('/person/'+uid)
 

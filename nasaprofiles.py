@@ -27,11 +27,7 @@ class PersonHandler(BaseHandler):
 
     def get(self, uid): 
         db = settings['db']
-#        try:
         person = Person(uid)
-#        except:
-#            self.redirect('/')
-#            return
 
         self.render('templates/person.html', title=person.display_name(), 
                     person=person, map=helper.map, mailing=helper.mailing, 

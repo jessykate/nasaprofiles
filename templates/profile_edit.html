@@ -19,7 +19,7 @@
       <p>
         <form action="/edit" method="get">
           <fieldset class="profile_edit_fieldset"> <!-- display info -->
-            <legend>Display Information</legend>
+            <legend class="legend_title">Display Information</legend>
       
             <p>Many people have multiple names, e-mails and phone numbers.  Please select your primary display name, email and phone number.</p>
             <br>
@@ -48,7 +48,7 @@
             <a href="http://en.gravatar.com/site/signup"><img src="{{ person.gravatar() }}" class="photo" alt="gravatar" /></a>
             <p>Gravatar setting:</p>
             <p>The picture on your badge is not publicly available, so we elected to use a webservice called Gravatar to pull in a picture.  The primary e-mail set up above will be linked to the picture displayed via Gravatar.  To set-up a gravatar, simply visit their <a href="http://en.gravatar.com/site/signup">website</a> and upload a picture to be affiliated with your primary e-mail address. If you would like more information, please visit the <a href="/faq">FAQ's</a>.
-            </p>
+            </p><br><br><br><br>
             <label for="category">Select a job category that best matches your expertise:   </label>
             <select name="category" style="margin-left:20px;">
               {% for value in ["", "developer", "scientist", "engineer", "management", "center_ops", "mission_ops", "admin", "legal", "finance", "communications"] %}
@@ -59,14 +59,15 @@
           </fieldset> <!-- end display info -->
 
           <fieldset class="profile_edit_fieldset"> <!-- biography -->
-            <legend>Your Biography</legend>
-            <textarea name="bio" rows=12 cols=80>
+            <legend class="legend_title">Your Biography</legend>
+            <textarea class="edit_textarea_bio" name="bio">
             {{ person.get('bio') }}
-            </textarea><br><br>
+            </textarea>
+            <p>Note: You can use html tags in your Biography.</p>
           </fieldset> <!-- end of biography-->
 
           <fieldset class="profile_edit_fieldset"> <!-- main nasa project -->
-            <legend>Main NASA Project</legend>
+            <legend class="legend_title">Main NASA Project</legend>
             <p>Information about your main NASA project.  This is what you do every day.  Please provide the following information, and the Job Title you fill out below will be directly below your name on your profile page.</p></br><br>
             <span class="wide_block">
               <div id="three_column">
@@ -84,13 +85,14 @@
             </span>
             <br>
             <label for="main_project_description">Project Description</label><br>
-            <textarea name="main_project_description" rows=7 cols=80>
+            <textarea name="main_project_description" class="edit_textarea">
               {{ person.get('main_project_description') }}
-            </textarea><br>
+            </textarea>
+            <p>Note: You can use html tags in your Project Description.</p>
           </fieldset> <!-- end main project -->
 
           <fieldset class="profile_edit_fieldset"> <!-- more info -->
-            <legend>More Info about You!</legend>
+            <legend class="legend_title">More Info about You!</legend><br>
             <div class="narrow_block">
               <label for="tags">Tags (comma separated)</label><br>
               <input type="text" name="tags" size="40" value="{{ person.get('tags') }}"><br>
@@ -118,15 +120,17 @@
             </div>
             <div class="wide_block">
               <label for="side_projects">Information about any side projects you'd like to share:</label><br>
-              <textarea name="side_projects" rows=7 cols=80>
+              <textarea name="side_projects" class="edit_textarea">
                 {{ person.get('side_projects') }}
-              </textarea><br>
+              </textarea>
+              <p>Note: You can use html tags in your Side Projects.</p>
             </div>
             <div class="wide_block">
               <label for="previous_projects">Previous Projects You've Worked On</label><br>
-              <textarea name="previous_projects" rows=7 cols=80>
+              <textarea name="previous_projects" class="edit_textarea">
                 {{ person.get('previous_projects') }}
-              </textarea><br>
+              </textarea>
+              <p>Note: You can use html tags in your Previous Projects.</p>
             </div>
           </fieldset> <!-- end more info -->
 
@@ -139,12 +143,9 @@
   <div id="sidebar">
 
     <fieldset class="profile_edit_fieldset"> <!-- x500 info -->
-      <legend>x500 information</legend>
+      <legend class="legend_title">x500 information</legend>
       <p>Note that information you edit here <span class="warning">will NOT
-        be stored in the official NASA x500</span>. It would be preferable
-        for you to update it through the formal channels, since then the two
-        systems will be in sync. But if you really want to edit these here,
-        go ahead. </p>
+        be stored in the official NASA x500</span>. If you would like to update your information on NASA's servers, please visit <a href="http://idmax.nasa.gov">https://idmax.nasa.gov</a> (please note you'll need to be on-site / on a VPN to access this NASA webpage).  Below is what is publicly available from your NASA x500 database:</p>
 
       {% for field, values in person.x500.iteritems() %}
         <label for="{{ field }}">{{ field }} </label><br>

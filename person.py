@@ -159,18 +159,9 @@ class Person(object):
                 self.x500['organization'] = value[value.find('Organization:')+14 : value.find(',')].strip()
                 self.x500['employer'] = value[value.find('Employer:')+10 : ].strip()
 
-            if field == '':
-                pass
-            if field == '':
-                pass
-            if field == '':
-                pass
-            if field == '':
-                pass
-            if field == '':
-                pass
-            if field == '':
-                pass
+            else:
+                # whatever is leftover, store it too
+                self.x500[field] = value
 
     def save(self):
         ''' save or update a person object '''

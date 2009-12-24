@@ -17,7 +17,6 @@ import tornado.escape
 from database import Database
 from person import Person
 from settings import settings
-from x500DisplayParser import x500DisplayPageParser
 
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):

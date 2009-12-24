@@ -56,62 +56,18 @@ class Person(object):
 
     def build(self, ldap_dict):
         ''' Build a Person object from information returned by x500
-        ldap. each x500 field gets stored in two fields, one with an
-        x500_ prefix, and one without.  '''
+        ldap. '''
         if settings['debug']:
             print 'Person.build() debug:'
             print ldap_dict
 
+        
+        # there are two categories of fileds in the ldap results:
+        # those that are part of our standard repertoire, and those
+        # that are random other fields. we handle both, parsing the
+        # former carefully, and renaming their key values to something
+        # more intuitive, and storing the additional fields unchanged.
         for field, values in ldap_dict.iteritems():
-            if field == 'cn':
-                self.x500['all_names'] = []
-                for value in values:
-                    self.x500['all_names'].append(value)
-
-            if field == 'mail':
-                self.x500['all_email'] = []
-                for value in values:
-                    self.x500['all_email'].append(value)
-
-            # different centers format this differently, of course :)
-            # Goddard: ['NASA ', ' Goddard Space Flight Center ', ' Mailstop 750.0 ', ' Greenbelt, MD 20771']
-            if field == 'postalAddress':
-                for value in values:
-                    address = value.split('$')             
-                    # strip whitespace
-                    address = [a.strip() for a in address]
-                    if 'NASA' in address:
-                        address.remove('NASA')
-                    if 'nasa' in address:
-                        address.remove('nasa')
-                    self.x500['center'] = address[0].strip()
-                    if len(address) > 1:
-                        self.x500['mail_stop'] = address[1].strip()
-                    if len(address) > 2:
-                        print '*** Warning: some values from Postal Address Field were missed.'
-                        print 'Raw value of postal address field:'
-                        print str(address)
-
-
-            if field == 'roomNumber':
-                # assumes there is only one list item for this
-                # result. might turn out to be wrong.
-                location = values[0].split(',')
-                self.x500['building'] = location[0][location[0].find(':')+1:].strip()
-                if len(location) > 1:
-                    self.x500['room_num'] = location[1][location[1].find(':')+1:].strip()
-                if len(location) > 2:
-                        print '*** Warning: some values from Room Number field were missed.'
-                        print 'Raw value of room number field:'
-                        print str(location)
-
-                    
-
-            if field == 'telephoneNumber':
-                self.x500['all_phones'] = []
-                for value in values:
-                    self.x500['all_phones'].append(value)
-
 
             # regarding uniqueIdentifier and uid: both are
             # inconsistently used, and some records have both. we
@@ -128,6 +84,62 @@ class Person(object):
             if field == 'uniqueIdentifier':
                 print 'found uniqueIdentifier. adding record with key = %s' % values[0]
                 self.uid = values[0]
+
+            if field == 'cn':
+                self.x500['all_names'] = []
+                for value in values:
+                    self.x500['all_names'].append(value)
+
+            if field == 'mail':
+                self.x500['all_email'] = []
+                for value in values:
+                    self.x500['all_email'].append(value)
+
+            # different centers format this differently, of course :)
+            # Goddard: ['NASA ', ' Goddard Space Flight Center ', ' Mailstop 750.0 ', ' Greenbelt, MD 20771']
+            # Headquarters: ['NASA Headquarters', '300 E ST SW', 'Washington DC 20546-0001']
+            # Ames: ['NASA Ames Research Center', 'MS 269-3']
+
+            # general parsing principle: once we remove the 'NASA'
+            # list item, if it exists, then:
+            # list[0] = center name
+            # list[1] = mail stop
+            # list[2], if if it exists, is the street address. 
+            if field == 'postalAddress':
+                for value in values:
+                    address = value.split('$')             
+                    # strip whitespace
+                    address = [a.strip() for a in address]
+                    if 'nasa' in address:
+                        address.remove('nasa')
+                    if 'NASA' in address:
+                        address.remove('NASA')
+                    self.x500['center'] = address[0].strip()
+                    if len(address) > 1:
+                        self.x500['mail_stop'] = address[1].strip()
+                    if len(address) > 2:
+                        self.x500['street_address'] = address[2].strip()
+                    if len(address) > 3:
+                        print '*** Warning: some values from Postal Address Field were missed.'
+                        print 'Raw value of postal address field:'
+                        print str(address)
+
+            if field == 'roomNumber':
+                # assumes there is only one list item for this
+                # result. might turn out to be wrong.
+                location = values[0].split(',')
+                self.x500['building'] = location[0][location[0].find(':')+1:].strip()
+                if len(location) > 1:
+                    self.x500['room_num'] = location[1][location[1].find(':')+1:].strip()
+                if len(location) > 2:
+                        print '*** Warning: some values from Room Number field were missed.'
+                        print 'Raw value of room number field:'
+                        print str(location)
+
+            if field == 'telephoneNumber':
+                self.x500['all_phones'] = []
+                for value in values:
+                    self.x500['all_phones'].append(value)
 
             if field == 'userClass':
                 # assumes there is only one list item for this
@@ -167,6 +179,7 @@ class Person(object):
             except:
                 print 'Error: self.uid = %s was not in db, but getting error on attempting to add' % (self.uid)
                 return 
+
         # else, we're updating an existing record
         else:
             person = db[self.uid]
@@ -183,7 +196,7 @@ class Person(object):
     def _populate(self, user_dict):
         ''' Populate a Person object from the data store. '''
         if settings['debug']:
-            print '_populate() debug:'
+            print '_populate() debug: Populating person object from data store with the following info:'
             print user_dict
 
         for field, value in user_dict.iteritems():

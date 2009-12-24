@@ -60,7 +60,7 @@
       <span class="h2">{{ person.get('main_project_name') }}</span>
       
       {% if person.get('main_project_web') %} 
-        <a href="{{ person.get('main_project_web') }}">{{ person.get('main_project_web') }} </a>
+        <span class="main_project_web"><a href="{{ person.get('main_project_web') }}">{{ person.get('main_project_web') }} </a></span>
       {% end %}<br>
       
       <p>{{ person.get('main_project_description') }}</p>
@@ -131,7 +131,7 @@
     {% end %}
 
     {% if person.get('personal_web') %}
-      <span>Personal Website: <a href="{{ person.get('personal_web') }}">{{ person.get('personal_web') }}</a><br/> 
+      <span>Personal Website: <a href="http://{{ person.get('personal_web') }}">http://{{ person.get('personal_web') }}</a><br/> 
     {% end %}
   </div>
 
@@ -144,7 +144,7 @@
     <img src="{{ map(person.get('center')).strip() }}"class="photo"/>
   </div>
   <div id="sidebar_text">
-    <h3 align="center">{{ person.get('center') }}</h3>
+    <h3 align="center">{{ person.display_name() }}'s Location</h3>
     {% if person.get('twitter') %}  
       <div id="twitter">
         <h3>Follow <a href="http://www.twitter.com/{{ person.get('twitter') }}">@{{ person.get('twitter') }}</a> on Twitter</h3>

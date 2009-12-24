@@ -469,7 +469,9 @@ a img {
     color: red;
 }
 
-
+#edit_submit {
+    text-align: center;
+}
 
 
 

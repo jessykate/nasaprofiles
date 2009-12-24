@@ -279,7 +279,8 @@ img.photo {
 .results_name{
     font-size: 125%;
     font-weight: bold;
-    margin-bottom:3px;
+    margin-bottom:3px;  
+    height: 20px;
 }
 
 #results_category{

@@ -226,7 +226,7 @@ class MainHandler(BaseHandler):
             people = []
             no_uid_flag = False
             for name, info in results.iteritems():
-                print 'search results: %s' % name
+                print 'Processing search results for: %s' % name
                 # get the uid so we can uniquely reference each search
                 # result
                 try:
@@ -292,19 +292,19 @@ class MainHandler(BaseHandler):
             server = "x500.nasa.gov"
             dn="o=National Aeronautics and Space Administration,c=US"
 
-        print dn
         if wildcard:
-            filter = "cn=*%s*" % (query)
+            _filter = "cn=*%s*" % (query)
             #filter = "(&(objectClass=organizationalPerson)(cn=*%s*))" % (query)
         else:
-            filter = "(&(objectClass=organizationalPerson)(cn=%s))" % (query)
-        print filter
+            _filter = "(&(objectClass=organizationalPerson)(cn=%s))" % (query)
+        print 'Searching ldap with filter: %s, dn="%s"' % (_filter, dn)
         l = ldap.open(server)
-        result_id = l.search(dn, ldap.SCOPE_SUBTREE, filter, None)
+        result_id = l.search(dn, ldap.SCOPE_SUBTREE, _filter, None)
         timeout = 0
         result_set = {}
         while 1: 
             result_type, result_data = l.result(result_id, timeout)
+            print 'raw ldap result:'
             print result_type
             print result_data
 

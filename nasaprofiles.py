@@ -133,8 +133,12 @@ class EditHandler(BaseHandler):
             self.render('templates/profile_edit.html', person=person)
 
         else:
+            # the user had updated their information. 
             new_values = self.request.arguments
-            self.write(str(new_values))
+
+            if debug:
+                print 'The user submitted the following new values for their profile:'
+                print new_values
 
             uid = self.get_current_user()
             person = Person(uid)

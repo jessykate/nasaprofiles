@@ -246,6 +246,16 @@ img.photo {
     padding: 5px;
 }
 
+#stat {
+    font-size: 150%;
+}
+
+.big_num {
+    font-size: 400%
+    background-color: #F5E39C;
+    
+}
+
 #results_gravatar{
     float: left;
     display: block;
@@ -298,6 +308,21 @@ img.photo {
     height: 100px;
 }
 
+.main_project_web {
+    margin-left: 30px;
+    font-size: 125%;
+}
+
+.edit_textarea_bio{
+    width: 100%;
+    height: 150px; 
+}
+
+.edit_textarea{
+    width: 100%;
+    height: 100px; 
+}
+
 #no_search {
     text-align: center;
     margin-left: 350px;
@@ -348,6 +373,11 @@ img.photo {
     
     
     
+}
+
+.legend_title {
+    font-size: 125%;
+    font-weight: bold;   
 }
 
 #name_column {

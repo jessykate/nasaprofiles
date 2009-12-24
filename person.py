@@ -73,8 +73,8 @@ class Person(object):
                 for value in values:
                     self.x500['all_email'].append(value)
 
-# different centers format this differently, of course :)
-# Goddard: ['NASA ', ' Goddard Space Flight Center ', ' Mailstop 750.0 ', ' Greenbelt, MD 20771']
+            # different centers format this differently, of course :)
+            # Goddard: ['NASA ', ' Goddard Space Flight Center ', ' Mailstop 750.0 ', ' Greenbelt, MD 20771']
             if field == 'postalAddress':
                 for value in values:
                     address = value.split('$')             
@@ -113,10 +113,16 @@ class Person(object):
                     self.x500['all_phones'].append(value)
 
 
-            # both are inconsistently used, of course :)
+            # both are inconsistently used. we always check for
+            # uniqueIdentifier FIRST, and use that if it
+            # exists. careful to be consistent about this, or
+            # duplicate records with different keys will get created
+            # and messes will ensue.
             if field == 'uniqueIdentifier':
+                print 'found uniqueIdentifier: %s' % values[0]
                 self.uid = values[0]
             elif field == 'uid':
+                print 'found uid %s instead of uniqueIdentifier' % values[0]
                 self.uid = values[0]
 
             if field == 'userClass':
@@ -152,9 +158,11 @@ class Person(object):
         # if there's no uid, then it's a new record
         if self.uid not in db:
             try:
+                print 'saving new record with uid = %s' % self.uid
                 db[self.uid] = self.__dict__
-            except:
-                pass
+            except, e:
+                print 'Error: self.uid = %s was not in db, but getting error %s on attempting to add' % (self.uid, e)
+                return 
         # else, we're updating an existing record
         else:
             person = db[self.uid]

@@ -24,9 +24,6 @@ class BaseHandler(tornado.web.RequestHandler):
         return self.get_cookie("uid")
 
 class PersonHandler(BaseHandler):
-    def x500_profile_search(self, query):
-        results = x500_search(query, ou=None, wildcard=False)
-        return results[tornado.escape.url_escape(query)]
 
     def get(self, uid): 
         db = settings['db']
@@ -202,22 +199,25 @@ class MainHandler(BaseHandler):
                 # get the uid so we can uniquely reference each search
                 # result
                 try:
+                    # careful here-- some results have BOTH a uid
+                    # field and a uniqueIdentifier.
                     if 'uniqueIdentifier' in info:
                         uid = info['uniqueIdentifier'][0]
                     elif 'uid' in info:
                         uid = info['uid'][0]
                     else: raise KeyError
                 except KeyError:
-                    # xxx todo actually handle this error. 
+                    # xxx todo actually handle this error a little better. 
                     no_uid_flag = True
                     print '*** Warning! User %s did not have a unique identifier. Weird. Here is their user data:' % name
                     print info
                     continue
 
                 if uid not in db:            
-                    print 'Adding %s to data store' % name
+                    print 'Adding %s (uid=%s) to data store' % name, uid
                     person = Person()
                     person.build(info)                    
+                    print 'saving person object'
                     person.save()
                 else:
                     person = Person(uid)
@@ -227,6 +227,8 @@ class MainHandler(BaseHandler):
             # if there's only one search result, redirect to the display
             # page for that person.
             if len(results) == 1 and not no_uid_flag:
+                if settings['debug']:
+                    print 
                 self.redirect('person/'+uid)
                 return
 

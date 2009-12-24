@@ -1,5 +1,6 @@
 
 import urllib, urllib2, hashlib
+from datetime import datetime
 from settings import settings
 try:
     import json
@@ -19,6 +20,9 @@ class Person(object):
         specified, populate it with the corresponding info from the
         database.'''
         self.uid = ''
+        # string formatted timestamp of when this revision of this
+        # record was saved. format: '%Y-%m-%dT%H:%M:%S'
+        self.edited = '' 
         self.primary_name = ''
         self.all_names = []
         self.primary_email = ''
@@ -140,19 +144,29 @@ class Person(object):
         if not self.uid:
             print 'Error: UID is empty. Cannot save new user data.'
             return
+
+        # always include a timestamp
+        timestamp = json.dumps(datetime.now().strftime('%Y-%m-%dT%H:%M:%S'))
+        self.edited = timestamp
+
+        # if there's no uid, then it's a new record
         if self.uid not in db:
             try:
                 db[self.uid] = self.__dict__
             except:
                 pass
+        # else, we're updating an existing record
         else:
             person = db[self.uid]
             for field, value in self.__dict__.iteritems():
+                # DONT EVER overwrite the x500 fields. they are the
+                # canonical reference.
                 if field == 'x500':
                     continue
                 # couch will automatically convert non-string values
-                # to json.
+                # for simple objects into json. 
                 person[field] = value
+
             db[self.uid] = person
     def _populate(self, user_dict):
         ''' Populate a Person object from the data store. '''

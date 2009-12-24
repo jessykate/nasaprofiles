@@ -23,6 +23,8 @@ class Person(object):
         # string formatted timestamp of when this revision of this
         # record was saved. format: '%Y-%m-%dT%H:%M:%S'
         self.edited = '' 
+        # a flag that gets set to true if a user edits their profile 
+        self.customized = False
         self.primary_name = ''
         self.all_names = []
         self.primary_email = ''
@@ -182,17 +184,18 @@ class Person(object):
 
         # else, we're updating an existing record
         else:
-            person = db[self.uid]
+            self.customized = True
+            person = db[self.uid]            
             for field, value in self.__dict__.iteritems():
-                # DONT EVER overwrite the x500 fields. they are the
+                # Don't EVER overwrite the x500 fields. they are the
                 # canonical reference.
                 if field == 'x500':
                     continue
                 # couch will automatically convert non-string values
                 # for simple objects into json. 
                 person[field] = value
-
             db[self.uid] = person
+
     def _populate(self, user_dict):
         ''' Populate a Person object from the data store. '''
         if settings['debug']:

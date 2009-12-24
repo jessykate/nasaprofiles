@@ -233,7 +233,7 @@ class MainHandler(BaseHandler):
 
             # display the search results
             self.render('templates/results.html', title='Search Results', results=people, 
-                        category_sm=helper.category_sm)
+                        query=query, category_sm=helper.category_sm)
 
         else: 
             # if no search has been done yet, just present user w

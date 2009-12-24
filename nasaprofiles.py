@@ -214,10 +214,9 @@ class MainHandler(BaseHandler):
                     continue
 
                 if uid not in db:            
-                    print 'Adding %s (uid=%s) to data store' % name, uid
+                    print 'Adding %s (uid=%s) to data store' % (name, uid)
                     person = Person()
                     person.build(info)                    
-                    print 'saving person object'
                     person.save()
                 else:
                     person = Person(uid)

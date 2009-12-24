@@ -113,16 +113,20 @@ class Person(object):
                     self.x500['all_phones'].append(value)
 
 
-            # both are inconsistently used. we always check for
-            # uniqueIdentifier FIRST, and use that if it
-            # exists. careful to be consistent about this, or
-            # duplicate records with different keys will get created
-            # and messes will ensue.
-            if field == 'uniqueIdentifier':
-                print 'found uniqueIdentifier: %s' % values[0]
+            # regarding uniqueIdentifier and uid: both are
+            # inconsistently used, and some records have both. we
+            # always use uniqueIdentifier if it exists. this is a
+            # little messy, since python dicts are not ordered, so we
+            # have no guarantee uniqueIdentifier will be seen
+            # first. if we're not consistent, duplicate records with
+            # different keys will get created and messes will
+            # ensue. blah.
+            if field == 'uid' and 'uniqueIdentifier' not in ldap_dict:
+                print 'found uid instead of uniqueIdentifier. adding record with key = %s' % values[0]
                 self.uid = values[0]
-            elif field == 'uid':
-                print 'found uid %s instead of uniqueIdentifier' % values[0]
+
+            if field == 'uniqueIdentifier':
+                print 'found uniqueIdentifier. adding record with key = %s' % values[0]
                 self.uid = values[0]
 
             if field == 'userClass':
@@ -160,8 +164,8 @@ class Person(object):
             try:
                 print 'saving new record with uid = %s' % self.uid
                 db[self.uid] = self.__dict__
-            except, e:
-                print 'Error: self.uid = %s was not in db, but getting error %s on attempting to add' % (self.uid, e)
+            except:
+                print 'Error: self.uid = %s was not in db, but getting error on attempting to add' % (self.uid)
                 return 
         # else, we're updating an existing record
         else:

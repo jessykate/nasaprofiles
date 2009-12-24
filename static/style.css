@@ -266,7 +266,7 @@ img.photo {
     padding-left: 10px;
     font-style: bold;
     display: block;
-    width: 150px;
+    width: 250px;
     height: 50px;
 }
 
@@ -285,6 +285,7 @@ img.photo {
 
 #results_center{
     float: left;
+    width: 250px;
     padding-left: 10px;
     padding-top: 18px;
     

@@ -101,16 +101,16 @@ category_lookup = {
 }
 
 category_sm_lookup = {
-    "Developer": "<img src='/static/images/category/developer_sm.png'>",
-    "Scientist": "<img src='/static/images/category/scientist_sm.png'>",
-    "Engineer": "<img src='/static/images/category/engineer_sm.png'>",
-    "Management": "<img src='/static/images/category/management_sm.png'>",
-    "Center Operations": "<img src='/static/images/category/center_ops_sm.png'>",
-    "Mission Operations": "<img src='/static/images/category/mission_ops_sm.png'>",
-    "Administrative": "<img src='/static/images/category/administrative_sm.png'>",
-    "Legal": "<img src='/static/images/category/legal_sm.png'>",
-    "Finance": "<img src='/static/images/category/finance_sm.png'>",
-    "Communications": "<img src='/static/images/category/communications_sm.png'>"
+    "developer": "<img src='/static/images/category/developer_sm.png'>",
+    "scientist": "<img src='/static/images/category/scientist_sm.png'>",
+    "engineer": "<img src='/static/images/category/engineer_sm.png'>",
+    "management": "<img src='/static/images/category/management_sm.png'>",
+    "center_ops": "<img src='/static/images/category/center_ops_sm.png'>",
+    "mission_ops": "<img src='/static/images/category/mission_ops_sm.png'>",
+    "admin": "<img src='/static/images/category/administrative_sm.png'>",
+    "legal": "<img src='/static/images/category/legal_sm.png'>", 
+    "finance": "<img src='/static/images/category/finance_sm.png'>",
+    "communications": "<img src='/static/images/category/communications_sm.png'>"
 }
 
 def mailing(address):

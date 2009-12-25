@@ -1,7 +1,19 @@
 {% extends base.html %}
  
 {% block meta %}
-    <meta content="openNASA Profile page of {{ person.display_name() }}" name='description' />
+<script LANGUAGE="JavaScript">
+function confirmSubmit()
+{
+var agree=confirm("Click OK to generate an email with login credentials for this account");
+if (agree)
+   return true ;
+else
+   return false ;
+}
+</script>
+<head>
+<meta content="openNASA Profile page of {{ person.display_name() }}" name='description' />
+</head>
 {% end %}
 
 {% block body %}
@@ -178,8 +190,8 @@
 
     <!-- is this you? -->
 
-    <div id="edit_alert">
-      Are you {{ person.display_name() }}? Click <a href="/request/{{ person.uid }}">here</a> to edit your profile.
+    <div>
+      Are you {{ person.display_name() }}? Click <a onclick="return confirmSubmit()" href="/request/{{ person.uid }}" class="lbOn">here</a> to edit your profile.
     </div>
   </div>
 </div>

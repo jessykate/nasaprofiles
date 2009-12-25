@@ -26,17 +26,9 @@
       </div>
       <a class="email" href="mailto:{{ person.email() }}">{{ person.email() }}</a> 
         <span class="tel"><!--write the all phones parser function!! -->
-          {% if person.get('office') %}
-            <span class="type">office</span>:
-            <span class="value">{{ person.get('office') }}</span><br>
-          {% end %}
-          {% if person.get('mobile') %}
-            <span class="type">mobile</span>:
-            <span class="value">{{ person.get('mobile') }}</span><br>
-          {% end %}
-          {% if person.get('pager') %}
-            <span class="type">pager</span>:
-            <span class="value">{{ person.get('pager') }}</span><br>
+          {% if person.phone() %}
+            <span class="type">Phone</span>:
+            <span class="value">{{ person.phone() }}</span><br>
           {% end %}
         </span>
     </div>
@@ -108,19 +100,23 @@
     </div>
   {% end %}
   
-  {% if person.get('mail_stop') or person.get('room_num') %} 
     <div class=" narrow_block">
       <h2>Address</h2>
       <address>
-        <span>Code: {{ person.get('organization') }}</span><br>
-        <span>Building {{ person.get('building') }}, Room {{ person.get('room_num') }}</span><br><br>
-        
-        
+	{% if person.get('organization') %}
+           <span>Code: {{ person.get('organization') }}</span><br>
+	{% end %}
+	{% if person.get('building') %}
+           <span>Building {{ person.get('building') }} 
+        {% end %}
+	{% if person.get('room_num') %}
+	     Room {{ person.get('room_num') }}</span><br><br>
+        {% end %}
+
         {{ person.get('center') }}<br>
         {{ person.get('mail_stop') }}<br>
         {{ mailing(person.get('center')) }}
 	
-	{% end %}
       </address>
     </div>
 
@@ -128,11 +124,29 @@
     <h2>Other Information</h2>
     
     {% if person.get('employer') %}
-      <span>Employer: {{ person.get('employer') }} <br /> 
+      <span>Employer: {{ person.get('employer') }}</span><br> 
+    {% end %}
+
+    <!-- check to see if the person has more than one phone, because
+    if they only have one, it will already have been displayed at the
+    top of the page. -->
+    {% if person.get('all_phones') and len(person.get('all_phones')) > 1 %}
+      Additional Phone Numbers:<br>
+	{% for phone in person.get('all_phones') %}
+           <!-- skip the phone if it's the primary phone, since that
+		is displayed at the top of the page. -->
+	   {% if phone != person.phone() %}
+	       {{ phone}}<br>
+           {% end %}
+        {% end %}
+    {% end %}
+
+    {% if person.get('fax') %}
+      <span>Fax: {{ person.get('fax', 1) }}</span><br>
     {% end %}
 
     {% if person.get('hire_date') %}
-      <span>Hire Date: {{ person.get('hire_date') }} <br /> 
+      <span>Hire Date: {{ person.get('hire_date') }}</span><br> 
     {% end %}
 
     {% if person.get('personal_web') %}

@@ -57,10 +57,10 @@ Address = {
     "NASA Ames Research Center": "Moffett Field, California 94035",
     "NASA Dryden Flight Research Center": "4800 Lilly Drive, Edwards, California 93523-0273",
     "NASA Glenn Research Center": "21000 Brookpark Rd, Cleveland, OH 44135",
-    "NASA Goddard Space Flight Center": "Greenbelt, MD 20771",
+    "Goddard Space Flight Center": "Greenbelt, MD 20771",
     "NASA Global Institute of Space Studies": "2880 Broadway, New York, NY",
     "NASA Fairmont IVV Facility": "100 University Dr Fairmont, WV 26554",
-    "NASA Jet Propulsion Laboratory": "4800 Oak Grove Drive, Pasadena, California 91109",
+    "Jet Propulsion Laboratory": "4800 Oak Grove Drive, Pasadena, California 91109",
     "NASA Johnson Space Center": "Houston, TX 77058",
     "NASA Kennedy Space Center": "FL 32899-0001",
     "NASA Langley Research Center": "Hampton, Virginia 23681",
@@ -76,9 +76,9 @@ Address = {
 Centers = {
     "NASA Ames Research Center": "label:ARC|37.411870,-122.062333",
     "NASA Dryden Flight Research Center": "label:DFRC|34.901944,-117.891026",
-    "NASA Glenn Research Center": "label:GRC|41.412728,-81.862178",
-    "NASA Goddard Space Flight Center": "label:GSFC|38.995938,-76.851768",
-    "NASA Jet Propulsion Laboratory": "label:JPL|34.203138,-118.172207",
+    "Glenn Research Center": "label:GRC|41.412728,-81.862178", # checked
+    "Goddard Space Flight Center": "label:GSFC|38.995938,-76.851768", # checked
+    "Jet Propulsion Laboratory": "label:JPL|34.203138,-118.172207", #checked
     "NASA Johnson Space Center": "label:JSC|29.560726,-95.093365",
     "NASA Kennedy Space Center": "label:KSC|28.58583,-80.651321",
     "NASA Langley Research Center": "label:LaRC|37.102681,-76.385536",

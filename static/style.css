@@ -256,6 +256,13 @@ img.photo {
     font-weight: bold;
 }
 
+#results_query {
+    font-size: 300%;
+    font-weight: bold;
+    font-style: italic;
+    padding-left: 10px;
+}
+
 #stat_description {
     border-bottom:1px solid #888888;
     font-size:12px;

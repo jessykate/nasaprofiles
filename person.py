@@ -70,6 +70,8 @@ class Person(object):
         # former carefully, and renaming their key values to something
         # more intuitive, and storing the additional fields unchanged.
         for field, values in ldap_dict.iteritems():
+            print 'now processing:'
+            print '(%s, %s)' % (field, values)
 
             # regarding uniqueIdentifier and uid: both are
             # inconsistently used, and some records have both. we
@@ -87,10 +89,11 @@ class Person(object):
                 print 'found uniqueIdentifier. adding record with key = %s' % values[0]
                 self.uid = values[0]
 
-            elif field == 'cn':
+            elif field == 'cn' or field == 'jplalias':
                 # store the canonical copy under x500 info and our own
                 # copy in all_names field.
-                self.x500['all_names'] = []
+                if not 'all_names' in self.x500:
+                    self.x500['all_names'] = []
                 for value in values:
                     self.x500['all_names'].append(value)                    
                     self.all_names.append(value)
@@ -105,6 +108,7 @@ class Person(object):
             # Goddard: ['NASA ', ' Goddard Space Flight Center ', ' Mailstop 750.0 ', ' Greenbelt, MD 20771']
             # Headquarters: ['NASA Headquarters', '300 E ST SW', 'Washington DC 20546-0001']
             # Ames: ['NASA Ames Research Center', 'MS 269-3']
+            # JPL: ['4800 Oak Grove Drive', ' M/S 180-904 ', ' Pasadena, CA 91109']
 
             # general parsing principle: once we remove the 'NASA'
             # list item, if it exists, then:
@@ -112,9 +116,15 @@ class Person(object):
             # list[1] = mail stop
             # list[2], if if it exists, is the street address. 
             elif field == 'postalAddress':
-                for value in values:
-                    address = value.split('$')             
-                    address = [a.strip() for a in address]
+                address = values[0].split('$')             
+                address = [a.strip() for a in address]
+                if len(address) == 3 and address[2].find('Pasadena') >= 0:
+                    # this is JPL
+                    self.x500['center'] = 'Jet Propulsion Laboratory'
+                    self.x500['mail_stop'] = address[1].strip()
+                    self.x500['street_address'] = address[0].strip()
+
+                else:
                     if 'nasa' in address:
                         address.remove('nasa')
                     if 'NASA' in address:
@@ -142,10 +152,28 @@ class Person(object):
                         print str(location)
 
             elif field == 'telephoneNumber':
-                self.x500['all_phones'] = []
+                if not 'all_phones' in self.x500:
+                    self.x500['all_phones'] = []
+                for value in values:
+                    # since telephoneNumber is most likely to be the
+                    # user's main phone number, we always insert it as
+                    # the first record.
+                    self.x500['all_phones'].insert(0,value)
+                    self.all_phones.insert(0,value)
+
+            elif field == 'pager':
+                if not 'all_phones' in self.x500:
+                    self.x500['all_phones'] = []
                 for value in values:
                     self.x500['all_phones'].append(value)
-                    self.all_phones.append(value)
+                    self.all_phones.append(value) 
+
+            # 'fascimileTelephoneNumber.' awesome. 
+            elif field == 'facsimileTelephoneNumber':            
+                self.x500['fax'] = []
+                for value in values:
+                    self.x500['fax'].append(value)
+                
 
             elif field == 'userClass':
                 # assumes there is only one list item for this
@@ -153,6 +181,19 @@ class Person(object):
                 value = values[0]
                 self.x500['organization'] = value[value.find('Organization:')+14 : value.find(',')].strip()
                 self.x500['employer'] = value[value.find('Employer:')+10 : ].strip()
+
+            # this is typical of JPL records. jpldepartmentname is
+            # sort of like their "Code"
+            elif field == 'jpldepartmentname' and 'userClass' not in ldap_dict: 
+                self.x500['organization'] = values[0]
+
+            elif field == 'jplemployer' and 'userClass' not in ldap_dict: 
+                self.x500['employer'] = values[0]
+
+            # some glenn records at least have their own title field. 
+            elif field == 'title':
+                self.x500['title'] = values[0]
+                self.title = values[0]
 
             else:
                 # whatever is leftover, store it too
@@ -164,8 +205,12 @@ class Person(object):
             print 'Error: UID is empty. Cannot save new user data.'
             return
 
-        # always include a timestamp
-        timestamp = json.dumps(datetime.now().strftime('%Y-%m-%dT%H:%M:%S'))
+        # always include a timestamp. use a javascript-compatible
+        # format, so that we can manipulate and order by dates easily
+        # in couch views (which uses javascript for its view
+        # functions).
+        # eg: "Mon, 25 Dec 2009 13:30:00 PST"
+        timestamp = datetime.now().strftime('%a, %d %b %Y %H:%M:%S PST')
         self.edited = timestamp
 
         # if there's no uid, then it's a new record
@@ -200,15 +245,27 @@ class Person(object):
         for field, value in user_dict.iteritems():
             self.__dict__[field] = value
 
-    def get(self, field, default=''):
+    def get(self, field, max_results=None, default=''):
         ''' Return the value of field, first looking for a local
         version, then looking in the x500 values. If the field doesnt
-        exist at all, return the value of default instead.'''
+        exist at all, return the value of default instead. If
+        max_results is set, slice the result set so that it has no
+        more than max_results. useful for limiting a list of items to
+        a single string.'''
         if field in self.__dict__ and self.__dict__[field]:
-            return self.__dict__[field]
+            result = self.__dict__[field]
         elif field in self.__dict__['x500']:
-            return self.__dict__['x500'][field]
-        else: return default
+            result = self.__dict__['x500'][field]
+        else: 
+            result = default
+
+        if max_results == 1:
+            # if it's just one, return it as a string
+            return result[0]
+        elif max_results:
+            return result[:max_results]
+        else:
+            return result
 
     def set(self, field, value):
         if field.find('x500') >= 0:

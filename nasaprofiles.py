@@ -279,12 +279,14 @@ class MainHandler(BaseHandler):
             num_customized = total_customized()
             _top_tags = top_tags(10)
             _top_skills = top_skills(10)
+            _category_count = category_count()
 
             # display the search results
             self.render('templates/results.html', title='Search Results', results=people, 
                         query=query, category_sm=helper.category_sm, 
                         recent_gravatars=recent_gravatars, top_skills=_top_skills,
-                        num_customized=num_customized, top_tags=_top_tags)
+                        num_customized=num_customized, top_tags=_top_tags, 
+                        category_count=_category_count)
 
         else: 
             # if no search has been done yet, just present user w
@@ -365,8 +367,13 @@ def total_customized():
         return row.value
 
 def category_count():
-    pass
-
+    ''' return a dict of category:count pairs for all job
+    categories'''
+    cat_counts = settings['db'].view('main/categories_count', group=True)
+    categories = {}
+    for item in cat_counts:
+        categories[item.key] = item.value
+    return categories
 
 def top_tags(n=None):
     ''' return a dict of tag:count pairs for the top n tags'''

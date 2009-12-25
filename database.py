@@ -95,6 +95,21 @@ class Database(object):
                                            reduce_fun=skills_count_reduce )
         skills_count_view.sync(self.db)
 
+        categories_count_map = '''
+        function(doc) {
+          if (doc.category) {
+           emit(doc.category, 1);
+          }
+        }
+        '''
+        categories_count_reduce = '''
+        function(key, values, rereduce) {
+          return sum(values);
+        }
+        '''        
+        categories_count_view = ViewDefinition('main', 'categories_count', categories_count_map, 
+                                           reduce_fun=categories_count_reduce )
+        categories_count_view.sync(self.db)
 
 
 if __name__ == '__main__':

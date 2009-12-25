@@ -285,11 +285,11 @@ class Person(object):
         if not email:
             email = 'noone@opennasa.com'
 
-        #site_base = 'http://'+settings['domain']
-        #if settings['port'] != 80:
-        #    site_base += ':'+str(settings['port'])
-        #default_img = site_base + settings['default_gravatar'][size]
-        default_img = ''
+        site_base = 'http://'+settings['domain']
+        if settings['port'] != 80:
+            site_base += ':'+str(settings['port'])
+        default_img = site_base + settings['default_gravatar'][size]
+
         gravatar_base = "http://www.gravatar.com/avatar.php?"
         return gravatar_base+urllib.urlencode({'gravatar_id':hashlib.md5(email.lower()).hexdigest(),
                                                'size':str(size), 'd':default_img})

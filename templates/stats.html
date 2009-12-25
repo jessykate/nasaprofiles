@@ -30,23 +30,22 @@
     <div id="stat_description">
       Recently updated profiles
     </div>
-    <span>
+    <div id="gravatar_rows">
       {% for uid, gravatar in recent_gravatars.iteritems() %}
        <a href="person/{{ uid }}"><img src="{{ gravatar }}"></a>
       {% end %}
-    </span>
+    </div>
   </div>
   
   <div id="stat">
     <div id="stat_description">
       Most popular skills
     </div>
-    <span>
+    <div>
     {% for skill, count in top_skills.iteritems() %}
       <span>{{ skill }}</span><br>
     {% end %}
-
-    </span>
+    </div>
   </div>
 
 </div>

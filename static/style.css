@@ -442,6 +442,11 @@ input.share {
     padding: 20px;
 }
 
+
+.faq {
+    color: #404040;
+}
+
 #question {
     font-weight: bold;
     font-size: 150%;

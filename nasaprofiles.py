@@ -210,6 +210,10 @@ class RefreshHandler(BaseHandler):
 class FaqHandler(BaseHandler):
     def get(self):
         self.render('templates/faq.html')
+
+class AboutHandler(BaseHandler):
+    def get(self):
+        self.render('templates/about.html')
     
 class MainHandler(BaseHandler):
     def get(self):
@@ -279,14 +283,18 @@ class MainHandler(BaseHandler):
             num_customized = total_customized()
             _top_tags = top_tags(10)
             _top_skills = top_skills(10)
-            _category_count = category_count()
+
+            categories = category_count(format='string')
+            
+            #labels = '|'.join(categories.keys())
+            #data = ','.join(category.values())
 
             # display the search results
             self.render('templates/results.html', title='Search Results', results=people, 
                         query=query, category_sm=helper.category_sm, 
                         recent_gravatars=recent_gravatars, top_skills=_top_skills,
                         num_customized=num_customized, top_tags=_top_tags, 
-                        category_count=_category_count)
+                        categories=categories)
 
         else: 
             # if no search has been done yet, just present user w
@@ -366,13 +374,18 @@ def total_customized():
     for row in customized:
         return row.value
 
-def category_count():
+def category_count(format=None):
     ''' return a dict of category:count pairs for all job
-    categories'''
+    categories. format can be 'string' or None, and specifies how the
+    values should be formatted. if format == None, int is used.'''
     cat_counts = settings['db'].view('main/categories_count', group=True)
     categories = {}
     for item in cat_counts:
-        categories[item.key] = item.value
+        if format == 'string':
+            categories[item.key] = str(item.value)
+        else:
+            categories[item.key] = item.value
+        
     return categories
 
 def top_tags(n=None):
@@ -414,6 +427,7 @@ application = tornado.web.Application([
         (r'/request/([A-Za-z0-9\+,\-%]+)', EditRequestHandler),
         (r'/edit', EditHandler),
         (r'/faq', FaqHandler),
+        (r'/about', AboutHandler),
         (r'/logout', LogoutHandler),
         (r'/login/([A-Za-z0-9\-]+)', LoginHandler),
         ], **settings)

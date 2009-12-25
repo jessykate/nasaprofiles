@@ -262,9 +262,14 @@ class MainHandler(BaseHandler):
                 self.redirect('person/'+uid)
                 return
 
+            # get some stats from the db
+            recent = recently_edited(10)
+            num_customized = total_customized()
+
             # display the search results
             self.render('templates/results.html', title='Search Results', results=people, 
-                        query=query, category_sm=helper.category_sm)
+                        query=query, category_sm=helper.category_sm, recent=recent, 
+                        num_customized=num_customized)
 
         else: 
             # if no search has been done yet, just present user w
@@ -315,6 +320,35 @@ class MainHandler(BaseHandler):
                     name = tornado.escape.url_escape(result_data[0][1]['cn'][0])
                     result_set[name] = result_data[0][1]
         return result_set
+
+def recently_edited(n=None):
+    '''returns a list of the n most recently edited profiles. If n is
+    None, returns all records, sorted in order of descending edit date
+    (eg. most recently edited to least recently edited)'''
+    
+    # the key value of the recently_edited view is a javascript date
+    # string representing the "number of milliseconds after midnight
+    # January 1, 1970 till the given date." so descending returns the
+    # largest value FIRST, and the largest value is furthest 1970 ==>
+    # most recent.
+    if n:
+        recent = settings['db'].view('main/recently_edited', descending=True, limit=n)    
+    else:
+        recent = settings['db'].view('main/recently_edited', descending=True)    
+    return [r.value for r in recent]
+
+def total_customized():
+    ''' returns an integer representing the total number of profiles
+    which have been customized in our system'''
+    # this is a reduce function, so it should only have one result.
+    customized = settings['db'].view('main/num_customized')
+    assert len(customized) == 1
+
+    # not sure how else to access the results, though iterating over a
+    # single item list seems a bit silly.
+    for row in customized:
+        return row.value
+
 
 ######################################################
 ######################################################

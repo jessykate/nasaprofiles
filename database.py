@@ -37,14 +37,6 @@ class Database(object):
         all_docs_view = ViewDefinition('main', 'all_docs', all_docs_fun )
         all_docs_view.sync(self.db)
 
-        existing_profiles_fun = '''
-        function(doc) {
-          emit(doc.x500_url, doc._id);
-        }
-        '''
-        existing_profiles_view = ViewDefinition('main', 'existing_profiles', existing_profiles_fun )
-        existing_profiles_view.sync(self.db)        
-
         recently_edited_fun = '''
         function(doc) {
           if (doc.edited) {
@@ -54,6 +46,23 @@ class Database(object):
         '''
         recently_edited_view = ViewDefinition('main', 'recently_edited', recently_edited_fun )
         recently_edited_view.sync(self.db)
+
+        total_customized_map = '''
+        function(doc) {
+          if (doc.customized) {
+            emit(doc._id, 1);
+          }
+        }
+        '''
+        total_customized_reduce = '''
+        function(key, values, rereduce) {
+          return sum(values);
+        }
+        '''        
+        total_customized_view = ViewDefinition('main', 'total_customized', total_customized_map, 
+                                              reduce_fun=total_customized_reduce )
+        total_customized_view.sync(self.db)
+
 
 if __name__ == '__main__':
     database = Database()    

@@ -45,6 +45,16 @@ class Database(object):
         existing_profiles_view = ViewDefinition('main', 'existing_profiles', existing_profiles_fun )
         existing_profiles_view.sync(self.db)        
 
+        recently_edited_fun = '''
+        function(doc) {
+          if (doc.edited) {
+            emit(Date.parse(doc.edited), doc._id);
+          }
+        }
+        '''
+        recently_edited_view = ViewDefinition('main', 'recently_edited', recently_edited_fun )
+        recently_edited_view.sync(self.db)
+
 if __name__ == '__main__':
     database = Database()    
     database.configure()

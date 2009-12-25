@@ -101,12 +101,12 @@
             <legend class="legend_title">More Info about You!</legend><br>
             <div class="narrow_block">
               <label for="tags">Tags (comma separated)</label><br>
-              <input type="text" name="tags" size="40" value="{{ person.get('tags') }}"><br>
+              <input type="text" name="tags" size="40" value="{{ ', '.join(person.get('tags')) }}"><br>
             </div>
             
             <div class="narrow_block">
               <label for="skills">Skills (comma separated)</label><br>
-              <input type="text" name="skills" size="40"  value="{{ person.get('skills') }}"><br>
+              <input type="text" name="skills" size="40"  value="{{ ', '.join(person.get('skills')) }}"><br>
             </div>
             <div class="wide_block">
               <div id="three_column">

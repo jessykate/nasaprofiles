@@ -37,14 +37,6 @@ class Database(object):
         all_docs_view = ViewDefinition('main', 'all_docs', all_docs_fun )
         all_docs_view.sync(self.db)
 
-        existing_profiles_fun = '''
-        function(doc) {
-          emit(doc.x500_url, doc._id);
-        }
-        '''
-        existing_profiles_view = ViewDefinition('main', 'existing_profiles', existing_profiles_fun )
-        existing_profiles_view.sync(self.db)        
-
         recently_edited_fun = '''
         function(doc) {
           if (doc.edited) {
@@ -54,6 +46,71 @@ class Database(object):
         '''
         recently_edited_view = ViewDefinition('main', 'recently_edited', recently_edited_fun )
         recently_edited_view.sync(self.db)
+
+        total_customized_map = '''
+        function(doc) {
+          if (doc.customized) {
+            emit(doc._id, 1);
+          }
+        }
+        '''
+        total_customized_reduce = '''
+        function(key, values, rereduce) {
+          return sum(values);
+        }
+        '''        
+        total_customized_view = ViewDefinition('main', 'total_customized', total_customized_map, 
+                                              reduce_fun=total_customized_reduce )
+        total_customized_view.sync(self.db)
+
+        tags_count_map = '''
+        function(doc) {
+          doc.tags.forEach(function(tag) {
+            emit(tag, 1);
+          });
+        }
+        '''
+        tags_count_reduce = '''
+        function(key, values, rereduce) {
+          return sum(values);
+        }
+        '''        
+        tags_count_view = ViewDefinition('main', 'tags_count', tags_count_map, 
+                                         reduce_fun=tags_count_reduce )
+        tags_count_view.sync(self.db)
+
+        skills_count_map = '''
+        function(doc) {
+          doc.skills.forEach(function(skill) {
+            emit(skill, 1);
+          });
+        }
+        '''
+        skills_count_reduce = '''
+        function(key, values, rereduce) {
+          return sum(values);
+        }
+        '''        
+        skills_count_view = ViewDefinition('main', 'skills_count', skills_count_map, 
+                                           reduce_fun=skills_count_reduce )
+        skills_count_view.sync(self.db)
+
+        categories_count_map = '''
+        function(doc) {
+          if (doc.category) {
+           emit(doc.category, 1);
+          }
+        }
+        '''
+        categories_count_reduce = '''
+        function(key, values, rereduce) {
+          return sum(values);
+        }
+        '''        
+        categories_count_view = ViewDefinition('main', 'categories_count', categories_count_map, 
+                                           reduce_fun=categories_count_reduce )
+        categories_count_view.sync(self.db)
+
 
 if __name__ == '__main__':
     database = Database()    

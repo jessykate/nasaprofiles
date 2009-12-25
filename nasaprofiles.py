@@ -178,12 +178,19 @@ class EditHandler(BaseHandler):
                     custom_name_flag = True
 
                 # dont override custom fields if they've been set
+                # elsewhere in this form.
                 elif field == 'primary_email' and custom_email_flag:
                     continue
                 elif field == 'primary_name' and custom_name_flag:
                     continue
                 elif field == 'primary_phone' and custom_phone_flag:
                     continue
+
+                # store tags and skills as lists
+                elif field == 'tags' or field == 'skills':
+                    values = value.split(',')
+                    values = [v.strip() for v in values]
+                    person.set(field, values)
 
                 # for all other fields, if it wasnt empty, then store
                 # the new value.
@@ -203,6 +210,10 @@ class RefreshHandler(BaseHandler):
 class FaqHandler(BaseHandler):
     def get(self):
         self.render('templates/faq.html')
+
+class AboutHandler(BaseHandler):
+    def get(self):
+        self.render('templates/about.html')
     
 class MainHandler(BaseHandler):
     def get(self):
@@ -262,9 +273,28 @@ class MainHandler(BaseHandler):
                 self.redirect('person/'+uid)
                 return
 
+            # get some stats from the db
+            recent = recently_edited(10)
+            recent_gravatars = {}
+            for uid in recent:
+                person = Person(uid)
+                recent_gravatars[uid] = person.gravatar(50)
+
+            num_customized = total_customized()
+            _top_tags = top_tags(10)
+            _top_skills = top_skills(10)
+
+            categories = category_count(format='string')
+            
+            #labels = '|'.join(categories.keys())
+            #data = ','.join(category.values())
+
             # display the search results
             self.render('templates/results.html', title='Search Results', results=people, 
-                        query=query, category_sm=helper.category_sm)
+                        query=query, category_sm=helper.category_sm, 
+                        recent_gravatars=recent_gravatars, top_skills=_top_skills,
+                        num_customized=num_customized, top_tags=_top_tags, 
+                        categories=categories)
 
         else: 
             # if no search has been done yet, just present user w
@@ -316,6 +346,76 @@ class MainHandler(BaseHandler):
                     result_set[name] = result_data[0][1]
         return result_set
 
+def recently_edited(n=None):
+    '''returns a list of the n most recently edited profiles. If n is
+    None, returns all records, sorted in order of descending edit date
+    (eg. most recently edited to least recently edited)'''
+    
+    # the key value of the recently_edited view is a javascript date
+    # string representing the "number of milliseconds after midnight
+    # January 1, 1970 till the given date." so descending returns the
+    # largest value FIRST, and the largest value is furthest 1970 ==>
+    # most recent.
+    if n:
+        recent = settings['db'].view('main/recently_edited', descending=True, limit=n)    
+    else:
+        recent = settings['db'].view('main/recently_edited', descending=True)    
+    return [r.value for r in recent]
+
+def total_customized():
+    ''' returns an integer representing the total number of profiles
+    which have been customized in our system'''
+    # this is a reduce function, so it should only have one result.
+    customized = settings['db'].view('main/num_customized')
+    assert len(customized) == 1
+
+    # not sure how else to access the results, though iterating over a
+    # single item list seems a bit silly.
+    for row in customized:
+        return row.value
+
+def category_count(format=None):
+    ''' return a dict of category:count pairs for all job
+    categories. format can be 'string' or None, and specifies how the
+    values should be formatted. if format == None, int is used.'''
+    cat_counts = settings['db'].view('main/categories_count', group=True)
+    categories = {}
+    for item in cat_counts:
+        if format == 'string':
+            categories[item.key] = str(item.value)
+        else:
+            categories[item.key] = item.value
+        
+    return categories
+
+def top_tags(n=None):
+    ''' return a dict of tag:count pairs for the top n tags'''
+    # the group=True parameter is key; it's what tells the view to
+    # group the results by key (er, no pun intended).
+    if n:
+        tags = settings['db'].view('main/tags_count', group=True, limit=n)
+    else:
+        tags = settings['db'].view('main/tags_count', group=True)
+
+    top_tags = {}
+    for tag in tags:
+        top_tags[tag.key] = tag.value
+    return top_tags
+
+def top_skills(n=None):
+    ''' return a dict of skill:count pairs for the top n skills'''
+    # the group=True parameter is key; it's what tells the view to
+    # group the results by key (er, no pun intended).
+    if n:
+        skills = settings['db'].view('main/skills_count', group=True, limit=n)
+    else:
+        skills = settings['db'].view('main/skills_count', group=True)
+
+    top_skills = {}
+    for skill in skills:
+        top_skills[skill.key] = skill.value
+    return top_skills
+
 ######################################################
 ######################################################
 
@@ -327,6 +427,7 @@ application = tornado.web.Application([
         (r'/request/([A-Za-z0-9\+,\-%]+)', EditRequestHandler),
         (r'/edit', EditHandler),
         (r'/faq', FaqHandler),
+        (r'/about', AboutHandler),
         (r'/logout', LogoutHandler),
         (r'/login/([A-Za-z0-9\-]+)', LoginHandler),
         ], **settings)

@@ -33,18 +33,20 @@
       </div>
       {% block footer %}
       <div id="footer">
-        <p class="copy">Copyright &copy; 2009 blahblah</p>
+        <p class="copy">Copyright &copy; 2009 openNASA</p>
         <ul id="footNav">
           <li><a href="/">search</a></li>
           <li><a href="/faq">faq</a></li>
-          <li><a href="/help">help</a></li>
-          <li><a href="#">feedback</a></li>
+          <li><a href="http://feedback.opennasa.com/pages/36731/">feedback</a></li>
           <li><a href="http://www.opennasa.com/">blog</a></li>
-          <li><a href="#">log out</a></li>
+          {% if current_user %}
+            <li><a href="/logout">log out</a></li>
+          {% end %}
         </ul>
       </div>
       {% end %}
     </div>
+    <!-- start uservoice feedback forum -->
     <script type="text/javascript">
     var uservoiceOptions = {
       /* required */
@@ -69,5 +71,20 @@
     _loadSuper = window.onload;
     window.onload = (typeof window.onload != 'function') ? _loadUserVoice : function() { _loadSuper(); _loadUserVoice(); };
     </script>
+    <!-- end uservoice feedback forum-->
+ 
+    <!-- start google analytics -->
+
+    <script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+    try {
+    var pageTracker = _gat._getTracker("UA-12200485-1");
+    pageTracker._trackPageview();
+    } catch(err) {}</script>
+
+    <!-- end google analytics-->
   </body>
 </html>

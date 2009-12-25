@@ -377,6 +377,21 @@ img.photo {
     padding: 10px;
 }
 
+#message_alert{
+    background-color: #F5E39C;
+    text-align:center;
+    margin: 10px;
+    padding: 10px;
+}
+
+#notify{
+    font-size: 150%;
+    font-style: bold;
+    margin: 30px 10px;
+    padding: 10px;
+}
+
+
 #profile_edit {
     background: url(images/wrapper_bg.png) top left repeat-y;
     float: left;

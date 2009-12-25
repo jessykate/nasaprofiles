@@ -178,12 +178,19 @@ class EditHandler(BaseHandler):
                     custom_name_flag = True
 
                 # dont override custom fields if they've been set
+                # elsewhere in this form.
                 elif field == 'primary_email' and custom_email_flag:
                     continue
                 elif field == 'primary_name' and custom_name_flag:
                     continue
                 elif field == 'primary_phone' and custom_phone_flag:
                     continue
+
+                # store tags and skills as lists
+                elif field == 'tags' or field == 'skills':
+                    values = value.split(',')
+                    values = [v.strip() for v in values]
+                    person.set(field, values)
 
                 # for all other fields, if it wasnt empty, then store
                 # the new value.
@@ -264,12 +271,20 @@ class MainHandler(BaseHandler):
 
             # get some stats from the db
             recent = recently_edited(10)
+            recent_gravatars = {}
+            for uid in recent:
+                person = Person(uid)
+                recent_gravatars[uid] = person.gravatar(50)
+
             num_customized = total_customized()
+            _top_tags = top_tags(10)
+            _top_skills = top_skills(10)
 
             # display the search results
             self.render('templates/results.html', title='Search Results', results=people, 
-                        query=query, category_sm=helper.category_sm, recent=recent, 
-                        num_customized=num_customized)
+                        query=query, category_sm=helper.category_sm, 
+                        recent_gravatars=recent_gravatars, top_skills=_top_skills,
+                        num_customized=num_customized, top_tags=_top_tags)
 
         else: 
             # if no search has been done yet, just present user w
@@ -349,6 +364,37 @@ def total_customized():
     for row in customized:
         return row.value
 
+def category_count():
+    pass
+
+
+def top_tags(n=None):
+    ''' return a dict of tag:count pairs for the top n tags'''
+    # the group=True parameter is key; it's what tells the view to
+    # group the results by key (er, no pun intended).
+    if n:
+        tags = settings['db'].view('main/tags_count', group=True, limit=n)
+    else:
+        tags = settings['db'].view('main/tags_count', group=True)
+
+    top_tags = {}
+    for tag in tags:
+        top_tags[tag.key] = tag.value
+    return top_tags
+
+def top_skills(n=None):
+    ''' return a dict of skill:count pairs for the top n skills'''
+    # the group=True parameter is key; it's what tells the view to
+    # group the results by key (er, no pun intended).
+    if n:
+        skills = settings['db'].view('main/skills_count', group=True, limit=n)
+    else:
+        skills = settings['db'].view('main/skills_count', group=True)
+
+    top_skills = {}
+    for skill in skills:
+        top_skills[skill.key] = skill.value
+    return top_skills
 
 ######################################################
 ######################################################

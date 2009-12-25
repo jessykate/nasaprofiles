@@ -69,14 +69,14 @@
       {% if person.get('skills') %}  
         <div class="narrow_block">
           <h2>Skills</h2>
-            {{ person.get('skills') }}
+            {{ ', '.join(person.get('skills')) }}
         </div>
       {% end %}
 
       {% if person.get('tags') %}  
         <div class="narrow_block">
           <h2>Tags</h2>
-            {{ person.get('tags') }}
+            {{ ', '.join(person.get('tags')) }}
         </div>
       {% end %}
     </div>

@@ -63,6 +63,39 @@ class Database(object):
                                               reduce_fun=total_customized_reduce )
         total_customized_view.sync(self.db)
 
+        tags_count_map = '''
+        function(doc) {
+          doc.tags.forEach(function(tag) {
+            emit(tag, 1);
+          });
+        }
+        '''
+        tags_count_reduce = '''
+        function(key, values, rereduce) {
+          return sum(values);
+        }
+        '''        
+        tags_count_view = ViewDefinition('main', 'tags_count', tags_count_map, 
+                                         reduce_fun=tags_count_reduce )
+        tags_count_view.sync(self.db)
+
+        skills_count_map = '''
+        function(doc) {
+          doc.skills.forEach(function(skill) {
+            emit(skill, 1);
+          });
+        }
+        '''
+        skills_count_reduce = '''
+        function(key, values, rereduce) {
+          return sum(values);
+        }
+        '''        
+        skills_count_view = ViewDefinition('main', 'skills_count', skills_count_map, 
+                                           reduce_fun=skills_count_reduce )
+        skills_count_view.sync(self.db)
+
+
 
 if __name__ == '__main__':
     database = Database()    

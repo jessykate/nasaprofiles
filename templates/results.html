@@ -6,7 +6,8 @@
   <div id="results_page">
     <div id="content">
       
-      There are <span id="big_num">{{ len(results) }}</span> results for your search <br><br>
+      There are <span id="big_num">{{ len(results) }}</span> results
+      for <span id="results_query">{{query.title()}}</span><br><br>
 
       {% for person in results %}
         <div id="profile_card" onclick="location.href='person/{{ person.get('uid') }}';" style="cursor:pointer;">

@@ -256,6 +256,13 @@ img.photo {
     font-weight: bold;
 }
 
+#results_query {
+    font-size: 300%;
+    font-weight: bold;
+    font-style: italic;
+    padding-left: 10px;
+}
+
 #stat_description {
     border-bottom:1px solid #888888;
     font-size:12px;
@@ -272,7 +279,7 @@ img.photo {
     padding-left: 10px;
     font-style: bold;
     display: block;
-    width: 150px;
+    width: 250px;
     height: 50px;
 }
 
@@ -292,6 +299,7 @@ img.photo {
 
 #results_center{
     float: left;
+    width: 250px;
     padding-left: 10px;
     padding-top: 18px;
     
@@ -369,6 +377,21 @@ img.photo {
     padding: 10px;
 }
 
+#message_alert{
+    background-color: #F5E39C;
+    text-align:center;
+    margin: 10px;
+    padding: 10px;
+}
+
+#notify{
+    font-size: 150%;
+    font-style: bold;
+    margin: 30px 10px;
+    padding: 10px;
+}
+
+
 #profile_edit {
     background: url(images/wrapper_bg.png) top left repeat-y;
     float: left;
@@ -417,6 +440,11 @@ input.share {
     float: left;
     width: 985px;
     padding: 20px;
+}
+
+
+.faq {
+    color: #404040;
 }
 
 #question {
@@ -486,7 +514,9 @@ a img {
     width: 80px;
 }
 
-
+#gravatar_rows {
+    margin-top:10px;
+}
 
 
 

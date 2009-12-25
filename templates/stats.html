@@ -6,45 +6,49 @@
       Custom profiles in people.openNASA
     </div>
     <span id="big_num">
-      {{len(results)}}
+      {{num_customized}}
     </span>
+  </div>
+      
+  <div id="stat">
+    <div id="stat_description">
+      Job Category Breakdown
+    </div><br>
+    <img src="http://chart.apis.google.com/chart?chs=280x120&
+	      chd=t:{{ ','.join(categories.values()) }}&
+	      chco=1CACC4&amp;cht=p&amp;chf=bg,s,E3EEF1&
+	      chl={{ '|'.join(categories.keys()) }}">
   </div>
   
   <div id="stat">
     <div id="stat_description">
-      Most popular Job Category
+      Recently updated profiles
     </div>
-    <span id="big_num">
-      {{len(results)}} 
-    </span>
-    <img src="static/images/job_category_sm.png">
+    <div id="gravatar_rows">
+      {% for uid, gravatar in recent_gravatars.iteritems() %}
+       <a href="person/{{ uid }}"><img src="{{ gravatar }}"></a>
+      {% end %}
+    </div>
+  </div>
+
+  <div id="stat">
+    <div id="stat_description">
+      Top {{ len(top_tags) }} Tags
+    </div>
+    {% for tag, count in top_tags.iteritems() %}
+      <span>{{ tag }}</span>
+    {% end %}
   </div>
   
   <div id="stat">
     <div id="stat_description">
-      Number of queries to date
+      Most popular skills
     </div>
-    <span id="big_num">
-      {{len(results)}}
-    </span>
-  </div>
-  
-  <div id="stat">
-    <div id="stat_description">
-      Latest updated profile
+    <div>
+    {% for skill, count in top_skills.iteritems() %}
+      <span>{{ skill }}</span>
+    {% end %}
     </div>
-    <span id="big_num">
-      {{len(results)}}
-    </span>
-  </div>
-  
-  <div id="stat">
-    <div id="stat_description">
-      Most popular skill
-    </div>
-    <span id="big_num">
-      {{len(results)}}
-    </span>
   </div>
 
 </div>

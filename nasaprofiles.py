@@ -366,7 +366,7 @@ def total_customized():
     ''' returns an integer representing the total number of profiles
     which have been customized in our system'''
     # this is a reduce function, so it should only have one result.
-    customized = settings['db'].view('main/num_customized')
+    customized = settings['db'].view('main/total_customized')
     assert len(customized) == 1
 
     # not sure how else to access the results, though iterating over a

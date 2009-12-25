@@ -13,9 +13,9 @@ settings = {
 
     # the local path to your default gravatar
     'default_gravatar': {
-        '50': "/static/images/gravatar_50.png",
-        '80': "/static/images/gravatar_80.png",
-        '125': "/static/images/gravatar_125.png",        
+        50: "/static/images/gravatar_50.png",
+        80: "/static/images/gravatar_80.png",
+        125: "/static/images/gravatar_125.png",        
         },
 
     # on you localhost and for development, you probably want this to

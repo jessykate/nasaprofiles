@@ -44,6 +44,9 @@ class Person(object):
         self.personal_web = ''
         self.twitter = ''
         self.facebook = ''
+        # self.opennasa_only --> set only when this is a custom local
+        # profile NOT based on x500 info.
+
         # all the original values pulled from x500
         self.x500 = {}
         # x500 info we may want to let people customize in a future

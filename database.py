@@ -113,6 +113,32 @@ class Database(object):
         categories_count_view.sync(self.db)
 
 
+        max_custom_uid_map = '''
+        function(doc) {
+          if (doc.opennasa_only == true) {
+            emit(null, doc._id.substring(1));
+          }
+        }
+        '''
+
+        max_custom_uid_reduce = '''
+        function(key, values, rereduce) {
+          var greatest = 0;
+          values.forEach(function(value) {
+            value = value * 1;
+            if (value > greatest) {
+              greatest = value;
+            }     
+          });
+          return greatest;
+        }
+        '''        
+        max_custom_uid_view = ViewDefinition('main', 'max_custom_uid', max_custom_uid_map, 
+                                           reduce_fun=max_custom_uid_reduce )
+        max_custom_uid_view.sync(self.db)
+
+
+
 if __name__ == '__main__':
     database = Database()    
     database.configure()

@@ -191,7 +191,16 @@ else
     <!-- is this you? -->
 
     <div id="edit_alert">
-      Are you {{ person.display_name() }}? Click <a onclick="return confirmSubmit()" href="/request/{{ person.uid }}" class="lbOn">here</a> to edit your profile.
+      {% if current_user %} 
+
+      {{person.display_name() }}, click <a href="/request/{{ person.uid }}">here</a> to make further edits to your profile.
+
+      {% else %}
+
+      Are you {{ person.display_name() }}?  Click <a onclick="return confirmSubmit()" href="/request/{{ person.uid }}">here</a> to edit your profile.
+
+      {% end %}
+
     </div>
   </div>
 </div>

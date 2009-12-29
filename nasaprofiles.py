@@ -421,8 +421,9 @@ def total_customized():
     which have been customized in our system'''
     # this is a reduce function, so it should only have one result.
     customized = settings['db'].view('main/total_customized')
-    assert len(customized) == 1
 
+    if not len(customized):
+        return 0
     # not sure how else to access the results, though iterating over a
     # single item list seems a bit silly.
     for row in customized:

@@ -223,7 +223,6 @@ img.photo {
 	clear: both;
 }
 
-
 #container {
 	// background: url(images/wrapper_bg.png) top left repeat-y;
 	background-color: white;
@@ -468,6 +467,7 @@ input.share {
 	padding: 0;
 	margin: 0;
 	list-style: none;
+	font-size: 120%;
 }
 
 #footer li {

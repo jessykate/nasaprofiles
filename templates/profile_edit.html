@@ -53,7 +53,7 @@
             <br><br>
             <a href="http://en.gravatar.com/site/signup"><img src="{{ person.gravatar() }}" class="photo" alt="gravatar" /></a>
             <p>Gravatar setting:</p>
-            <p>The picture on your badge is not publicly available, so we elected to use a webservice called Gravatar to pull in a picture.  The primary e-mail set up above will be linked to the picture displayed via Gravatar.  To set-up a gravatar, simply visit their <a href="http://en.gravatar.com/site/signup">website</a> and upload a picture to be affiliated with your primary e-mail address. If you would like more information, please visit the <a href="/faq">FAQ's</a>.
+            <p>The picture on your badge is not publicly available, so we elected to use a webservice called Gravatar to pull in a picture.  The primary e-mail set up above will be linked to the picture displayed via Gravatar.  To set-up a gravatar, simply visit their <a href="http://en.gravatar.com/site/signup">website</a> and upload a picture to be affiliated with your primary e-mail address. If you would like more information, please visit the <a href="/faq#gravatar">FAQ's</a>.
             </p><br><br><br><br>
             <label for="category">Select a job category that best matches your expertise:   </label>
             <select name="category" style="margin-left:20px;">
@@ -101,12 +101,12 @@
             <legend class="legend_title">More Info about You!</legend><br>
             <div class="narrow_block">
               <label for="tags">Tags (comma separated)</label><br>
-              <input type="text" name="tags" size="40" value="{{ ', '.join(person.get('tags')) }}"><br>
+              <input type="text" name="tags" size="38" value="{{ ', '.join(person.get('tags')) }}"><br>
             </div>
             
             <div class="narrow_block">
               <label for="skills">Skills (comma separated)</label><br>
-              <input type="text" name="skills" size="40"  value="{{ ', '.join(person.get('skills')) }}"><br>
+              <input type="text" name="skills" size="38"  value="{{ ', '.join(person.get('skills')) }}"><br>
             </div>
             <div class="wide_block">
               <div id="three_column">
@@ -139,7 +139,6 @@
               <p>Note: You can use html tags in your Previous Projects.</p>
             </div>
           </fieldset> <!-- end more info -->
-
           <div id="edit_submit"><input type="submit" name="submitted" value="Share" class="share"></div>
         </form>
       </p>

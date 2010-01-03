@@ -57,7 +57,7 @@
             </p><br><br><br><br>
             <label for="category">Select a job category that best matches your expertise:   </label>
             <select name="category" style="margin-left:20px;">
-              {% for value in ["", "developer", "scientist", "engineer", "management", "center_ops", "mission_ops", "admin", "legal", "finance", "communications"] %}
+              {% for value in ["", "developer", "scientist","engineer", "management", "center_ops", "mission_ops", "astronaut", "admin", "legal", "finance", "communications"] %}
                 <option value="{{ value }}" {% if value ==  person.get('category') %} selected="selected" {% end %}>{{ value }}</option>
               {% end %}
             </select>

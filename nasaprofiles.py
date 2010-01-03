@@ -18,6 +18,23 @@ from database import Database
 from person import Person
 from settings import settings
 
+
+class TemplateBase(tornado.template.Template):
+    def generate(self, **kwargs):
+        ''' this function gets called for all templates to make each
+        of the kwargs available as variables to the rendered
+        template. Override the function to customize the default
+        variables available to *all* templates. '''
+        namespace = {
+            'recent_gravatars' : recent_gravatars, 
+            'top_skills' :_top_skills,
+            'num_customized' : num_customized,
+            'top_tags' :_top_tags, 
+            'categories' : categories,
+            }
+        namespace.update(kwargs)
+        super(TemplateBase, self).generate(namespace)
+
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
         return self.get_cookie("uid")
@@ -201,6 +218,43 @@ class EditHandler(BaseHandler):
             person.save()
             self.redirect('/person/'+uid)
 
+class CreateRequestHandler(BaseHandler):
+    def get(self):
+        message = None
+        email = self.get_argument("email", None)
+        if not email:
+            self.render('templates/create_request.html', message=message)
+            return
+        # check to make sure this is a nasa email by looking for the
+        # word nasa in the domain part of the address.
+        try:
+            name, domain = email.split('@')
+        except:
+            message = 'Invalid email address. Please try again.'
+            self.render('templates/create_request.html', message=message)
+            return
+        if domain.lower().find('nasa') < 0:
+            message = 'You must enter a NASA email address. Please try again.'
+            self.render('templates/create_request.html', message=message)
+            return
+        else:
+            # create an empty profile for this person with just their
+            # email address
+            new_person = Person()
+            new_person.all_email = [email,]            
+            new_person.opennasa_only = True
+            uid = next_custom_uid()
+            new_person.uid = uid
+            new_person.save()            
+
+            # and then send them a one-time login.
+            self.redirect('request/'+uid)
+            return
+
+
+class CreateHandler(BaseHandler):
+    pass
+
         
 class RefreshHandler(BaseHandler):
     ''' supports refreshing of x500 info'''
@@ -367,8 +421,9 @@ def total_customized():
     which have been customized in our system'''
     # this is a reduce function, so it should only have one result.
     customized = settings['db'].view('main/total_customized')
-    assert len(customized) == 1
 
+    if not len(customized):
+        return 0
     # not sure how else to access the results, though iterating over a
     # single item list seems a bit silly.
     for row in customized:
@@ -416,15 +471,27 @@ def top_skills(n=None):
         top_skills[skill.key] = skill.value
     return top_skills
 
+def next_custom_uid():
+    ''' return the value of the next custom UID. note that this is a
+    string value, and all custom UIDs (ie, those note based on an x500
+    value) begin with a # symbol.'''
+    results = settings['db'].view('main/max_custom_uid', descending=True, limit=1)
+    if not results:
+        return '+0'
+    for result in results:
+        return '+'+ str(result.value + 1)
+
 ######################################################
 ######################################################
 
 application = tornado.web.Application([
         (r'/', MainHandler),
         # XXX FIXME this regex probably wouldnt support many names
-        (r'/person/([A-Za-z0-9\+,\-%]+)', PersonHandler),
-        (r'/person/([A-Za-z0-9\+,\-%]+/refresh)', RefreshHandler),
-        (r'/request/([A-Za-z0-9\+,\-%]+)', EditRequestHandler),
+        (r'/person/([A-Za-z0-9\+,\-%\+]+)', PersonHandler),
+        (r'/person/([A-Za-z0-9\+,\-%\+]+/refresh)', RefreshHandler),
+        (r'/request/([A-Za-z0-9\+,\-\+]+)', EditRequestHandler),
+        (r'/create_request', CreateRequestHandler),
+        (r'/create', CreateHandler),
         (r'/edit', EditHandler),
         (r'/faq', FaqHandler),
         (r'/about', AboutHandler),

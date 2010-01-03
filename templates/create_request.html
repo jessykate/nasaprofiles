@@ -1,0 +1,32 @@
+{% extends base.html %}
+
+{% block meta %}
+<script LANGUAGE="JavaScript">
+function confirmSubmit()
+{
+var agree=confirm("Clicking OK will generate an email with login credentials for this email address.");
+if (agree)
+   return true ;
+else
+   return false ;
+}
+</script>
+{% end %}
+
+{% block body %}
+
+{% if message %}
+<div id="create_alert">{{ message }}</div>
+{% end %}
+
+  <div id="create_request">
+    <center> 
+      <form action="/create_request" method="get">
+	<p>Enter your NASA email address only, and we will send you
+	login details to create a new profile.</p>
+	<input type="text" name="email" size="25"><br><br>
+	<input type="submit" onclick="return confirmSubmit()" value="Send Login" />
+      </form>
+    </center>
+  </div>
+{% end %}

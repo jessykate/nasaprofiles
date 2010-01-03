@@ -1,6 +1,5 @@
 <div id="sidebar_text">
 
-
   <div id="stat">
     <div id="stat_description">
       Custom profiles in people.openNASA
@@ -9,16 +8,7 @@
       {{num_customized}}
     </span>
   </div>
-    
-  <div id="stat">
-    <div id="stat_description">
-      Top {{ len(top_tags) }} Tags
-    </div>
-    {% for tag, count in top_tags.iteritems() %}
-      <span>{{ tag }}</span><br>
-    {% end %}
-  </div>
-  
+      
   <div id="stat">
     <div id="stat_description">
       Job Category Breakdown
@@ -39,6 +29,15 @@
       {% end %}
     </div>
   </div>
+
+  <div id="stat">
+    <div id="stat_description">
+      Top {{ len(top_tags) }} Tags
+    </div>
+    {% for tag, count in top_tags.iteritems() %}
+      <span>{{ tag }}</span>
+    {% end %}
+  </div>
   
   <div id="stat">
     <div id="stat_description">
@@ -46,7 +45,7 @@
     </div>
     <div>
     {% for skill, count in top_skills.iteritems() %}
-      <span>{{ skill }}</span><br>
+      <span>{{ skill }}</span>
     {% end %}
     </div>
   </div>

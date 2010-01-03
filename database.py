@@ -26,7 +26,8 @@ class Database(object):
         return self.db
 
     def configure(self):
-        # define/update the views
+        ''' define/update the views. note that the sync function will
+        also update existing views.'''
 
         self.connect()
         all_docs_fun = '''
@@ -35,11 +36,11 @@ class Database(object):
         }
         '''
         all_docs_view = ViewDefinition('main', 'all_docs', all_docs_fun )
-        all_docs_view.sync(self.db)
+        all_docs_view.sync(self.db) 
 
         recently_edited_fun = '''
         function(doc) {
-          if (doc.edited) {
+          if (doc.edited && doc.customized) {
             emit(Date.parse(doc.edited), doc._id);
           }
         }
@@ -110,6 +111,32 @@ class Database(object):
         categories_count_view = ViewDefinition('main', 'categories_count', categories_count_map, 
                                            reduce_fun=categories_count_reduce )
         categories_count_view.sync(self.db)
+
+
+        max_custom_uid_map = '''
+        function(doc) {
+          if (doc.opennasa_only == true) {
+            emit(null, doc._id.substring(1));
+          }
+        }
+        '''
+
+        max_custom_uid_reduce = '''
+        function(key, values, rereduce) {
+          var greatest = 0;
+          values.forEach(function(value) {
+            value = value * 1;
+            if (value > greatest) {
+              greatest = value;
+            }     
+          });
+          return greatest;
+        }
+        '''        
+        max_custom_uid_view = ViewDefinition('main', 'max_custom_uid', max_custom_uid_map, 
+                                           reduce_fun=max_custom_uid_reduce )
+        max_custom_uid_view.sync(self.db)
+
 
 
 if __name__ == '__main__':

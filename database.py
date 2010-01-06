@@ -137,6 +137,17 @@ class Database(object):
                                            reduce_fun=max_custom_uid_reduce )
         max_custom_uid_view.sync(self.db)
 
+        all_names_map = '''
+        function(doc) {
+          if (doc.all_names) {
+            doc.all_names.forEach(function(name) {
+              emit(name, doc._id);
+            });
+          }
+        }
+        '''
+        all_names_view = ViewDefinition('main', 'all_names', all_names_map)
+        all_names_view.sync(self.db)
 
 
 if __name__ == '__main__':

@@ -492,6 +492,8 @@ def next_custom_uid():
     string value, and all custom UIDs (ie, those note based on an x500
     value) begin with a # symbol.'''
     results = settings['db'].view('main/max_custom_uid', descending=True, limit=1)
+    if not results:
+        return '+0'
     for result in results:
         return '+'+ str(result.value + 1)
 

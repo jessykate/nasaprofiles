@@ -271,9 +271,14 @@ class AboutHandler(BaseHandler):
     
 class MainHandler(BaseHandler):
     def get(self):
+        user_message = ''
         db = settings['db']
         query = self.get_argument("query", None)
-        if query:
+        if query and len(query) < 3:
+            user_message = 'Please use a search term longer than 2 characters'
+            self.render('templates/results.html', title='Search Results', results=None, message=user_message)
+            
+        elif query:
             center = self.get_argument("ou")
             # flag to note if a record returns with no recognizable uid
             no_uid_flag = False
@@ -353,13 +358,12 @@ class MainHandler(BaseHandler):
                         query=query, category_sm=helper.category_sm, 
                         recent_gravatars=recent_gravatars, top_skills=_top_skills,
                         num_customized=num_customized, top_tags=_top_tags, 
-                        categories=categories)
+                        categories=categories, message=user_message)
 
         else: 
             # if no search has been done yet, just present user w
             # search form
-            self.render('templates/search.html', title='Search for your NASA Homies',
-                        message = self.get_cookie("message"))
+            self.render('templates/search.html', title='Search for your NASA Homies')
 
     def local_search(self,query):
         ''' do a search of the local database for documents that have

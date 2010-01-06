@@ -47,8 +47,12 @@
 
   <div id="search_home">
     <div id="no_search">
+      {% if message %}
+      {{ message }}
+      {% else %}
       <p>No results for that search. Please try again.<br>
       (<a href="http://localhost:8989/faq#notfound">Can't find your profile?</a>)</p>
+      {% end %}
     </div>
     {% include "search_slogan.html" %} 
     {% include "search_form.html" %}

@@ -275,56 +275,64 @@ class MainHandler(BaseHandler):
         query = self.get_argument("query", None)
         if query:
             center = self.get_argument("ou")
-            if center == "all":
-                center = None
-
-            # results is a key value store of the name, info pairs
-            # from the ldap server. info is itself a dict. for each
-            # new result, check if we already have this person's
-            # record. if so, then it contains both the x500 info AND
-            # any local additions. if not, add it. each value is a
-            # list, no matter if it has one or more values.
-            results = self.x500_search(query, ou=center)
-            # as we parse the results, build an list of people objects
-            # which will be used to present the search results in the
-            # template.
-            people = []
+            # flag to note if a record returns with no recognizable uid
             no_uid_flag = False
-            for name, info in results.iteritems():
-                print 'Processing search results for: %s' % name
-                # get the uid so we can uniquely reference each search
-                # result
-                try:
-                    # careful here-- some results have BOTH a uid
-                    # field and a uniqueIdentifier.
-                    if 'uniqueIdentifier' in info:
-                        uid = info['uniqueIdentifier'][0]
-                    elif 'uid' in info:
-                        uid = info['uid'][0]
-                    else: raise KeyError
-                except KeyError:
-                    # xxx todo actually handle this error a little better. 
-                    no_uid_flag = True
-                    print '*** Warning! User %s did not have a unique identifier. Weird. Here is their user data:' % name
-                    print info
-                    continue
 
-                if uid not in db:            
-                    print 'Adding %s (uid=%s) to data store' % (name, uid)
-                    person = Person()
-                    person.build(info)                    
-                    person.save()
-                else:
-                    person = Person(uid)
-                    print 'User %s is already in the data store' % name
-                people.append(person)
-            
+            # figure out if we're doing a local search or a remote search
+            if center=='local': 
+                people = self.local_search(query)
+
+            else: 
+                if center == "all":
+                    center = None
+                # results is a key value store of the (name, info)
+                # pairs from the ldap server. info is itself a
+                # dict. for each new result, check if we already have
+                # this person's record. if so, then it contains both
+                # the x500 info AND any local additions. if not, add
+                # it. each value is a list, no matter if it has one or
+                # more values.
+                results = self.x500_search(query, ou=center)
+
+                # as we parse the results, build a list of people objects
+                # which will be used to present the search results in the
+                # template.
+                people = []
+                for name, info in results.iteritems():
+                    print 'Processing search results for: %s' % name
+                    # get the uid so we can uniquely reference each search
+                    # result
+                    try:
+                        # careful here-- some results have BOTH a uid
+                        # field and a uniqueIdentifier.
+                        if 'uniqueIdentifier' in info:
+                            uid = info['uniqueIdentifier'][0]
+                        elif 'uid' in info:
+                            uid = info['uid'][0]
+                        else: raise KeyError
+                    except KeyError:
+                        # xxx todo actually handle this error a little better. 
+                        no_uid_flag = True
+                        print '*** Warning! User %s did not have a unique identifier. Weird. Here is their user data:' % name
+                        print info
+                        continue
+
+                    if uid not in db:            
+                        print 'Adding %s (uid=%s) to data store' % (name, uid)
+                        person = Person()
+                        person.build(info)                    
+                        person.save()
+                    else:
+                        person = Person(uid)
+                        print 'User %s is already in the data store' % name
+                    people.append(person)            
+
             # if there's only one search result, redirect to the display
             # page for that person.
-            if len(results) == 1 and not no_uid_flag:
+            if len(people) == 1 and not no_uid_flag:
                 if settings['debug']:
                     print 
-                self.redirect('person/'+uid)
+                self.redirect('person/'+people[0].uid)
                 return
 
             # get some stats from the db
@@ -340,9 +348,6 @@ class MainHandler(BaseHandler):
 
             categories = category_count(format='string')
             
-            #labels = '|'.join(categories.keys())
-            #data = ','.join(category.values())
-
             # display the search results
             self.render('templates/results.html', title='Search Results', results=people, 
                         query=query, category_sm=helper.category_sm, 
@@ -355,6 +360,17 @@ class MainHandler(BaseHandler):
             # search form
             self.render('templates/search.html', title='Search for your NASA Homies',
                         message = self.get_cookie("message"))
+
+    def local_search(self,query):
+        ''' do a search of the local database for documents that have
+        names with a substring matching the query term. case
+        insensitive. returns a list of Person objects.'''
+        results = settings['db'].view('main/all_names')
+        people = []
+        for result in results:
+            if result.key.lower().find(query) >= 0:
+                people.append(Person(result.value))
+        return people
 
     def x500_search(self,query, ou=None, wildcard=True):
         if ou:
@@ -372,7 +388,7 @@ class MainHandler(BaseHandler):
                 server = "x500.nasa.gov"
                 dn = "ou=%s,o=National Aeronautics and Space Administration,c=US" % (ou)                            
         else:
-            # defaults
+            # when center == None --> agency-wide search
             server = "x500.nasa.gov"
             dn="o=National Aeronautics and Space Administration,c=US"
 

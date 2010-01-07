@@ -150,6 +150,27 @@ class Database(object):
         all_names_view.sync(self.db)
 
 
+        all_tags_map = '''
+        function(doc) {
+          doc.tags.forEach(function(tag) {
+            emit(tag, doc._id);
+          });
+        }
+        '''
+        all_tags_view = ViewDefinition('main', 'all_tags', all_tags_map)
+        all_tags_view.sync(self.db)
+
+        all_skills_map = '''
+        function(doc) {
+          doc.skills.forEach(function(skill) {
+            emit(skill, doc._id);
+          });
+        }
+        '''
+        all_skills_view = ViewDefinition('main', 'all_skills', all_skills_map)
+        all_skills_view.sync(self.db)
+
+
 if __name__ == '__main__':
     database = Database()    
     database.configure()

@@ -65,6 +65,7 @@ h6 {
 }
 #slogan {
     text-align: center;
+    padding-bottom: 100px;
 }
 
 #tagline {
@@ -116,6 +117,7 @@ ul#nav li a:hover {
 #search_home{
     width: 985px;
     min-height: 400px;    
+    margin-bottom: 30px;
 }
 
 #content {
@@ -338,9 +340,8 @@ img.photo {
 }
 
 #no_search {
-//    color: #1cacc4;
     text-align: center;
-    margin-left: 350px;
+    margin-left: 335px;
     margin-top: 20px;
     width:300px;
     font-size: 110%;
@@ -519,5 +520,16 @@ a img {
     margin-top:10px;
 }
 
+#center_search {
+    padding-top: 10px;
+}
 
+#other_search {
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+
+#search_button {
+    font-size: 200%;
+}
 

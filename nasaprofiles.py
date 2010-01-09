@@ -239,6 +239,16 @@ class CreateRequestHandler(BaseHandler):
             message = 'You must enter a NASA email address. Please try again.'
             self.render('templates/create_request.html', message=message)
             return
+        # double check that a profile with this email does not already
+        # exist (note this unfortunately does not account for the fact
+        # that people often have multiple @nasa.gov emails)
+        matching_email = settings['db'].view('main/all_email', key=email.lower())
+        if matching_email:
+            people = []
+            for match in matching_email:
+                people.append(Person(match.value))
+            self.render('templates/message.html', message_data=people, message_type='profile_exists')
+            return
         else:
             # create an empty profile for this person with just their
             # email address

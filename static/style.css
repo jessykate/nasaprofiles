@@ -366,6 +366,10 @@ img.photo {
     margin-bottom: 20px;
 }
 
+#simple_message {
+    margin: 20px;
+}
+
 .narrow_block {
 	width: 275px;
 	margin-right: 10px;

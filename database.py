@@ -170,6 +170,18 @@ class Database(object):
         all_skills_view = ViewDefinition('main', 'all_skills', all_skills_map)
         all_skills_view.sync(self.db)
 
+        all_email_map = '''
+        function(doc) {
+          if (doc.all_email) {
+            doc.all_email.forEach(function(email) {
+              emit(email.toLowerCase(), doc._id);
+            });
+          }
+        }
+        '''
+        all_email_view = ViewDefinition('main', 'all_email', all_email_map)
+        all_email_view.sync(self.db)
+
 
 if __name__ == '__main__':
     database = Database()    

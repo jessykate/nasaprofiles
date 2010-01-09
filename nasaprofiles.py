@@ -222,11 +222,13 @@ class CreateRequestHandler(BaseHandler):
     def get(self):
         message = None
         email = self.get_argument("email", None)
-        if not email:
+        # check if the form has been submitted yet 
+        if not email: 
             self.render('templates/create_request.html', message=message)
             return
-        # check to make sure this is a nasa email by looking for the
-        # word nasa in the domain part of the address.
+        # else-- process their request. check to make sure this is a
+        # nasa email by looking for the word nasa in the domain part
+        # of the address.
         try:
             name, domain = email.split('@')
         except:

@@ -352,6 +352,20 @@ img.photo {
     padding-right: 20px;
 }
 
+#create_alert {
+    text-align: center;
+    margin-left: 335px;
+    margin-top: 20px;
+    width:300px;
+    font-size: 110%;
+    background-color: #F5E39C;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-bottom: 20px;
+}
+
 .narrow_block {
 	width: 275px;
 	margin-right: 10px;
@@ -369,7 +383,7 @@ img.photo {
 	padding: 0;
 }
 
-#edit_alert, #create_alert{
+#edit_alert {
     background-color: #F5E39C;
     text-align:center;
     float: left;

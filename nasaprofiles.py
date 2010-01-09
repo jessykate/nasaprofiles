@@ -363,6 +363,7 @@ class MainHandler(BaseHandler):
         # figure out if we're doing a local search or a remote search
         if center=='local': 
             people = self.local_search(query)
+            return people
 
         else: 
             if center == "all":

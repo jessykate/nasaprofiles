@@ -158,7 +158,7 @@ else
     {% end %}
 
     {% if person.get('personal_web') %}
-      <span>Personal Website: <a href="http://{{ person.get('personal_web') }}">http://{{ person.get('personal_web') }}</a><br/> 
+      <span>Personal Website: <a href="{{ person.get('personal_web') }}">{{ person.get('personal_web') }}</a><br/> 
     {% end %}
     {% if person.get('category') %}
 	Job Category: {{ person.get('category') }}  

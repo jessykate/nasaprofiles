@@ -211,6 +211,12 @@ class EditHandler(BaseHandler):
                     values = [v.strip() for v in values]
                     person.set(field, values)
 
+                # make sure we have WWW urls
+                elif field == 'personal_web' or field == 'main_project_web':
+                    if not value.startswith('http://'):
+                        value = 'http://'+value
+                        person.set(field, value)
+
                 # for all other fields, if it wasnt empty, then store
                 # the new value.
                 elif value:

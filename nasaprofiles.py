@@ -342,6 +342,8 @@ class MainHandler(BaseHandler):
 
         people = []
         uids = []
+        # make sure the query is also made lowercase!
+        query = query.lower()
         for tag in tags:
             # tag.key is the tag; tag.value is the uid of the
             # corrsponding user
@@ -358,6 +360,8 @@ class MainHandler(BaseHandler):
         tags.'''
         skills = settings['db'].view('main/all_skills')
 
+        # make sure the query is also made lowercase!
+        query = query.lower()
         people = []
         uids = []
         for skill in skills:

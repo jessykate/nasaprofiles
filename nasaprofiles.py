@@ -40,14 +40,16 @@ class BaseHandler(tornado.web.RequestHandler):
         return self.get_cookie("uid")
 
 class PersonHandler(BaseHandler):
-
     def get(self, uid): 
         db = settings['db']
-        person = Person(uid)
-
-        self.render('templates/person.html', title=person.display_name(), 
-                    person=person, map=helper.map, mailing=helper.mailing, 
-                    category=helper.category, category_sm=helper.category_sm)
+        try:
+            person = Person(uid)
+            self.render('templates/person.html', title=person.display_name(), 
+                        person=person, map=helper.map, mailing=helper.mailing, 
+                        category=helper.category, category_sm=helper.category_sm)
+        except:
+            user_message = "There is no profile with that ID. Please try again."
+            self.render('templates/results.html', title='Search Results', results=None, message=user_message)
 
 class EditRequestHandler(BaseHandler):
     def get(self, uid):
@@ -290,6 +292,7 @@ class MainHandler(BaseHandler):
             # if no search has been done yet, just present user w
             # search form
             self.render('templates/search.html', title='Search for your NASA Homies')
+            return
 
         elif len(query) < 3:
             user_message = 'Please use a search term longer than 2 characters'

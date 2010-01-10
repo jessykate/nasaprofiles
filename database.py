@@ -137,6 +137,50 @@ class Database(object):
                                            reduce_fun=max_custom_uid_reduce )
         max_custom_uid_view.sync(self.db)
 
+        all_names_map = '''
+        function(doc) {
+          if (doc.all_names) {
+            doc.all_names.forEach(function(name) {
+              emit(name, doc._id);
+            });
+          }
+        }
+        '''
+        all_names_view = ViewDefinition('main', 'all_names', all_names_map)
+        all_names_view.sync(self.db)
+
+
+        all_tags_map = '''
+        function(doc) {
+          doc.tags.forEach(function(tag) {
+            emit(tag, doc._id);
+          });
+        }
+        '''
+        all_tags_view = ViewDefinition('main', 'all_tags', all_tags_map)
+        all_tags_view.sync(self.db)
+
+        all_skills_map = '''
+        function(doc) {
+          doc.skills.forEach(function(skill) {
+            emit(skill, doc._id);
+          });
+        }
+        '''
+        all_skills_view = ViewDefinition('main', 'all_skills', all_skills_map)
+        all_skills_view.sync(self.db)
+
+        all_email_map = '''
+        function(doc) {
+          if (doc.all_email) {
+            doc.all_email.forEach(function(email) {
+              emit(email.toLowerCase(), doc._id);
+            });
+          }
+        }
+        '''
+        all_email_view = ViewDefinition('main', 'all_email', all_email_map)
+        all_email_view.sync(self.db)
 
 
 if __name__ == '__main__':

@@ -40,14 +40,16 @@ class BaseHandler(tornado.web.RequestHandler):
         return self.get_cookie("uid")
 
 class PersonHandler(BaseHandler):
-
     def get(self, uid): 
         db = settings['db']
-        person = Person(uid)
-
-        self.render('templates/person.html', title=person.display_name(), 
-                    person=person, map=helper.map, mailing=helper.mailing, 
-                    category=helper.category, category_sm=helper.category_sm)
+        try:
+            person = Person(uid)
+            self.render('templates/person.html', title=person.display_name(), 
+                        person=person, map=helper.map, mailing=helper.mailing, 
+                        category=helper.category, category_sm=helper.category_sm)
+        except:
+            user_message = "There is no profile with that ID. Please try again."
+            self.render('templates/results.html', title='Search Results', results=None, message=user_message)
 
 class EditRequestHandler(BaseHandler):
     def get(self, uid):
@@ -209,6 +211,12 @@ class EditHandler(BaseHandler):
                     values = [v.strip() for v in values]
                     person.set(field, values)
 
+                # make sure we have WWW urls
+                elif field == 'personal_web' or field == 'main_project_web':
+                    if not value.startswith('http://'):
+                        value = 'http://'+value
+                        person.set(field, value)
+
                 # for all other fields, if it wasnt empty, then store
                 # the new value.
                 elif value:
@@ -222,11 +230,13 @@ class CreateRequestHandler(BaseHandler):
     def get(self):
         message = None
         email = self.get_argument("email", None)
-        if not email:
+        # check if the form has been submitted yet 
+        if not email: 
             self.render('templates/create_request.html', message=message)
             return
-        # check to make sure this is a nasa email by looking for the
-        # word nasa in the domain part of the address.
+        # else-- process their request. check to make sure this is a
+        # nasa email by looking for the word nasa in the domain part
+        # of the address.
         try:
             name, domain = email.split('@')
         except:
@@ -236,6 +246,16 @@ class CreateRequestHandler(BaseHandler):
         if domain.lower().find('nasa') < 0:
             message = 'You must enter a NASA email address. Please try again.'
             self.render('templates/create_request.html', message=message)
+            return
+        # double check that a profile with this email does not already
+        # exist (note this unfortunately does not account for the fact
+        # that people often have multiple @nasa.gov emails)
+        matching_email = settings['db'].view('main/all_email', key=email.lower())
+        if matching_email:
+            people = []
+            for match in matching_email:
+                people.append(Person(match.value))
+            self.render('templates/message.html', message_data=people, message_type='profile_exists')
             return
         else:
             # create an empty profile for this person with just their
@@ -271,25 +291,121 @@ class AboutHandler(BaseHandler):
     
 class MainHandler(BaseHandler):
     def get(self):
-        db = settings['db']
+        user_message = ''
         query = self.get_argument("query", None)
-        if query:
-            center = self.get_argument("ou")
+
+        if not query:
+            # if no search has been done yet, just present user w
+            # search form
+            self.render('templates/search.html', title='Search for your NASA Homies')
+            return
+
+        elif len(query) < 3:
+            user_message = 'Please use a search term longer than 2 characters'
+            self.render('templates/results.html', title='Search Results', results=None, message=user_message)
+            return
+
+        else:
+            search_type = self.get_argument("search_type", None)
+            if search_type == 'center':
+                people = self.center_search(query)
+            elif search_type == 'skill':
+                people = self.skill_search(query)
+            else:
+                people = self.tag_search(query)
+
+       # if there's only one search result, redirect to the display
+        # page for that person.
+        if len(people) == 1:
+            self.redirect('person/'+people[0].uid)
+            return
+
+        # get some stats from the db
+        recent = recently_edited(10)
+        recent_gravatars = {}
+        for uid in recent:
+            person = Person(uid)
+            recent_gravatars[uid] = person.gravatar(50)
+
+        num_customized = total_customized()
+        _top_tags = top_tags(10)
+        _top_skills = top_skills(10)
+
+        categories = category_count(format='string')
+
+        # display the search results
+        self.render('templates/results.html', title='Search Results', results=people, 
+                    query=query, category_sm=helper.category_sm, 
+                    recent_gravatars=recent_gravatars, top_skills=_top_skills,
+                    num_customized=num_customized, top_tags=_top_tags, 
+                    categories=categories, message=user_message)
+
+    def tag_search(self, query):
+        ''' search for matches of case-normalized query string against
+        tags, returning a list of Person objects with matching
+        tags.'''
+        tags = settings['db'].view('main/all_tags')
+
+        people = []
+        uids = []
+        # make sure the query is also made lowercase!
+        query = query.lower()
+        for tag in tags:
+            # tag.key is the tag; tag.value is the uid of the
+            # corrsponding user
+            if tag.key.lower().find(query) >= 0:
+                # make sure the people we add are unique
+                if tag.value not in uids:
+                    uids.append(tag.value)
+                    people.append(Person(tag.value))
+        return people
+
+    def skill_search(self, query):
+        ''' search for matches of case-normalized query string against
+        skills, returning a list of Person objects with matching
+        tags.'''
+        skills = settings['db'].view('main/all_skills')
+
+        # make sure the query is also made lowercase!
+        query = query.lower()
+        people = []
+        uids = []
+        for skill in skills:
+            # tag.key is the tag; tag.value is the uid of the
+            # corrsponding user
+            if skill.key.lower().find(query) >= 0:
+                # make sure the people we add are unique
+                if skill.value not in uids:
+                    uids.append(skill.value)
+                    people.append(Person(skill.value))
+        return people
+                
+    def center_search(self, query):            
+        center = self.get_argument("ou")
+        # flag to note if a record returns with no recognizable uid
+        no_uid_flag = False
+
+        # figure out if we're doing a local search or a remote search
+        if center=='local': 
+            people = self.local_search(query)
+            return people
+
+        else: 
             if center == "all":
                 center = None
-
-            # results is a key value store of the name, info pairs
-            # from the ldap server. info is itself a dict. for each
-            # new result, check if we already have this person's
-            # record. if so, then it contains both the x500 info AND
-            # any local additions. if not, add it. each value is a
-            # list, no matter if it has one or more values.
+            # results is a key value store of the (name, info)
+            # pairs from the ldap server. info is itself a
+            # dict. for each new result, check if we already have
+            # this person's record. if so, then it contains both
+            # the x500 info AND any local additions. if not, add
+            # it. each value is a list, no matter if it has one or
+            # more values.
             results = self.x500_search(query, ou=center)
-            # as we parse the results, build an list of people objects
+
+            # as we parse the results, build a list of people objects
             # which will be used to present the search results in the
             # template.
             people = []
-            no_uid_flag = False
             for name, info in results.iteritems():
                 print 'Processing search results for: %s' % name
                 # get the uid so we can uniquely reference each search
@@ -309,7 +425,7 @@ class MainHandler(BaseHandler):
                     print info
                     continue
 
-                if uid not in db:            
+                if uid not in settings['db']:            
                     print 'Adding %s (uid=%s) to data store' % (name, uid)
                     person = Person()
                     person.build(info)                    
@@ -317,44 +433,21 @@ class MainHandler(BaseHandler):
                 else:
                     person = Person(uid)
                     print 'User %s is already in the data store' % name
-                people.append(person)
-            
-            # if there's only one search result, redirect to the display
-            # page for that person.
-            if len(results) == 1 and not no_uid_flag:
-                if settings['debug']:
-                    print 
-                self.redirect('person/'+uid)
-                return
+                people.append(person)            
+            if len(people) == 1 and no_uid_flag:
+                return None
+            else: return people
 
-            # get some stats from the db
-            recent = recently_edited(10)
-            recent_gravatars = {}
-            for uid in recent:
-                person = Person(uid)
-                recent_gravatars[uid] = person.gravatar(50)
-
-            num_customized = total_customized()
-            _top_tags = top_tags(10)
-            _top_skills = top_skills(10)
-
-            categories = category_count(format='string')
-            
-            #labels = '|'.join(categories.keys())
-            #data = ','.join(category.values())
-
-            # display the search results
-            self.render('templates/results.html', title='Search Results', results=people, 
-                        query=query, category_sm=helper.category_sm, 
-                        recent_gravatars=recent_gravatars, top_skills=_top_skills,
-                        num_customized=num_customized, top_tags=_top_tags, 
-                        categories=categories)
-
-        else: 
-            # if no search has been done yet, just present user w
-            # search form
-            self.render('templates/search.html', title='Search for your NASA Homies',
-                        message = self.get_cookie("message"))
+    def local_search(self,query):
+        ''' do a search of the local database for documents that have
+        names with a substring matching the query term. case
+        insensitive. returns a list of Person objects.'''
+        results = settings['db'].view('main/all_names')
+        people = []
+        for result in results:
+            if result.key.lower().find(query) >= 0:
+                people.append(Person(result.value))
+        return people
 
     def x500_search(self,query, ou=None, wildcard=True):
         if ou:
@@ -372,7 +465,7 @@ class MainHandler(BaseHandler):
                 server = "x500.nasa.gov"
                 dn = "ou=%s,o=National Aeronautics and Space Administration,c=US" % (ou)                            
         else:
-            # defaults
+            # when center == None --> agency-wide search
             server = "x500.nasa.gov"
             dn="o=National Aeronautics and Space Administration,c=US"
 
@@ -439,8 +532,7 @@ def category_count(format=None):
         if format == 'string':
             categories[item.key] = str(item.value)
         else:
-            categories[item.key] = item.value
-        
+            categories[item.key] = item.value        
     return categories
 
 def top_tags(n=None):
@@ -448,9 +540,9 @@ def top_tags(n=None):
     # the group=True parameter is key; it's what tells the view to
     # group the results by key (er, no pun intended).
     if n:
-        tags = settings['db'].view('main/tags_count', group=True, limit=n)
+        tags = settings['db'].view('main/tags_count', group=True, limit=n, descending=True)
     else:
-        tags = settings['db'].view('main/tags_count', group=True)
+        tags = settings['db'].view('main/tags_count', group=True, descending=True)
 
     top_tags = {}
     for tag in tags:

@@ -43,15 +43,7 @@ else
             <span class="value">{{ person.phone() }}</span><br>
           {% end %}
         </span>
-    </div>
-    
-    <div id="profile_category">
-      {% if person.get('category') %}
-         {{ category(person.get('category')) }}  
-      {% else %}
-        <img src="/static/images/job_category.png">
-      {% end %}
-    </div>
+    </div>    
              
   </div>
   
@@ -81,14 +73,18 @@ else
       {% if person.get('skills') %}  
         <div class="narrow_block">
           <h2>Skills</h2>
-            {{ ', '.join(person.get('skills')) }}
+	  {% for skill in person.get('skills') %}
+	  <a href="/?query={{skill}}&search_type=skill">{{skill}}</a> 
+	  {% end %}
         </div>
       {% end %}
 
       {% if person.get('tags') %}  
         <div class="narrow_block">
           <h2>Tags</h2>
-            {{ ', '.join(person.get('tags')) }}
+	  {% for tag in person.get('tags') %}
+	  <a href="/?query={{tag}}&search_type=tag">{{tag}}</a> 
+	  {% end %}
         </div>
       {% end %}
     </div>
@@ -162,8 +158,12 @@ else
     {% end %}
 
     {% if person.get('personal_web') %}
-      <span>Personal Website: <a href="http://{{ person.get('personal_web') }}">http://{{ person.get('personal_web') }}</a><br/> 
+      <span>Personal Website: <a href="{{ person.get('personal_web') }}">{{ person.get('personal_web') }}</a><br/> 
     {% end %}
+    {% if person.get('category') %}
+	Job Category: {{ person.get('category') }}  
+    {% end %}
+
   </div>
 
 <!-- END STUFF -->

@@ -2,7 +2,9 @@
     <center> 
     <form action="/" method="get">
       <input type="text" name="query" class="submit" size="25"><br><br><br>
-      <select name="ou" size=1>
+      <div id="center_search"> 
+	<input type="radio" name="search_type" value="center" checked /> By Center
+	<select name="ou" size=1>
         <option value="Ames Research Center">Ames Research Center</option> <!-- works -->
         <option value="Langley Research Center">Langley Research Center</option> <!-- works -->
         <option value="Marshall Space Flight Center">Marshall Space Flight Center</option> <!-- works -->
@@ -10,16 +12,22 @@
         <option value="Goddard Space Flight Center">Goddard Space Flight Center</option> <!-- works -->
         <option value="Kennedy Space Center">Kennedy Space Center</option> <!-- works -->
         <option value="Jet Propulsion Laboratory">Jet Propulsion Laboratory</option> <!-- works -->
-        <option value="headquarters">Headquarters</option> <!-- works -->
+        <option value="headquarters">Headquarters</option> 
+        <option value="local">people.openNASA</option> </select>
+      </div>
+      <div id="other_search">
+	<input type="radio" name="search_type" value="tag" /> By Tag
+	<input type="radio" name="search_type" value="skill" /> By Skill
+      </div>
 	<!--
 	 UNAVAILABLE: {'desc': 'Server is unavailable'}
         <option value="Johnson Space Center">Johnson Space Center</option> <
         <option value="Dryden Flight Research Center">Dryden Flight Research Center</option> 
         <option value="Stennis Space Center">Stennis Space Center</option>
-	-->
-        <option value="all">All Centers (! Slow !)</option> <!-- sort of kinda works -->
+	kinda works, usually times out.
+        <option value="all">All Centers (! Slow !)</option> 
 	-->
       </select>
-      <input type="submit" value="Search" />
+      <input type="submit" value="Search" id="search_button"/>
     </form>
     </center>

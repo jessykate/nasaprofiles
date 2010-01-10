@@ -1,0 +1,17 @@
+{% extends base.html %}
+
+{% block body %}
+
+{% if message_type == 'profile_exists' %}
+<div id="simple_message">
+  <center>
+    <p>One or more profiles with that email already exist. Click the
+      following links to view them:</p>
+    {% for person in message_data %}
+    <a href="/person/{{person.uid}}">{{person.display_name()}}</a><br>
+    {% end %}
+  </center>
+</div>
+{% end %}
+
+{% end %}

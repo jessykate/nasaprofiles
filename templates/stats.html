@@ -35,7 +35,7 @@
       Top {{ len(top_tags) }} Tags
     </div>
     {% for tag, count in top_tags.iteritems() %}
-      <span>{{ tag }}</span>
+    <span><a href="/?query={{tag}}&search_type=tag">{{ tag }}</a></span>
     {% end %}
   </div>
   
@@ -45,7 +45,7 @@
     </div>
     <div>
     {% for skill, count in top_skills.iteritems() %}
-      <span>{{ skill }}</span>
+      <span><a href="/?query={{skill}}&search_type=skill">{{ skill }}</a></span>
     {% end %}
     </div>
   </div>

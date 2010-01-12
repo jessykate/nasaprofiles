@@ -297,7 +297,15 @@ class MainHandler(BaseHandler):
         if not query:
             # if no search has been done yet, just present user w
             # search form
-            self.render('templates/search.html', title='Search for your NASA Homies')
+
+            # get recently edited profiles
+            recent = recently_edited(10)
+            recent_gravatars = {}
+            for uid in recent:
+                person = Person(uid)
+                recent_gravatars[uid] = person.gravatar(50)
+
+            self.render('templates/search.html', title='Search for your NASA Homies', recent_gravatars=recent_gravatars)
             return
 
         elif len(query) < 3:

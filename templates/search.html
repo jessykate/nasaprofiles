@@ -5,6 +5,14 @@
   <div id="search_home">
     {% include "search_slogan.html" %}
     {% include "search_form.html" %}
+    <div id="recently_edited_home">
+      <center>
+	<h3>Recently Edited Profiles</h3>
+      {% for uid, gravatar in recent_gravatars.iteritems() %}
+      <a href="person/{{ uid }}"><img src="{{ gravatar }}"></a>
+      {% end %}
+      </center>
+    </div>
   </div>
 </div>
 <div>

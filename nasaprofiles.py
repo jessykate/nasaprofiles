@@ -317,7 +317,7 @@ class MainHandler(BaseHandler):
             search_type = self.get_argument("search_type", None)
             if search_type == 'center':
                 if self.get_argument("ou") == "None":
-                    user_message == 'You must select a center if doing a center-specific search.'
+                    user_message = 'You must select a center if doing a center-specific search.'
                     people = []
                 else:
                     people = self.center_search(query)
@@ -346,6 +346,7 @@ class MainHandler(BaseHandler):
         categories = category_count(format='string')
 
         # display the search results
+        print 'user message: ' + user_message
         self.render('templates/results.html', title='Search Results', results=people, 
                     query=query, category_sm=helper.category_sm, 
                     recent_gravatars=recent_gravatars, top_skills=_top_skills,

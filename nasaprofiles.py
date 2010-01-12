@@ -316,7 +316,11 @@ class MainHandler(BaseHandler):
         else:
             search_type = self.get_argument("search_type", None)
             if search_type == 'center':
-                people = self.center_search(query)
+                if self.get_argument("ou") == "None":
+                    user_message == 'You must select a center if doing a center-specific search.'
+                    people = []
+                else:
+                    people = self.center_search(query)
             elif search_type == 'skill':
                 people = self.skill_search(query)
             else:
@@ -399,8 +403,6 @@ class MainHandler(BaseHandler):
             return people
 
         else: 
-            if center == "all":
-                center = None
             # results is a key value store of the (name, info)
             # pairs from the ldap server. info is itself a
             # dict. for each new result, check if we already have

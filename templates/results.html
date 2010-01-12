@@ -2,6 +2,8 @@
 
 {% block body %}
 
+{{ message }}
+
 {% if results %}
   <div id="results_page">
     <div id="content">
@@ -48,7 +50,7 @@
   <div id="search_home">
     <div id="no_search">
       {% if message %}
-      {{ message }}
+      <p>{{ message }}</p>
       {% else %}
       <p>No results for that search. Please try again. (<a href="/faq#notfound">Can't find your profile?</a>)</p>
       {% end %}

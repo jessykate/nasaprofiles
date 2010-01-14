@@ -65,7 +65,8 @@ h6 {
 }
 #slogan {
     text-align: center;
-    padding-bottom: 100px;
+    padding-bottom: 60px;
+    padding-top: 40px;
 }
 
 #tagline {
@@ -538,8 +539,22 @@ a img {
     margin-top:10px;
 }
 
+#main_search {
+    text-align: center;
+
+}
+
+#links_search {
+    width: 40px;
+    position: absolute;
+    left:981px;
+    top: 300px;
+    
+}
+
 #center_search {
     padding-top: 10px;
+    text-align: center;
 }
 
 #other_search {
@@ -547,7 +562,12 @@ a img {
     padding-bottom: 20px;
 }
 
-#search_button {
+#button_search {
+    padding-top: 50px;
+    text-align: center;
+}
+
+#big_button {
     font-size: 200%;
 }
 

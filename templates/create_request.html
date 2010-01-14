@@ -14,29 +14,42 @@ else
 {% end %}
 
 {% block body %}
+<div id="static_page">
+  <div id="content">
+    {% if current_user %}
+      <div id="create_alert">
+        You are already logged in.  Click <a href="/edit"> here</a> to keep editing your <a href="/person/{{ current_user }}">profile</a>, or <a href="/logout">logout</a> if you wish to create a new profile with a different email address.
+      </div>
+    {% else %}
+    {% if message %}
+      <div id="create_alert">
+        {{ message }}
+      </div>
+    {% end %}
+  
+    <div id="create_request">
+      <center> 
+        <form action="/create_request" method="get">
+	        <p>Enter your NASA email address only, and we will send you login details to create a new profile.</p>
+	        <input type="text" name="email" size="25"><br><br>
+	        <input type="submit" onclick="return confirmSubmit()" value="Send Login" />
+        </form>
+      </center>
+    </div>
 
-{% if current_user %}
-<div id="create_alert">
-You are already logged in.  Click <a href="/edit"> here</a> to keep
-editing your <a href="/person/{{ current_user }}">profile</a>,
-or <a href="/logout">logout</a> if you wish to create a new profile
-with a different email address.
-</div>
-{% else %}
-{% if message %}
-<div id="create_alert">
-  {{ message }}
-</div>
 {% end %}
-  <div id="create_request">
-    <center> 
-      <form action="/create_request" method="get">
-	<p>Enter your NASA email address only, and we will send you
-	login details to create a new profile.</p>
-	<input type="text" name="email" size="25"><br><br>
-	<input type="submit" onclick="return confirmSubmit()" value="Send Login" />
-      </form>
-    </center>
   </div>
-{% end %}
+
+  <div id="sidebar">
+
+    {% include "stats.html" %}
+
+  </div>
+</div>
+<div>
+
+
+
+
+
 {% end %}

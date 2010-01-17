@@ -1,0 +1,20 @@
+<div id="search_home">
+  {% include "search_slogan.html" %}
+  <div id="main_search">
+    
+    <form action="/" method="get">
+      <div id="center_search"> 
+	<input type="text" name="query" class="submit" size="25">
+      </div>
+      <input type="radio" name="search_type" value="center" checked /> By Center
+      {% include center_select.html %}
+      <div id="other_search">
+	<input type="radio" name="search_type" value="tag" /> By Tag
+	<input type="radio" name="search_type" value="skill" /> By Skill
+      </div>
+      <div id="button_search">
+	<input type="submit" value="Search" id="big_button" />
+      </div>
+    </form>    
+  </div>
+</div>

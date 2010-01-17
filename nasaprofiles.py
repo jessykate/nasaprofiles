@@ -281,13 +281,9 @@ class RefreshHandler(BaseHandler):
     pass
 
 
-class FaqHandler(BaseHandler):
-    def get(self):
-        self.render('templates/faq.html')
-
-class AboutHandler(BaseHandler):
-    def get(self):
-        self.render('templates/about.html')
+class PageHandler(BaseHandler):
+    def get(self, pagename):
+        self.render('templates/'+pagename+'.html')
     
 class MainHandler(BaseHandler):
     def get(self):
@@ -297,7 +293,7 @@ class MainHandler(BaseHandler):
         if not query:
             # if no search has been done yet, just present user w
             # search form
-
+            advanced = self.get_argument("advanced", None)
             # get recently edited profiles
             recent = recently_edited(10)
             recent_gravatars = {}
@@ -305,7 +301,7 @@ class MainHandler(BaseHandler):
                 person = Person(uid)
                 recent_gravatars[uid] = person.gravatar(50)
 
-            self.render('templates/search.html', title='Search for your NASA Homies', recent_gravatars=recent_gravatars)
+            self.render('templates/search.html', title='Search for your NASA Homies', recent_gravatars=recent_gravatars, advanced=advanced)
             return
 
         elif len(query) < 3:
@@ -596,8 +592,9 @@ application = tornado.web.Application([
         (r'/create_request', CreateRequestHandler),
         (r'/create', CreateHandler),
         (r'/edit', EditHandler),
-        (r'/faq', FaqHandler),
-        (r'/about', AboutHandler),
+        (r'/(faq)', PageHandler),
+        (r'/(advanced)', PageHandler),
+        (r'/(about)', PageHandler),
         (r'/logout', LogoutHandler),
         (r'/login/([A-Za-z0-9\-]+)', LoginHandler),
         ], **settings)

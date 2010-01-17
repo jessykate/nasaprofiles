@@ -11,7 +11,7 @@ body {
 }
 #header{
     padding:0px 0px 50px 100px;   
-    height:65px; 
+    height:94px; 
 }
 
 #opennasa_header{
@@ -24,11 +24,11 @@ body {
 }
 
 #people_header{
-    background: url(images/topright.png) right top no-repeat;
-    width:300px;
-    height:145px;
-    float:right;
-   
+    width: 225px;
+    height: 50px;
+    position: absolute;
+    left:975px;
+    top: 100px;
 }
 
 h1 {
@@ -99,7 +99,10 @@ h6 {
 }
 
 #wrapper {
-	width: 1000px;
+    background-image: url(images/directory.png);
+    background-position: 722px 60px;
+    background-repeat: no-repeat;
+    width: 1000px;
 	margin: 0 auto;
 	
 }

@@ -289,32 +289,31 @@ class MainHandler(BaseHandler):
     def get(self):
         user_message = ''
         query = self.get_argument("query", None)
-
         if not query:
             # if no search has been done yet, just present user w
             # search form
-            advanced = self.get_argument("advanced", None)
-            # get recently edited profiles
-            recent = recently_edited(10)
-            recent_gravatars = {}
-            for uid in recent:
-                person = Person(uid)
-                recent_gravatars[uid] = person.gravatar(50)
-
-            self.render('templates/search.html', title='Search for your NASA Homies', recent_gravatars=recent_gravatars, advanced=advanced)
+            self.render('templates/index.html', title='Search for your NASA Homies', 
+                        recent_gravatars=get_recent_gravatars(10), message=None)
             return
 
         elif len(query) < 3:
             user_message = 'Please use a search term longer than 2 characters'
-            self.render('templates/results.html', title='Search Results', results=None, message=user_message)
+            self.render('templates/index.html', title='Search for your NASA Homies', 
+                        recent_gravatars=get_recent_gravatars(10), message=user_message)
             return
 
         else:
-            search_type = self.get_argument("search_type", None)
+            search_type = self.get_argument("search_type")
+            print 'search_type=%s' % search_type
             if search_type == 'center':
                 if self.get_argument("ou") == "None":
                     user_message = 'You must select a center if doing a center-specific search.'
-                    people = []
+                    self.render('templates/index.html', 
+                                title='Search for your NASA Homies', 
+                                recent_gravatars=get_recent_gravatars(10), 
+                                message=user_message)
+                    return
+
                 else:
                     people = self.center_search(query)
             elif search_type == 'skill':
@@ -322,7 +321,8 @@ class MainHandler(BaseHandler):
             else:
                 people = self.tag_search(query)
 
-       # if there's only one search result, redirect to the display
+           
+        # if there's only one search result, redirect to the display
         # page for that person.
         if len(people) == 1:
             self.redirect('person/'+people[0].uid)
@@ -342,7 +342,6 @@ class MainHandler(BaseHandler):
         categories = category_count(format='string')
 
         # display the search results
-        print 'user message: ' + user_message
         self.render('templates/results.html', title='Search Results', results=people, 
                     query=query, category_sm=helper.category_sm, 
                     recent_gravatars=recent_gravatars, top_skills=_top_skills,
@@ -511,10 +510,20 @@ def recently_edited(n=None):
     # largest value FIRST, and the largest value is furthest 1970 ==>
     # most recent.
     if n:
-        recent = settings['db'].view('main/recently_edited', descending=True, limit=n)    
+        recent = settings['db'].view('main/recently_edited', descending=True, limit=n)  
     else:
         recent = settings['db'].view('main/recently_edited', descending=True)    
     return [r.value for r in recent]
+
+def get_recent_gravatars(num):
+    # get recently edited profiles
+    recent = recently_edited(num)
+    recent_gravatars = {}
+    for uid in recent:
+        person = Person(uid)
+        recent_gravatars[uid] = person.gravatar(50)
+    return recent_gravatars
+
 
 def total_customized():
     ''' returns an integer representing the total number of profiles
@@ -585,7 +594,6 @@ def next_custom_uid():
 
 application = tornado.web.Application([
         (r'/', MainHandler),
-        # XXX FIXME this regex probably wouldnt support many names
         (r'/person/([A-Za-z0-9\+,\-%\+]+)', PersonHandler),
         (r'/person/([A-Za-z0-9\+,\-%\+]+/refresh)', RefreshHandler),
         (r'/request/([A-Za-z0-9\+,\-\+]+)', EditRequestHandler),
@@ -593,7 +601,7 @@ application = tornado.web.Application([
         (r'/create', CreateHandler),
         (r'/edit', EditHandler),
         (r'/(faq)', PageHandler),
-        (r'/(advanced)', PageHandler),
+        #(r'/(advanced)', PageHandler),
         (r'/(about)', PageHandler),
         (r'/logout', LogoutHandler),
         (r'/login/([A-Za-z0-9\-]+)', LoginHandler),

@@ -1,9 +1,10 @@
 <form action="/" method="get">
   <div id="center_search"> 
-    <input type="text" name="query" class="submit" size="25">
-    <input type="radio" name="search_type" value="center" checked /> By Center
+    <input type="text" name="query" class="submit" size="25"><br><br>
+    <input type="hidden" name="search_type" value="center" > 
     {% include center_select.html %}
     <div id="button_search">
       <input type="submit" value="Search" id="big_button" />
     </div>
+  </div>
 </form>

@@ -241,10 +241,6 @@ class Person(object):
 
     def _populate(self, user_dict):
         ''' Populate a Person object from the data store. '''
-        if settings['debug']:
-            print '_populate: Populating person object from data store with the following info:'
-            print user_dict
-
         for field, value in user_dict.iteritems():
             self.__dict__[field] = value
 

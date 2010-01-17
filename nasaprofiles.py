@@ -307,7 +307,7 @@ class MainHandler(BaseHandler):
             print 'search_type=%s' % search_type
             if search_type == 'center':
                 if self.get_argument("ou") == "None":
-                    user_message = 'You must select a center if doing a center-specific search.'
+                    user_message = 'You must select a center before doing a center-specific search.'
                     self.render('templates/index.html', 
                                 title='Search for your NASA Homies', 
                                 recent_gravatars=get_recent_gravatars(10), 
@@ -321,6 +321,12 @@ class MainHandler(BaseHandler):
             else:
                 people = self.tag_search(query)
 
+        if not len(people):
+            user_message = 'No results for that search. Please try again.<br>(<a href="/faq#notfound">Can\'t find your profile?</a>)'
+            self.render('templates/index.html', 
+                        title='Search for your NASA Homies', 
+                        recent_gravatars=get_recent_gravatars(10), 
+                        message=user_message)
            
         # if there's only one search result, redirect to the display
         # page for that person.

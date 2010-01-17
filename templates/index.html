@@ -3,36 +3,46 @@
 {% block body %}
 
 <div id="search_home">
-  {% include "search_slogan.html" %}
+  <a href="/">{% include "search_slogan.html" %}</a>
 
   {% if message %}
   <div id="no_search">
-    <p>{{ message }}</p>
+    <center>
+      {{ message }}
+    </center>
   </div>
   {% end %}
 
+    <div id="links_search">
+      <center>
+      <a href="#"
+	 id="advanced_link"
+	 onclick="document.getElementById('advanced_search').style.display='';
+		  document.getElementById('basic_search').style.display='none'; 
+		  document.getElementById('advanced_link').display='none';
+		  document.getElementById('basic_link').display='';
+		  return false;">[ Advanced Search ]</a>
+
+      <a href="#"
+	 id="basic_link"
+	 onclick="document.getElementById('basic_search').style.display='';
+		  document.getElementById('advanced_search').style.display='none'; 
+		  document.getElementById('basic_link').display='none';
+		  document.getElementById('advanced_link').display='';
+		  return false;">[ Basic Search ]</a>
+
+      <a href="/faq#notfound">[ Help ]</a>        
+      </center>
+    </div>
+
   <div id="main_search">
 
-    <div id="links_search">
-      <a href="#"
-      onclick="document.getElementById('advanced_search').style.display='';
-      document.getElementById('basic_search').style.display='none'; 
-      document.getElementById('basic_link').display='';
-      document.getElementById('advanced_link').display='none';
-      return false;" id="advanced_link">advanced</a>
-
-      <a href="#"
-      onclick="document.getElementById('basic_search').style.display='';
-      document.getElementById('advanced_search').style.display='none'; 
-      document.getElementById('advanced_link').display='';
-      document.getElementById('basic_link').display='none';
-      return false;" id="basic_link" style="display:none">basic</a>
-
-      <a href="/faq#notfound">help+faq</a>        
+    <div id="basic_search">
+      {% include "basic_search.html" %}
     </div>
-    <br><br><br>
-    <div id="basic_search">{% include "basic_search.html" %}</div>
-    <div id="advanced_search" style="display:none">{% include "advanced_search.html" %}</div>
+    <div id="advanced_search" style="display:none">
+      {% include "advanced_search.html" %}
+    </div>
 
   </div>
 

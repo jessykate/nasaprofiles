@@ -27,7 +27,7 @@ body {
     width: 225px;
     height: 50px;
     position: absolute;
-    left:975px;
+    left:900px;
     top: 100px;
 }
 
@@ -362,16 +362,18 @@ img.photo {
 }
 
 #no_search {
-    text-align: center;
-    margin-left: 335px;
-    margin-top: 20px;
-    width:300px;
+    width:400px;
+    margin: auto;
     font-size: 110%;
     background-color: #F5E39C;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+    /*
+    margin-left: 335px;
+    text-align: center;
+    */
 }
 
 #create_alert {
@@ -566,11 +568,7 @@ a img {
 }
 
 #links_search {
-    width: 40px;
-    position: absolute;
-    left:981px;
-    top: 325px;
-    
+    margin-top: 15px;
 }
 
 #center_search {
@@ -580,12 +578,11 @@ a img {
 
 #other_search {
     padding-top: 10px;
-    padding-bottom: 20px;
     text-align: center;
 }
 
 #button_search {
-    padding-top: 30px;
+    padding-top: 10px;
     text-align: center;
 }
 

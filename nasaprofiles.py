@@ -576,9 +576,9 @@ def top_skills(n=None):
     # the group=True parameter is key; it's what tells the view to
     # group the results by key (er, no pun intended).
     if n:
-        skills = settings['db'].view('main/skills_count', group=True, limit=n)
+        skills = settings['db'].view('main/skills_count', group=True, limit=n, descending=True)
     else:
-        skills = settings['db'].view('main/skills_count', group=True)
+        skills = settings['db'].view('main/skills_count', group=True, descending=True)
 
     top_skills = {}
     for skill in skills:

@@ -1,16 +1,11 @@
 
   
     <form action="/" method="get">
-      <div id="main_search">
-        <input type="text" name="query" class="submit" size="25">
-        <div id="links_search">
-          <a href="/advanced">advanced</a>
-          <a href="/faq#notfound">help+faq</a>        
-        </div><br><br><br>
-      </div>
+
       <div id="center_search"> 
 	        <input type="radio" name="search_type" value="center" checked /> By Center
 	        <select name="ou" size=1>
+            <option>Select a Center...</option> <!-- works -->
             <option value="Ames Research Center">Ames Research Center</option> <!-- works -->
             <option value="Glenn Research Center">Glenn Research Center</option> <!-- works -->
             <option value="Goddard Space Flight Center">Goddard Space Flight Center</option> <!-- works -->
@@ -19,7 +14,7 @@
             <option value="Kennedy Space Center">Kennedy Space Center</option> <!-- works -->
             <option value="Langley Research Center">Langley Research Center</option> <!-- works -->
             <option value="Marshall Space Flight Center">Marshall Space Flight Center</option> <!-- works -->
-            <option selected="selected" value="local">people.openNASA</option> 
+            <option value="local">people.openNASA</option> 
           </select>
       </div>
 <!--      <div id="other_search">

@@ -281,13 +281,9 @@ class RefreshHandler(BaseHandler):
     pass
 
 
-class FaqHandler(BaseHandler):
-    def get(self):
-        self.render('templates/faq.html')
-
-class AboutHandler(BaseHandler):
-    def get(self):
-        self.render('templates/about.html')
+class PageHandler(BaseHandler):
+    def get(self, pagename):
+        self.render('templates/'+pagename+'.html')
     
 class MainHandler(BaseHandler):
     def get(self):
@@ -585,8 +581,9 @@ application = tornado.web.Application([
         (r'/create_request', CreateRequestHandler),
         (r'/create', CreateHandler),
         (r'/edit', EditHandler),
-        (r'/faq', FaqHandler),
-        (r'/about', AboutHandler),
+        (r'/(faq)', PageHandler),
+        (r'/(advanced)', PageHandler),
+        (r'/(about)', PageHandler),
         (r'/logout', LogoutHandler),
         (r'/login/([A-Za-z0-9\-]+)', LoginHandler),
         ], **settings)

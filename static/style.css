@@ -6,11 +6,29 @@ body {
 	border: 0;
 	color: #404040;
 	padding-bottom: 30px;
-	background: #fff url(images/body_bg.jpg) center top no-repeat;
+	background: #fff url(images/body_bg.png) center top no-repeat;
 	margin: 0;
 }
 #header{
-    padding:0px 0px 50px 100px;    
+    padding:0px 0px 50px 100px;   
+    height:65px; 
+}
+
+#opennasa_header{
+    width: 213px;
+    height: 75px;
+    position: absolute;
+    left:400px;
+    top: 0px;
+    
+}
+
+#people_header{
+    background: url(images/topright.png) right top no-repeat;
+    width:300px;
+    height:145px;
+    float:right;
+   
 }
 
 h1 {
@@ -548,7 +566,7 @@ a img {
     width: 40px;
     position: absolute;
     left:981px;
-    top: 300px;
+    top: 325px;
     
 }
 
@@ -560,6 +578,7 @@ a img {
 #other_search {
     padding-top: 10px;
     padding-bottom: 20px;
+    text-align: center;
 }
 
 #button_search {

@@ -558,18 +558,18 @@ def category_count(format=None):
     return categories
 
 def top_tags(n=None):
-    ''' return a dict of tag:count pairs for the top n tags'''
+    ''' return a list of the top n tags in order of decreasing frequency'''
     # the group=True parameter is key; it's what tells the view to
     # group the results by key (er, no pun intended).
     if n:
         tags = settings['db'].view('main/tags_count', group=True, limit=n, descending=True)
     else:
         tags = settings['db'].view('main/tags_count', group=True, descending=True)
-
-    top_tags = {}
+    top_tags = []
     for tag in tags:
-        top_tags[tag.key] = tag.value
-    return top_tags
+        top_tags.append((tag.value, tag.key))
+    top_tags.sort(reverse=True)
+    return [tag[1] for tag in top_tags]
 
 def top_skills(n=None):
     ''' return a dict of skill:count pairs for the top n skills'''
@@ -579,11 +579,11 @@ def top_skills(n=None):
         skills = settings['db'].view('main/skills_count', group=True, limit=n, descending=True)
     else:
         skills = settings['db'].view('main/skills_count', group=True, descending=True)
-
-    top_skills = {}
+    top_skills = []
     for skill in skills:
-        top_skills[skill.key] = skill.value
-    return top_skills
+        top_skills.append((skill.value, skill.key))
+    top_skills.sort(reverse=True)
+    return [skill[1] for skill in top_skills]
 
 def next_custom_uid():
     ''' return the value of the next custom UID. note that this is a

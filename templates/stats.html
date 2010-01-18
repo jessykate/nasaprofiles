@@ -34,7 +34,7 @@
     <div id="stat_description">
       Top {{ len(top_tags) }} Tags
     </div>
-    {% for tag, count in top_tags.iteritems() %}
+    {% for tag in top_tags %}
     <span><a href="/?query={{tag}}&search_type=tag">{{ tag }}</a></span>
     {% end %}
   </div>
@@ -44,7 +44,7 @@
       Most popular skills
     </div>
     <div>
-    {% for skill, count in top_skills.iteritems() %}
+    {% for skill in top_skills %}
       <span><a href="/?query={{skill}}&search_type=skill">{{ skill }}</a></span>
     {% end %}
     </div>

@@ -289,28 +289,28 @@ class MainHandler(BaseHandler):
     def get(self):
         user_message = ''
         query = self.get_argument("query", None)
+        search_type = self.get_argument("search_type", None)
         if not query:
             # if no search has been done yet, just present user w
             # search form
             self.render('templates/index.html', title='Search for your NASA Homies', 
-                        recent_gravatars=get_recent_gravatars(10), message=None)
+                        recent_gravatars=get_recent_gravatars(5), message=None)
             return
 
-        elif len(query) < 3:
+        elif len(query) < 3 and search_type == 'center':
             user_message = 'Please use a search term longer than 2 characters'
             self.render('templates/index.html', title='Search for your NASA Homies', 
-                        recent_gravatars=get_recent_gravatars(10), message=user_message)
+                        recent_gravatars=get_recent_gravatars(5), message=user_message)
             return
 
         else:
-            search_type = self.get_argument("search_type")
             print 'search_type=%s' % search_type
             if search_type == 'center':
                 if self.get_argument("ou") == "None":
                     user_message = 'You must select a center before doing a center-specific search.'
                     self.render('templates/index.html', 
                                 title='Search for your NASA Homies', 
-                                recent_gravatars=get_recent_gravatars(10), 
+                                recent_gravatars=get_recent_gravatars(5), 
                                 message=user_message)
                     return
 
@@ -325,7 +325,7 @@ class MainHandler(BaseHandler):
             user_message = 'No results for that search. Please try again.<br>(<a href="/faq#notfound">Can\'t find your profile?</a>)'
             self.render('templates/index.html', 
                         title='Search for your NASA Homies', 
-                        recent_gravatars=get_recent_gravatars(10), 
+                        recent_gravatars=get_recent_gravatars(5), 
                         message=user_message)
            
         # if there's only one search result, redirect to the display
@@ -335,12 +335,6 @@ class MainHandler(BaseHandler):
             return
 
         # get some stats from the db
-        recent = recently_edited(10)
-        recent_gravatars = {}
-        for uid in recent:
-            person = Person(uid)
-            recent_gravatars[uid] = person.gravatar(50)
-
         num_customized = total_customized()
         _top_tags = top_tags(10)
         _top_skills = top_skills(10)
@@ -350,7 +344,7 @@ class MainHandler(BaseHandler):
         # display the search results
         self.render('templates/results.html', title='Search Results', results=people, 
                     query=query, category_sm=helper.category_sm, 
-                    recent_gravatars=recent_gravatars, top_skills=_top_skills,
+                    recent_gravatars=get_recent_gravatars(10), top_skills=_top_skills,
                     num_customized=num_customized, top_tags=_top_tags, 
                     categories=categories, message=user_message)
 

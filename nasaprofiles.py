@@ -293,13 +293,13 @@ class MainHandler(BaseHandler):
             # if no search has been done yet, just present user w
             # search form
             self.render('templates/index.html', title='Search for your NASA Homies', 
-                        recent_gravatars=get_recent_gravatars(5), message=None)
+                        recent_gravatars=get_recent_gravatars(10), message=None)
             return
 
         elif len(query) < 3 and search_type == 'center':
             user_message = 'Please use a search term longer than 2 characters'
             self.render('templates/index.html', title='Search for your NASA Homies', 
-                        recent_gravatars=get_recent_gravatars(5), message=user_message)
+                        recent_gravatars=get_recent_gravatars(10), message=user_message)
             return
 
         else:
@@ -309,7 +309,7 @@ class MainHandler(BaseHandler):
                     user_message = 'You must select a center before doing a center-specific search.'
                     self.render('templates/index.html', 
                                 title='Search for your NASA Homies', 
-                                recent_gravatars=get_recent_gravatars(5), 
+                                recent_gravatars=get_recent_gravatars(10), 
                                 message=user_message)
                     return
 
@@ -324,7 +324,7 @@ class MainHandler(BaseHandler):
             user_message = 'No results for that search. Please try again.<br>(<a href="/faq#notfound">Can\'t find your profile?</a>)'
             self.render('templates/index.html', 
                         title='Search for your NASA Homies', 
-                        recent_gravatars=get_recent_gravatars(5), 
+                        recent_gravatars=get_recent_gravatars(10), 
                         message=user_message)
            
         # if there's only one search result, redirect to the display

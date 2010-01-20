@@ -4,6 +4,10 @@
 from database import Database
 import os
 settings = {
+    # specify a secret key for secure cookies. you must generate this
+    # yourself.
+    "cookie_secret": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+
     # what domain is your app running at?
     'domain': 'my.domain.com',
 

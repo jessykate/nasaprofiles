@@ -191,7 +191,7 @@ else
     <!-- is this you? -->
 
     <div id="edit_alert">
-      {% if current_user %} 
+      {% if current_user == person.uid %} 
 
       {{person.display_name() }}, click <a href="/request/{{ person.uid }}">here</a> to make further edits to your profile.
 

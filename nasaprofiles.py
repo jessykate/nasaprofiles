@@ -37,7 +37,7 @@ class TemplateBase(tornado.template.Template):
 
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
-        return self.get_cookie("uid")
+        return self.get_secure_cookie("uid")
 
 class PersonHandler(BaseHandler):
     def get(self, uid): 
@@ -119,8 +119,8 @@ class LoginHandler(BaseHandler):
         edit_requests = db['edit_requests']
         if uuid in edit_requests:
             uid = edit_requests[uuid]
-            self.set_cookie("uid", uid)
-            # remove this cookie so it can't be used again
+            self.set_secure_cookie("uid", uid)
+            # remove this edit request so it can't be used again
             edit_requests.pop(uuid)
             db['edit_requests'] = edit_requests
             print 'Expired cookie for one-time login %s' % uuid
@@ -133,7 +133,6 @@ class LogoutHandler(BaseHandler):
     def get(self):
         if self.current_user:
             self.clear_cookie("uid")
-            #self.set_cookie("message","You were successfully logged out")
         self.redirect('/')
 
 class EditHandler(BaseHandler):

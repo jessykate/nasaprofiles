@@ -214,7 +214,7 @@ class EditHandler(BaseHandler):
                 elif field == 'personal_web' or field == 'main_project_web':
                     if not value.startswith('http://'):
                         value = 'http://'+value
-                        person.set(field, value)
+                    person.set(field, value)
 
                 # for all other fields, if it wasnt empty, then store
                 # the new value.
@@ -452,6 +452,7 @@ class MainHandler(BaseHandler):
         for result in results:
             if result.key.lower().find(query) >= 0:
                 people.append(Person(result.value))
+        print 'len people: %d' % len(people)
         return people
 
     def x500_search(self,query, ou=None, wildcard=True):

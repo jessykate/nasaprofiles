@@ -448,10 +448,18 @@ class MainHandler(BaseHandler):
         names with a substring matching the query term. case
         insensitive. returns a list of Person objects.'''
         results = settings['db'].view('main/all_names')
+        uids_in_list = []
         people = []
         for result in results:
             if result.key.lower().find(query) >= 0:
-                people.append(Person(result.value))
+                # since people can have multiple names in their
+                # profile, the search string might match once for each
+                # version of their name. keep track of uids we've
+                # already matched on so that we dont return duplicate
+                # results.
+                if result.value not in uids_in_list:
+                    uids_in_list.append(result.value)
+                    people.append(Person(result.value))
         print 'len people: %d' % len(people)
         return people
 

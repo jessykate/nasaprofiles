@@ -139,93 +139,92 @@ class EditHandler(BaseHandler):
 
     @tornado.web.authenticated
     def get(self):
-        if not self.get_argument('submitted', None):
-            db = settings['db']
-            uid = self.get_current_user()
-            person = Person(uid)
-            self.render('templates/profile_edit.html', person=person)
+        #if not self.get_argument('submitted', None):
+        db = settings['db']
+        uid = self.get_current_user()
+        person = Person(uid)
+        self.render('templates/profile_edit.html', person=person)
 
-        else:
-            # the user had updated their information. 
-            new_values = self.request.arguments
+    def post(self):
+        new_values = self.request.arguments
 
-            if settings['debug']:
-                print 'The user submitted the following new values for their profile:'
-                print new_values
+        if settings['debug']:
+            print 'The user submitted the following new values for their profile:'
+            print new_values
 
-            uid = self.get_current_user()
-            person = Person(uid)
+        uid = self.get_current_user()
+        person = Person(uid)
 
-            custom_email_flag = False
-            custom_name_flag = False
-            custom_phone_flag = False
-            for field, value in new_values.iteritems():            
+        custom_email_flag = False
+        custom_name_flag = False
+        custom_phone_flag = False
+        for field, value in new_values.iteritems():            
 
-                field = field.strip()
-                # the values returned by the form are lists by
-                # default. all OUR custom fields are strings, so
-                # this is easy-- if they weren't this would have
-                # to be a bit more nuanced. 
-                value = value[0].strip()
-                # force into unicode, dropping non-unicode characters. 
-                value = unicode(value, errors='ignore')
+            field = field.strip()
+            # the values returned by the form are lists by
+            # default. all OUR custom fields are strings, so
+            # this is easy-- if they weren't this would have
+            # to be a bit more nuanced. 
+            value = value[0].strip()
+            # force into unicode, dropping non-unicode characters. 
+            value = unicode(value, errors='ignore')
 
-                if field == 'submitted' or field == 'x500':
-                    continue
-                elif field == 'custom_name' and (value == 'custom...' or value == ''):
-                    continue
-                elif field == 'custom_email' and (value == 'custom...' or value == ''):
-                    continue
-                elif field == 'custom_phone' and (value == 'custom...' or value == ''):
-                    continue
+            if field == 'submitted' or field == 'x500':
+                continue
+            elif field == 'custom_name' and (value == 'custom...' or value == ''):
+                continue
+            elif field == 'custom_email' and (value == 'custom...' or value == ''):
+                continue
+            elif field == 'custom_phone' and (value == 'custom...' or value == ''):
+                continue
 
-                elif field == 'custom_phone':
-                    print 'settings custom value %s = %s' % (field, value)
-                    person.add('all_phones', value)
-                    person.primary_phone = value
-                    custom_phone_flag = True
+            elif field == 'custom_phone':
+                print 'settings custom value %s = %s' % (field, value)
+                person.add('all_phones', value)
+                person.primary_phone = value
+                custom_phone_flag = True
 
-                elif field == 'custom_email':
-                    print 'settings custom value %s = %s' % (field, value)
-                    person.add('all_email', value)
-                    person.primary_email = value
-                    custom_email_flag = True
+            elif field == 'custom_email':
+                print 'settings custom value %s = %s' % (field, value)
+                person.add('all_email', value)
+                person.primary_email = value
+                custom_email_flag = True
 
-                elif field == 'custom_name':
-                    print 'settings custom value %s = %s' % (field, value)
-                    person.add('all_names', value)
-                    person.primary_name = value
-                    custom_name_flag = True
+            elif field == 'custom_name':
+                print 'settings custom value %s = %s' % (field, value)
+                person.add('all_names', value)
+                person.primary_name = value
+                custom_name_flag = True
 
-                # dont override custom fields if they've been set
-                # elsewhere in this form.
-                elif field == 'primary_email' and custom_email_flag:
-                    continue
-                elif field == 'primary_name' and custom_name_flag:
-                    continue
-                elif field == 'primary_phone' and custom_phone_flag:
-                    continue
+            # dont override custom fields if they've been set
+            # elsewhere in this form.
+            elif field == 'primary_email' and custom_email_flag:
+                continue
+            elif field == 'primary_name' and custom_name_flag:
+                continue
+            elif field == 'primary_phone' and custom_phone_flag:
+                continue
 
-                # store tags and skills as lists
-                elif field == 'tags' or field == 'skills':
-                    values = value.split(',')
-                    values = [v.strip() for v in values]
-                    person.set(field, values)
+            # store tags and skills as lists
+            elif field == 'tags' or field == 'skills':
+                values = value.split(',')
+                values = [v.strip() for v in values]
+                person.set(field, values)
 
-                # make sure we have WWW urls
-                elif field == 'personal_web' or field == 'main_project_web':
-                    if not value.startswith('http://'):
-                        value = 'http://'+value
-                    person.set(field, value)
+            # make sure we have WWW urls
+            elif field == 'personal_web' or field == 'main_project_web':
+                if not value.startswith('http://'):
+                    value = 'http://'+value
+                person.set(field, value)
 
-                # for all other fields, if it wasnt empty, then store
-                # the new value.
-                elif value:
-                    print 'settings new value %s = %s' % (field, value)
-                    person.set(field, value)
+            # for all other fields, if it wasnt empty, then store
+            # the new value.
+            elif value:
+                print 'settings new value %s = %s' % (field, value)
+                person.set(field, value)
 
-            person.save()
-            self.redirect('/person/'+uid)
+        person.save()
+        self.redirect('/person/'+uid)
 
 class CreateRequestHandler(BaseHandler):
     def get(self):
@@ -328,6 +327,7 @@ class MainHandler(BaseHandler):
                         title='Search for your NASA Homies', 
                         recent_gravatars=get_recent_gravatars(10), 
                         message=user_message)
+            return
            
         # if there's only one search result, redirect to the display
         # page for that person.

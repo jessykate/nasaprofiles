@@ -167,6 +167,8 @@ class EditHandler(BaseHandler):
                 # this is easy-- if they weren't this would have
                 # to be a bit more nuanced. 
                 value = value[0].strip()
+                # force into unicode, dropping non-unicode characters. 
+                value = unicode(value, errors='ignore')
 
                 if field == 'submitted' or field == 'x500':
                     continue
